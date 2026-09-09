@@ -1,0 +1,100 @@
+// Private Box2D seam. Public Thor2D packages depend on this adapter instead
+// of importing the compiler's vendor package directly.
+package box2d
+
+import native "vendor:box2d"
+
+BodyId :: native.BodyId
+BodyType :: native.BodyType
+JointId :: native.JointId
+ShapeId :: native.ShapeId
+ChainId :: native.ChainId
+Vec2 :: native.Vec2
+QueryFilter :: native.QueryFilter
+AABB :: native.AABB
+ShapeProxy :: native.ShapeProxy
+OverlapResultFcn :: native.OverlapResultFcn
+CastResultFcn :: native.CastResultFcn
+WorldDef :: native.WorldDef
+BodyDef :: native.BodyDef
+WorldId :: native.WorldId
+Rot :: native.Rot
+
+DefaultWorldDef :: native.DefaultWorldDef
+DefaultBodyDef :: native.DefaultBodyDef
+SetLengthUnitsPerMeter :: native.SetLengthUnitsPerMeter
+CreateWorld :: native.CreateWorld
+DestroyWorld :: native.DestroyWorld
+World_IsValid :: native.World_IsValid
+World_SetGravity :: native.World_SetGravity
+World_Step :: native.World_Step
+World_OverlapAABB :: native.World_OverlapAABB
+World_OverlapShape :: native.World_OverlapShape
+World_CastRay :: native.World_CastRay
+World_CastShape :: native.World_CastShape
+
+CreateBody :: native.CreateBody
+DestroyBody :: native.DestroyBody
+Body_IsValid :: native.Body_IsValid
+Body_SetType :: native.Body_SetType
+Body_SetTransform :: native.Body_SetTransform
+Body_GetPosition :: native.Body_GetPosition
+Body_GetRotation :: native.Body_GetRotation
+Body_SetLinearVelocity :: native.Body_SetLinearVelocity
+Body_SetAngularVelocity :: native.Body_SetAngularVelocity
+Body_GetLinearVelocity :: native.Body_GetLinearVelocity
+Body_GetAngularVelocity :: native.Body_GetAngularVelocity
+Body_SetLinearDamping :: native.Body_SetLinearDamping
+Body_SetAngularDamping :: native.Body_SetAngularDamping
+Body_SetGravityScale :: native.Body_SetGravityScale
+Body_SetFixedRotation :: native.Body_SetFixedRotation
+Body_SetBullet :: native.Body_SetBullet
+Body_EnableSleep :: native.Body_EnableSleep
+Body_ApplyForce :: native.Body_ApplyForce
+Body_ApplyLinearImpulse :: native.Body_ApplyLinearImpulse
+Body_ApplyForceToCenter :: native.Body_ApplyForceToCenter
+Body_ApplyTorque :: native.Body_ApplyTorque
+Body_ApplyLinearImpulseToCenter :: native.Body_ApplyLinearImpulseToCenter
+Body_ApplyAngularImpulse :: native.Body_ApplyAngularImpulse
+Body_SetAwake :: native.Body_SetAwake
+Body_IsAwake :: native.Body_IsAwake
+
+Shape_IsValid :: native.Shape_IsValid
+Shape_GetParentChain :: native.Shape_GetParentChain
+Shape_GetAABB :: native.Shape_GetAABB
+Shape_TestPoint :: native.Shape_TestPoint
+DestroyShape :: native.DestroyShape
+Chain_IsValid :: native.Chain_IsValid
+CreateChain :: native.CreateChain
+DestroyChain :: native.DestroyChain
+Chain_GetSegmentCount :: native.Chain_GetSegmentCount
+Chain_GetSegments :: native.Chain_GetSegments
+Joint_IsValid :: native.Joint_IsValid
+DestroyJoint :: native.DestroyJoint
+MakeRot :: native.MakeRot
+MakeAABB :: native.MakeAABB
+MakeProxy :: native.MakeProxy
+DefaultQueryFilter :: native.DefaultQueryFilter
+
+Thor2D_Contact_Event :: native.Thor2D_Contact_Event
+Thor2D_Sensor_Event :: native.Thor2D_Sensor_Event
+Thor2D_Hit_Event :: native.Thor2D_Hit_Event
+Thor2D_Collect_Contact_Events :: native.Thor2D_Collect_Contact_Events
+Thor2D_Collect_Sensor_Events :: native.Thor2D_Collect_Sensor_Events
+Thor2D_Collect_Hit_Events :: native.Thor2D_Collect_Hit_Events
+Thor2D_Create_Box_Shape :: native.Thor2D_Create_Box_Shape
+Thor2D_Create_Capsule_Shape :: native.Thor2D_Create_Capsule_Shape
+Thor2D_Create_Circle_Shape :: native.Thor2D_Create_Circle_Shape
+Thor2D_Create_Segment_Shape :: native.Thor2D_Create_Segment_Shape
+Thor2D_Create_Polygon_Shape :: native.Thor2D_Create_Polygon_Shape
+Thor2D_Create_Chain_Shape :: native.Thor2D_Create_Chain_Shape
+Thor2D_Make_Query_Filter :: native.Thor2D_Make_Query_Filter
+Thor2D_Create_Distance_Joint :: native.Thor2D_Create_Distance_Joint
+Thor2D_Create_Revolute_Joint :: native.Thor2D_Create_Revolute_Joint
+Thor2D_Create_Weld_Joint :: native.Thor2D_Create_Weld_Joint
+Thor2D_Create_Motor_Joint :: native.Thor2D_Create_Motor_Joint
+Thor2D_Create_Mouse_Joint :: native.Thor2D_Create_Mouse_Joint
+Thor2D_Create_Prismatic_Joint :: native.Thor2D_Create_Prismatic_Joint
+Thor2D_Create_Wheel_Joint :: native.Thor2D_Create_Wheel_Joint
+Thor2D_Raycast_Closest :: native.Thor2D_Raycast_Closest
+Thor2D_Rotation_Angle :: native.Thor2D_Rotation_Angle

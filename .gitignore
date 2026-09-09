@@ -1,0 +1,11 @@
+.odin/
+bin/
+build/
+src/thor2d/internal/video/lib/
+.DS_Store
+*.user
+*.log
+*.py[cod]
+__pycache__/
+*.a
+*.o
