@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "project_id": "thor2d.guide_game.v11",
+  "name": "Thor2D Guide Game v0.11",
+  "assets": [],
+  "scenes": [{ "id": "main", "name": "Coin Run", "entities": [] }]
+}

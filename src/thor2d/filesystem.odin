@@ -57,6 +57,14 @@ Destroy_Filesystem :: proc(filesystem: ^Filesystem) {
 			}
 			delete(archive.Entries)
 		}
+		for file in filesystem.open_files {
+			if file != nil && file.native != nil { os.close(file.native) }
+			if file != nil {
+				delete(file.Path)
+				free(file)
+			}
+		}
+		delete(filesystem.open_files)
 		delete(filesystem.archives)
 		delete(filesystem.Identity)
 		delete(filesystem.Source_Directory)
@@ -384,6 +392,7 @@ Unmount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error 
 // after Close_File. Path is an owned clone.
 File :: struct {
 	native: ^os.File,
+	owner: ^Filesystem,
 	writable: bool,
 	Path: string,
 	Mode: File_Open_Mode,
@@ -430,11 +439,13 @@ Open_File :: proc(filesystem: ^Filesystem, relative: string, mode := File_Open_M
 	}
 	file := new(File)
 	file.native = native
+	file.owner = filesystem
 	file.writable = writable
 	// v0.10: remember the LOVE-visible identity. The clone is best-effort: a
 	// failed clone still yields a usable handle with an empty name.
 	file.Path, _ = strings.clone(relative)
 	file.Mode = mode
+	append(&filesystem.open_files, file)
 	return file, .None
 }
 
@@ -483,6 +494,8 @@ Close_File :: proc(file: ^File) -> Error {
 		return .File_Not_Found
 	}
 	file.native = nil
+	// The Filesystem owns the File record so LOVE-visible metadata remains
+	// readable after Close_File. Destroy_Filesystem releases closed records.
 	return .None
 }
 

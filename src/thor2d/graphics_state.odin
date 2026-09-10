@@ -66,8 +66,12 @@ Reset_Graphics_State :: proc(ctx: ^Context) {
 	ctx.draw_color = White
 	ctx.background_color = Black
 	ctx.current_font = Font{}
+	ctx.graphics_transform = Identity_Transform()
+	clear(&ctx.graphics_transform_stack)
 	ctx.line_join = .Miter
 	ctx.line_style = .Smooth
+	ctx.line_width = 1
+	ctx.point_size = 2
 	ctx.color_mask = Default_Color_Mask()
 	ctx.stencil_enabled = false
 	ctx.wireframe = false
@@ -325,10 +329,16 @@ Is_Wireframe :: proc(ctx: ^Context) -> bool {
 // --- Stats / limits / batch ---
 
 Get_Graphics_Stats :: proc(ctx: ^Context) -> Graphics_Stats {
-	if ctx == nil {
+	if ctx == nil || ctx.backend == nil {
 		return Graphics_Stats{}
 	}
-	return Graphics_Stats{}
+	native := backend.Graphics_Stats(ctx.backend)
+	return Graphics_Stats{
+		Draw_Calls = native.Draw_Calls,
+		Texture_Memory = native.Texture_Memory,
+		Canvas_Count = native.Canvas_Count,
+		Mesh_Count = native.Mesh_Count,
+	}
 }
 
 Get_System_Limits :: proc(ctx: ^Context) -> System_Limits {
@@ -372,27 +382,47 @@ Present_Screen :: proc(ctx: ^Context) {
 // --- Transform helpers (LOVE replaceTransform / transformPoint) ---
 
 Replace_Transform :: proc(ctx: ^Context, transform: Transform_2D) {
-	if ctx == nil || ctx.backend == nil {
+	if ctx == nil {
 		return
 	}
-	backend.Reset_Transform(ctx.backend)
-	// Transform_2D is a 2x3-style CPU matrix; approximate through the GPU
-	// stack with translation + rotation + scale decomposition is lossy, so
-	// v0.8 resets then applies translation only and documents the gap.
-	_ = transform
+	ctx.graphics_transform = transform
+	if ctx.backend != nil {
+		backend.Replace_Transform(ctx.backend, Transform_Get_Matrix(transform))
+	}
 }
 
 Transform_Point_Graphics :: proc(ctx: ^Context, point: Vec2) -> Vec2 {
-	_ = ctx
-	return point
+	if ctx == nil {
+		return point
+	}
+	return Transform_Point(ctx.graphics_transform, point)
 }
 
 Inverse_Transform_Point :: proc(ctx: ^Context, point: Vec2) -> Vec2 {
-	_ = ctx
-	return point
+	if ctx == nil {
+		return point
+	}
+	return Transform_Point_Inverse(ctx.graphics_transform, point)
 }
 
-// --- v0.8 primitives (CPU-tessellated over backend lines/circles) ---
+// --- v0.8 primitives (CPU-tessellated over backend triangles/lines) ---
+
+// draw_filled_triangles sends a tessellation through the backend.  Keeping
+// this in the backend means filled primitives use the same affine transform
+// as every other graphics operation and do not approximate an area with
+// outline lines.
+draw_filled_triangles :: proc(ctx: ^Context, points: []Vec2, indices: []u32, color: Color) {
+	if ctx == nil || ctx.backend == nil {
+		return
+	}
+	for i := 0; i+2 < len(indices); i += 3 {
+		i0, i1, i2 := int(indices[i]), int(indices[i+1]), int(indices[i+2])
+		if i0 < 0 || i1 < 0 || i2 < 0 || i0 >= len(points) || i1 >= len(points) || i2 >= len(points) {
+			continue
+		}
+		backend.Draw_Triangle(ctx.backend, points[i0].X, points[i0].Y, points[i1].X, points[i1].Y, points[i2].X, points[i2].Y, color.R, color.G, color.B, color.A)
+	}
+}
 
 Draw_Arc :: proc(ctx: ^Context, center: Vec2, radius: f32, angle_start, angle_end: f32, mode: Draw_Mode, arc_type: Arc_Type = .Pie, segments := 24, color := White) {
 	if ctx == nil || ctx.backend == nil || radius <= 0 || segments < 2 {
@@ -402,22 +432,35 @@ Draw_Arc :: proc(ctx: ^Context, center: Vec2, radius: f32, angle_start, angle_en
 	if steps > 128 {
 		steps = 128
 	}
-	prev := Vec2{center.X + radius*f32(math.cos(angle_start)), center.Y + radius*f32(math.sin(angle_start))}
-	for i := 1; i <= steps; i += 1 {
+	points := make([dynamic]Vec2, steps+2)
+	defer delete(points)
+	points[0] = center
+	for i := 0; i <= steps; i += 1 {
 		t := angle_start + (angle_end-angle_start)*f32(i)/f32(steps)
-		next := Vec2{center.X + radius*f32(math.cos(t)), center.Y + radius*f32(math.sin(t))}
-		if mode == .Fill && (arc_type == .Pie || arc_type == .Closed) {
-			Draw_Line(ctx, center, prev, 1, color)
-			Draw_Line(ctx, prev, next, 1, color)
-			Draw_Line(ctx, next, center, 1, color)
-		} else {
-			Draw_Line(ctx, prev, next, 1, color)
-		}
-		prev = next
+		points[i+1] = Vec2{center.X + radius*f32(math.cos(t)), center.Y + radius*f32(math.sin(t))}
 	}
-	if mode == .Line && arc_type == .Closed {
-		first := Vec2{center.X + radius*f32(math.cos(angle_start)), center.Y + radius*f32(math.sin(angle_start))}
-		Draw_Line(ctx, prev, first, 1, color)
+	if mode == .Fill {
+		// A filled arc is an actual area, not a collection of radial outline
+		// lines.  All LOVE arc types share this tessellated sector geometry;
+		// arc_type controls the outline only.
+		indices := make([dynamic]u32, steps*3)
+		defer delete(indices)
+		for i := 0; i < steps; i += 1 {
+			indices[i*3+0] = 0
+			indices[i*3+1] = u32(i+1)
+			indices[i*3+2] = u32(i+2)
+		}
+		draw_filled_triangles(ctx, points[:], indices[:], color)
+		return
+	}
+	for i := 1; i < len(points)-1; i += 1 {
+		Draw_Line(ctx, points[i], points[i+1], ctx.line_width, color)
+	}
+	if arc_type == .Closed {
+		Draw_Line(ctx, points[len(points)-1], points[1], ctx.line_width, color)
+	} else if arc_type == .Pie {
+		Draw_Line(ctx, center, points[1], ctx.line_width, color)
+		Draw_Line(ctx, center, points[len(points)-1], ctx.line_width, color)
 	}
 }
 
@@ -429,18 +472,29 @@ Draw_Ellipse :: proc(ctx: ^Context, center: Vec2, radius_x, radius_y: f32, mode:
 	if steps > 128 {
 		steps = 128
 	}
-	prev := Vec2{center.X + radius_x, center.Y}
-	for i := 1; i <= steps; i += 1 {
+	points := make([dynamic]Vec2, steps)
+	defer delete(points)
+	for i := 0; i < steps; i += 1 {
 		a := 2*f32(math.PI)*f32(i)/f32(steps)
-		next := Vec2{center.X + radius_x*f32(math.cos(a)), center.Y + radius_y*f32(math.sin(a))}
-		if mode == .Fill {
-			Draw_Line(ctx, center, prev, 1, color)
-			Draw_Line(ctx, prev, next, 1, color)
-			Draw_Line(ctx, next, center, 1, color)
-		} else {
-			Draw_Line(ctx, prev, next, 1, color)
+		points[i] = Vec2{center.X + radius_x*f32(math.cos(a)), center.Y + radius_y*f32(math.sin(a))}
+	}
+	if mode == .Fill {
+		fan_points := make([dynamic]Vec2, steps+1)
+		defer delete(fan_points)
+		fan_points[0] = center
+		copy(fan_points[1:], points[:])
+		indices := make([dynamic]u32, steps*3)
+		defer delete(indices)
+		for i := 0; i < steps; i += 1 {
+			indices[i*3+0] = 0
+			indices[i*3+1] = u32(i+1)
+			indices[i*3+2] = u32((i+1)%steps+1)
 		}
-		prev = next
+		draw_filled_triangles(ctx, fan_points[:], indices[:], color)
+		return
+	}
+	for i := 0; i < steps; i += 1 {
+		Draw_Line(ctx, points[i], points[(i+1)%steps], ctx.line_width, color)
 	}
 }
 
@@ -450,7 +504,7 @@ Draw_Polygon :: proc(ctx: ^Context, points: []Vec2, mode: Draw_Mode, color := Wh
 	}
 	if mode == .Line {
 		for i in 0..<len(points) {
-			Draw_Line(ctx, points[i], points[(i+1)%len(points)], 1, color)
+			Draw_Line(ctx, points[i], points[(i+1)%len(points)], ctx.line_width, color)
 		}
 		return
 	}
@@ -459,14 +513,7 @@ Draw_Polygon :: proc(ctx: ^Context, points: []Vec2, mode: Draw_Mode, color := Wh
 		return
 	}
 	defer delete(indices)
-	for i := 0; i+2 < len(indices); i += 3 {
-		a := points[indices[i]]
-		b := points[indices[i+1]]
-		c := points[indices[i+2]]
-		Draw_Line(ctx, a, b, 1, color)
-		Draw_Line(ctx, b, c, 1, color)
-		Draw_Line(ctx, c, a, 1, color)
-	}
+	draw_filled_triangles(ctx, points, indices[:], color)
 }
 
 Draw_Points :: proc(ctx: ^Context, points: []Vec2, color := White) {

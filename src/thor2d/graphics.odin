@@ -541,23 +541,29 @@ Take_Screenshot :: proc(ctx: ^Context, path: string) -> Error {
 }
 
 Set_Line_Width :: proc(ctx: ^Context, width: f32) -> Error {
-	if ctx == nil || ctx.backend == nil {
-		return .Backend_Initialization_Failed
-	}
-	if !backend.Set_Line_Width(ctx.backend, width) {
-		return .Invalid_Config
-	}
+	if ctx == nil || width <= 0 { return .Invalid_Config }
+	ctx.line_width = width
+	if ctx.backend != nil && !backend.Set_Line_Width(ctx.backend, width) { return .Invalid_Config }
 	return .None
 }
 
+Get_Line_Width :: proc(ctx: ^Context) -> f32 {
+	if ctx == nil { return 0 }
+	if ctx.backend != nil { return backend.Get_Line_Width(ctx.backend) }
+	return ctx.line_width
+}
+
 Set_Point_Size :: proc(ctx: ^Context, size: f32) -> Error {
-	if ctx == nil || ctx.backend == nil {
-		return .Backend_Initialization_Failed
-	}
-	if !backend.Set_Point_Size(ctx.backend, size) {
-		return .Invalid_Config
-	}
+	if ctx == nil || size <= 0 { return .Invalid_Config }
+	ctx.point_size = size
+	if ctx.backend != nil && !backend.Set_Point_Size(ctx.backend, size) { return .Invalid_Config }
 	return .None
+}
+
+Get_Point_Size :: proc(ctx: ^Context) -> f32 {
+	if ctx == nil { return 0 }
+	if ctx.backend != nil { return backend.Get_Point_Size(ctx.backend) }
+	return ctx.point_size
 }
 
 Get_Renderer_Info :: proc(ctx: ^Context) -> Renderer_Info {

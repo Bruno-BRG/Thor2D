@@ -15,7 +15,7 @@ is missing from the wiki.
 | --- | --- | --- |
 | `love.load`, `love.update`, `love.draw` | Implemented | `Game` callbacks, fixed-step lifecycle, shutdown and headless execution |
 | `love.event` | Implemented | Typed FIFO queue, callback, polling, wait, keyboard/text, mouse, window, gamepad, joystick, touch and file-drop events |
-| `love.graphics` | Implemented full 2D (v0.10) | Primitives plus v0.8 color/background/font state, dimensions, pixel helpers, default filter, line join/style, persistent blend mode, tracked scissor, Print/Printf, Arc/Ellipse/Polygon/Points, textured transform draw, CPU instanced fallback; stencil/color-mask/depth/cull/wireframe return `.Unsupported` explicitly; v0.10 adds full ParticleSystem tuning, font metrics, Text append, quad/batch/canvas/shader completion, mesh accessors, CPU texture arrays, state getters, canvas readback |
+| `love.graphics` | Implemented full 2D (v0.11 correctness wave) | Primitives plus color/background/font state, dimensions, pixel helpers, default filter, line join/style, persistent blend mode, tracked scissor, Print/Printf, solid tessellated Arc/Ellipse/Polygon fills, Points, affine textured drawing, transform stack and raw/sheared transform application, line/point size getters, per-frame draw stats and live resource metrics; stencil/color-mask/depth/cull/wireframe return `.Unsupported` explicitly; v0.10 adds ParticleSystem tuning, font metrics, Text append, quad/batch/canvas/shader completion, mesh accessors, CPU texture arrays and canvas readback |
 | `love.image` | Implemented RGBA8 subset | CPU `Image_Data`, pixel access, texture creation, PNG export, plus v0.9 `Paste_Image`, `Map_Pixel`, in-memory `Encode_Image_PNG`, compressed sniffing + load where the GPU accepts it |
 | `love.font` | Implemented core + global | File/memory fonts, measurement, drawing, reusable text objects, `Set_Font/Get_Font`, plus v0.9 `Image_Font` (LOVE image fonts, arbitrary glyph order) |
 | `love.audio`, `love.sound` | Implemented dedicated desktop subset | Private miniaudio engine, enumerated/selectable playback devices, static/stream/queue sources, generated PCM, incremental decoder, SoundData clone/resampling/channel conversion, seek/tell/loop, volume/pitch/pan, spatial position/velocity/direction/cone/distance/doppler, listener, buses, volume/delay/filter/room-delay effects and microphone capture ring buffer, plus v0.8 master/position/velocity/distance-model getters, plus v0.9 LOVE effect-name query (echo/reverb wired, 6 others unsupported) |
@@ -62,7 +62,10 @@ public implementation and unit coverage exist. A graphical or hardware feature
 that is not portable is returned as `Error.Unsupported` or
 `Error.Capability_Unavailable`; Thor2D never returns a fake resource handle.
 
-The v0.8 adapter intentionally keeps a few boundaries explicit: Mesh modes
+The v0.11 adapter keeps a few boundaries explicit: graphics statistics are
+Raylib-side counters plus an RGBA8 texture-memory estimate (not driver VRAM
+telemetry), and arbitrary affine transforms use exact triangle tessellation
+for the filled primitive path. Mesh modes
 other than indexed triangles use the tested CPU fallback, `Image_Data` is
 currently RGBA8-only, FFmpeg video does not yet mix its own audio track,
 stencil/color-mask/depth/cull/wireframe and GPU instancing return

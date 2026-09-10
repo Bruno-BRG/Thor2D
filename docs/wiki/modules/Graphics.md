@@ -29,23 +29,24 @@ deterministic. `Color` channels are `u8` (0–255), unlike LOVE 0–1 floats.
 - `From_Pixels(ctx, v)` / `To_Pixels(ctx, v)` — LOVE `fromPixels/toPixels` (DPI scale; identity at 1x).
 - `Set_Default_Filter(ctx, min, mag)` / `Get_Default_Filter(ctx)` — LOVE `setDefaultFilter`.
 - `Set_Line_Join(ctx, j)` / `Get_Line_Join(ctx)`, `Set_Line_Style(ctx, s)` / `Get_Line_Style(ctx)` — LOVE line join/style (stored; backend draws smooth lines).
+- `Set_Line_Width/Get_Line_Width(ctx, width)` and `Set_Point_Size/Get_Point_Size(ctx, size)` — persistent line/point sizes; defaults are 1 and 2, and values are retained in headless mode.
 - `Set_Blend_Mode(ctx, mode)` / `Get_Blend_Mode(ctx)` / `Reset_Blend_Mode(ctx)` — LOVE `setBlendMode/getBlendMode`. Legacy `Begin_Blend/End_Blend` remain as scoped compat wrappers.
 - `Set_Scissor(ctx, rect)` / `Get_Scissor(ctx)` / `Intersect_Scissor(ctx, rect)` / `Reset_Scissor(ctx)` — LOVE `setScissor/getScissor/intersectScissor`. Legacy `Begin_Scissor/End_Scissor` bypass tracking; prefer `Set_Scissor`.
 - `Set_Color_Mask(ctx, mask)` → `.Unsupported` (stored + returned by `Get_Color_Mask`); LOVE `setColorMask`.
 - `Set_Stencil_Test(ctx, enabled)` / `Clear_Stencil(ctx)` → `.Unsupported`; LOVE stencil.
 - `Set_Depth_Mode`, `Set_Cull_Mode` / `Get_Cull_Mode`, `Set_Wireframe` / `Is_Wireframe` — 2D desktop; non-default modes return `.Unsupported`.
-- `Get_Graphics_Stats(ctx)` / `Get_System_Limits(ctx)` / `Is_Graphics_Supported(ctx, feature)` — LOVE `getStats/getSystemLimits/getSupported`.
+- `Get_Graphics_Stats(ctx)` / `Get_System_Limits(ctx)` / `Is_Graphics_Supported(ctx, feature)` — LOVE `getStats/getSystemLimits/getSupported`. Raylib reports per-frame draw-call count, live canvas/mesh counts, and estimated RGBA8 texture memory; headless returns zero metrics.
 - `Flush_Batch(ctx)`, `Present_Screen(ctx)` — no-ops for port compatibility (backend draws immediately; `End_Frame` presents).
-- `Replace_Transform(ctx, t)`, `Transform_Point_Graphics`, `Inverse_Transform_Point` — LOVE `replaceTransform/transformPoint/inverseTransformPoint` (v0.8: transform stack via `Push/Pop/Translate/Rotate/Scale` stays canonical).
+- `Replace_Transform(ctx, t)`, `Transform_Point_Graphics`, `Inverse_Transform_Point` — LOVE `replaceTransform/transformPoint/inverseTransformPoint`; affine matrices, including shear, are applied exactly. `Push_Transform/Pop_Transform/Translate/Rotate/Scale/Reset_Transform` update both the public state and backend; all stack operations are also safe in headless mode.
 
 ### Drawing
 
 - `Draw_Rect(ctx, rect, color)` / `Draw_Rect_Outline` — LOVE `rectangle`.
 - `Draw_Circle(ctx, center, radius, color)` — LOVE `circle` (filled).
 - `Draw_Line(ctx, a, b, thickness, color)` — LOVE `line`.
-- `Draw_Arc(ctx, center, radius, a1, a2, mode, type, segments, color)` — LOVE `arc` (CPU-tessellated, ≤128 segments).
-- `Draw_Ellipse(ctx, center, rx, ry, mode, segments, color)` — LOVE `ellipse`.
-- `Draw_Polygon(ctx, points, mode, color)` — LOVE `polygon` (fill via ear-clip `Triangulate_Polygon`).
+- `Draw_Arc(ctx, center, radius, a1, a2, mode, type, segments, color)` — LOVE `arc` (CPU-tessellated, ≤128 segments; fill emits solid triangles, while the type controls the outline).
+- `Draw_Ellipse(ctx, center, rx, ry, mode, segments, color)` — LOVE `ellipse` (fill emits a solid triangle fan; line emits the tessellated outline).
+- `Draw_Polygon(ctx, points, mode, color)` — LOVE `polygon` (fill uses the ear-clip `Triangulate_Polygon` result as solid backend triangles).
 - `Draw_Points(ctx, points, color)` — LOVE `points`.
 - `Draw_Text(ctx, text, pos, size, color)`, `Print(ctx, text, pos, color)`, `Printf(ctx, text, rect, align, color)` — LOVE `print/printf`.
 - `Load_Texture(ctx, path)` / `Generate_Texture` / `Draw_Texture(ctx, ...)` / `Draw_Texture_Ex/Pro/Quad/Transform` — LOVE `newImage/draw`.

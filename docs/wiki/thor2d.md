@@ -9,7 +9,7 @@ is invoked by `Run`/`Run_Headless` when `Create` fails — `ctx` is nil there
 because no `Context` was created, so handlers must accept nil. `Game.On_Low_Memory(ctx)`
 (mirrors `love.lowmemory`) is never invoked on desktop (no OS signal;
 reserved as mobile-future). Version: `THOR2D_VERSION_MAJOR/MINOR/PATCH`
-(`0/9/0`), `Thor2D_Version()`, `Is_Version_Compatible(major, minor)`
+(`0/11/0`), `Thor2D_Version()`, `Is_Version_Compatible(major, minor)`
 (mirrors `love.getVersion` / `love.isVersionCompatible`).
 
 See [Api_Reference](Api_Reference.md) and [Porting_From_LOVE](guides/Porting_From_LOVE.md).

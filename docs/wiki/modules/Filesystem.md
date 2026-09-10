@@ -24,7 +24,7 @@ Sandboxed source/save/archive layers. Lookup order: save dir → project dir →
 - `Mount_Archive/Mount_Archive_File/Unmount_Archive` — LOVE `mount/unmount` (stored/deflate ZIP only).
 - `Open_File/Read_File_Handle/Write_File_Handle/Seek_File/Tell_File/Close_File` — LOVE `newFile` + `File:*` (physical files only, not ZIP entries).
 - `File_Is_Open/File_Is_EOF/File_Size_Of` — LOVE `File:isOpen/isEOF/getSize` on an open handle (closed handles: `Is_Open` false, `Is_EOF` true, `Size_Of` → `.Invalid_Handle`).
-- `File_Name/File_Mode` — LOVE `File:getFilename/getMode` (stored at `Open_File`, valid after `Close_File`; owned by the handle, do not delete).
+- `File_Name/File_Mode` — LOVE `File:getFilename/getMode` (stored at `Open_File`, valid after `Close_File`; the owning `Filesystem` releases file records during `Destroy_Filesystem`).
 - `File_Read_Line(file)` — one `\n`-terminated line (`\r` stripped), owned string; EOF-before-bytes → `.File_Not_Found` (LOVE line-iteration single step; `File_Lines` still covers whole-file reads).
 - `File_Flush(file)` — LOVE `File:flush`; honest no-op `.None` (writes are unbuffered `os.write`, nothing to flush).
 - `File_Set_Buffer_Mode(file, mode)` / `File_Buffer_Mode_Of(file)` — LOVE `File:setBuffer/getBuffer` with `File_Buffer_Mode{None, Line, Full}`; only `.None` is honored, `.Line`/`.Full` → `.Unsupported` (no buffering to configure).

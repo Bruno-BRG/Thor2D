@@ -1,7 +1,7 @@
 # Porting from LÖVE to Thor2D
 
 Side-by-side reference for LOVE developers. Left is LOVE Lua, right is Thor2D
-Odin (v0.8). All Thor2D snippets assume `import thor2d "thor2d"` and a
+Odin (v0.11). All Thor2D snippets assume `import thor2d "thor2d"` and a
 `ctx: ^thor2d.Context`.
 
 ## Lifecycle
@@ -25,24 +25,29 @@ thor2d.Run(thor2d.Default_Config(), thor2d.Game{Load = load, Update = update, Dr
 
 ## Graphics state
 
-| LOVE | Thor2D v0.8 |
+| LOVE | Thor2D v0.11 |
 | --- | --- |
 | `love.graphics.setColor(r,g,b)` | `thor2d.Set_Color(ctx, thor2d.RGB(r,g,b))` |
 | `love.graphics.getColor()` | `thor2d.Get_Color(ctx)` |
 | `love.graphics.setBackgroundColor(...)` | `thor2d.Set_Background_Color(ctx, ...)` + `thor2d.Clear_Screen(ctx)` |
 | `love.graphics.getDimensions()` | `thor2d.Get_Dimensions(ctx)` |
+| `love.graphics.setLineWidth(w)` / `getLineWidth()` | `thor2d.Set_Line_Width(ctx, w)` / `Get_Line_Width(ctx)` |
+| `love.graphics.setPointSize(s)` / `getPointSize()` | `thor2d.Set_Point_Size(ctx, s)` / `Get_Point_Size(ctx)` |
 | `love.graphics.setBlendMode("alpha")` | `thor2d.Set_Blend_Mode(ctx, .Alpha)` |
 | `love.graphics.setScissor(x,y,w,h)` | `thor2d.Set_Scissor(ctx, rect)` / `thor2d.Reset_Scissor(ctx)` |
 | `love.graphics.print(s, x, y)` | `thor2d.Print(ctx, s, pos)` |
 | `love.graphics.printf(s, x, y, w)` | `thor2d.Printf(ctx, s, rect, .Left)` |
 | `love.graphics.arc("fill", x,y,r,a1,a2)` | `thor2d.Draw_Arc(ctx, pos, r, a1, a2, .Fill)` |
 | `love.graphics.ellipse("line", ...)` | `thor2d.Draw_Ellipse(ctx, center, rx, ry, .Line)` |
-| `love.graphics.polygon("fill", ...)` | `thor2d.Draw_Polygon(ctx, points, .Fill)` |
+| `love.graphics.polygon("fill", ...)` | `thor2d.Draw_Polygon(ctx, points, .Fill)` (solid triangulated fill) |
 | `love.graphics.points(...)` | `thor2d.Draw_Points(ctx, points)` |
 | `love.graphics.draw(img, x,y,r,sx,sy,ox,oy)` | `thor2d.Draw_Texture_Transform(ctx, tex, pos, r, scale, origin, shear)` |
 
-Fill polygons use the built-in ear-clipping triangulator; arcs/ellipses are
-CPU-tessellated polylines (segments capped at 128).
+Fill polygons use the built-in ear-clipping triangulator and emit solid
+triangles; filled arcs and ellipses likewise emit solid tessellated areas.
+Arc/ellipse segments are capped at 128. Graphics transforms are affine and
+preserve shear through `Replace_Transform`; the transform stack is mirrored in
+headless state as well as the Raylib adapter.
 
 ## Window / system
 

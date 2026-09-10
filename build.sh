@@ -25,6 +25,10 @@ case "${1:-help}" in
         mkdir -p "${THOR2D_ROOT}/bin"
         exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/pong" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-pong"
         ;;
+    guide-game)
+        mkdir -p "${THOR2D_ROOT}/bin"
+        exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/guide_game_v11" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-guide-game-v11"
+        ;;
     showcase)
         mkdir -p "${THOR2D_ROOT}/bin"
         exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/showcase_v02" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-showcase-v02"
@@ -185,7 +189,7 @@ case "${1:-help}" in
         ;;
     check)
         "${THOR2D_ODIN}" check "${THOR2D_ROOT}/src/thor2d" "${THOR2D_COLLECTION}" -no-entry-point -vet
-        for example in hello pong showcase_v02 showcase_v04 platformer_v03 physics_lab project_scene headless_simulation_v05 capabilities_v05 audio_lab_v05 video_player_v05 physics_complete_v05 package_runner_v05 audio_lab_v07 audio_capture_v07 video_player_v07 multimedia_showcase_v07 async_assets_v07 love_port_v08 net_echo_v09 particles_v10; do
+        for example in hello pong showcase_v02 showcase_v04 platformer_v03 physics_lab project_scene headless_simulation_v05 capabilities_v05 audio_lab_v05 video_player_v05 physics_complete_v05 package_runner_v05 audio_lab_v07 audio_capture_v07 video_player_v07 multimedia_showcase_v07 async_assets_v07 love_port_v08 net_echo_v09 particles_v10 guide_game_v11; do
             "${THOR2D_ODIN}" check "${THOR2D_ROOT}/examples/${example}" "${THOR2D_COLLECTION}" -vet
         done
         "${THOR2D_ODIN}" check "${THOR2D_ROOT}/tools/editor_v09" "${THOR2D_COLLECTION}" -vet
@@ -218,6 +222,7 @@ Thor2D development commands:
   ./build.sh deps    Install/check Odin and build the pinned Box2D dependency
   ./build.sh hello   Run the hello example
   ./build.sh pong    Run the Pong example
+  ./build.sh guide-game Run the step-by-step guide game
   ./build.sh showcase Run the v0.2 graphics showcase
   ./build.sh showcase-v04 Run the v0.4 API showcase
   ./build.sh project-run [dir] Run a project example

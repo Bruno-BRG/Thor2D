@@ -50,6 +50,7 @@ main :: proc() {
 
 ## Guides
 
+- [First_Game](guides/First_Game.md) — build a small playable Coin Run game step by step.
 - [Getting_Started](guides/Getting_Started.md) — install, run, pack.
 - [Porting_From_LOVE](guides/Porting_From_LOVE.md) — side-by-side LOVE → Thor2D table.
 - [Capabilities](guides/Capabilities.md) — `Query_Capability` rules, headless, `.thor` packages.

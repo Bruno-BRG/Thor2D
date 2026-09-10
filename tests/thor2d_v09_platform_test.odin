@@ -99,13 +99,13 @@ test_v09_cursor_headless_error_path :: proc(t: ^testing.T) {
 @(test)
 test_v09_version_consts_and_compat :: proc(t: ^testing.T) {
 	testing.expect(t, thor2d.THOR2D_VERSION_MAJOR == 0)
-	testing.expect(t, thor2d.THOR2D_VERSION_MINOR == 10)
+	testing.expect(t, thor2d.THOR2D_VERSION_MINOR == 11)
 	testing.expect(t, thor2d.THOR2D_VERSION_PATCH == 0)
 	major, minor, patch := thor2d.Thor2D_Version()
-	testing.expect(t, major == 0 && minor == 10 && patch == 0)
-	testing.expect(t, thor2d.Is_Version_Compatible(0, 10))
+	testing.expect(t, major == 0 && minor == 11 && patch == 0)
+	testing.expect(t, thor2d.Is_Version_Compatible(0, 11))
 	testing.expect(t, thor2d.Is_Version_Compatible(0, 9))
-	testing.expect(t, !thor2d.Is_Version_Compatible(0, 11))
+	testing.expect(t, !thor2d.Is_Version_Compatible(0, 12))
 	testing.expect(t, !thor2d.Is_Version_Compatible(1, 0))
 	testing.expect(t, !thor2d.Is_Version_Compatible(-1, 0))
 }

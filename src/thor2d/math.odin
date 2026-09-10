@@ -608,13 +608,15 @@ Bezier_Segment :: proc(curve: ^Bezier_Curve, t0, t1: f32) -> (Bezier_Curve, Erro
 	if end <= start {
 		return Bezier_Curve{}, .Invalid_Data
 	}
-	_, right := bezier_split(curve.Control_Points[:], start)
+	left_unused, right := bezier_split(curve.Control_Points[:], start)
+	defer delete(left_unused)
 	defer delete(right)
 	remapped := (end-start)/(1-start) if start < 1 else 1
-	left, _ := bezier_split(right[:], Clamp(remapped, 0, 1))
-	defer delete(left)
-	segment := Bezier_Curve{Control_Points = make([dynamic]Vec2, len(left))}
-	copy(segment.Control_Points[:], left[:])
+	segment_points, right_unused := bezier_split(right[:], Clamp(remapped, 0, 1))
+	defer delete(right_unused)
+	segment := Bezier_Curve{Control_Points = make([dynamic]Vec2, len(segment_points))}
+	copy(segment.Control_Points[:], segment_points[:])
+	delete(segment_points)
 	return segment, .None
 }
 

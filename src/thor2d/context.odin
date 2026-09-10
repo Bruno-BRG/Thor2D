@@ -50,7 +50,10 @@ Create :: proc(config: Config) -> (Context, Error) {
 			video_backend = video.Create(),
 			draw_color = White,
 			background_color = Black,
+			graphics_transform = Identity_Transform(),
 			blend_mode = .Alpha,
+			line_width = 1,
+			point_size = 2,
 			color_mask = Color_Mask{R = true, G = true, B = true, A = true},
 			default_filter_min = .Linear,
 			default_filter_mag = .Linear,
@@ -82,7 +85,10 @@ Create :: proc(config: Config) -> (Context, Error) {
 		filesystem = filesystem,
 		draw_color = White,
 		background_color = Black,
+		graphics_transform = Identity_Transform(),
 		blend_mode = .Alpha,
+		line_width = 1,
+		point_size = 2,
 		color_mask = Color_Mask{R = true, G = true, B = true, A = true},
 		default_filter_min = .Linear,
 		default_filter_mag = .Linear,
@@ -106,6 +112,7 @@ Destroy :: proc(ctx: ^Context) {
 		delete(event.Editing)
 	}
 	delete(ctx.events)
+	delete(ctx.graphics_transform_stack)
 	Destroy_All_Physics(ctx)
 	if ctx.audio_backend != nil {
 		audio.Destroy(ctx.audio_backend)

@@ -181,7 +181,7 @@ build details are in [docs/dependencies.md](docs/dependencies.md).
 
 ## Current boundaries
 
-The v0.8 focus is LOVE-parity depth (graphics state, window/filesystem/input
+The v0.11 focus is LOVE-parity depth (graphics state, window/filesystem/input
 getters, meter, audio/math/data getters) plus the wiki. Some capabilities
 remain intentionally explicit:
 

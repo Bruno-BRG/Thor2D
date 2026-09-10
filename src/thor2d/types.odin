@@ -817,6 +817,11 @@ Context :: struct {
 	// v0.8 LOVE-parity graphics state (mirrors love.graphics state).
 	draw_color: Color,
 	background_color: Color,
+	// The active graphics transform is kept on Context as well as in the
+	// backend.  This makes transformPoint/inverseTransformPoint truthful in
+	// headless runs and keeps the public state authoritative.
+	graphics_transform: Transform_2D,
+	graphics_transform_stack: [dynamic]Transform_2D,
 	current_font: Font,
 	blend_mode: Blend_Mode,
 	scissor: Rect,
@@ -824,6 +829,8 @@ Context :: struct {
 	color_mask: Color_Mask,
 	line_join: Line_Join,
 	line_style: Line_Style,
+	line_width: f32,
+	point_size: f32,
 	default_filter_min: Texture_Filter,
 	default_filter_mag: Texture_Filter,
 	stencil_enabled: bool,
@@ -892,6 +899,7 @@ Filesystem :: struct {
 	Source_Directory: string,
 	Save_Directory: string,
 	archives: [dynamic]Filesystem_Archive,
+	open_files: [dynamic]^File,
 	// v0.10 LOVE symlink intent flag (mirrors love.filesystem symlink policy
 	// queries). The backend follows OS symlinks on reads; this flag records
 	// game intent (default true) and never weakens the sandbox: paths
@@ -987,9 +995,9 @@ Cursor_Invalid :: proc(cursor: Cursor) -> bool {
 	return cursor.handle == 0
 }
 
-// v0.9 framework version (mirrors love.getVersion). Patch is 0 for v0.9.0.
+// v0.11 framework version (mirrors love.getVersion). Patch is 0 for v0.11.0.
 THOR2D_VERSION_MAJOR :: 0
-THOR2D_VERSION_MINOR :: 10
+THOR2D_VERSION_MINOR :: 11
 THOR2D_VERSION_PATCH :: 0
 
 // v0.9 CPU-side image font (mirrors love.graphics.newImageFont).

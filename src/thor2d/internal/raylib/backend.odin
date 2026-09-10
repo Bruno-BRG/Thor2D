@@ -225,6 +225,10 @@ Raw_Event :: struct {
 }
 
 Transform_State :: struct {
+	// Column-vector affine matrix in raylib's row-major representation.  The
+	// matrix is authoritative so Replace_Transform preserves shear and other
+	// affine combinations instead of decomposing them back to lossy TRS.
+	matrix_value: rl.Matrix,
 	translation: rl.Vector2,
 	scale: rl.Vector2,
 	rotation: f32,
@@ -266,6 +270,9 @@ Backend :: struct {
 	frame_time_cursor, frame_time_count: int,
 	gpu_mesh_supported: bool,
 	point_size: f32,
+	line_width: f32,
+	draw_calls: int,
+	canvas_switches: int,
 	// v0.9 requested MSAA samples (window creation hint only).
 	msaa_samples: int,
 	// v0.10 default-font (handle 0) line-height multiplier. Named fonts store
@@ -278,8 +285,9 @@ Create :: proc(title: string, width, height, target_fps: int, resizable, vsync: 
 	b := new(Backend)
 	b.next_handle = 1
 	b.next_asset_id = 1
-	b.transform = Transform_State{scale = rl.Vector2{1, 1}}
+	b.transform = identity_transform()
 	b.point_size = 2
+	b.line_width = 1
 	b.msaa_samples = msaa_samples if msaa_samples > 0 else 0
 	b.default_font_line_height = 1
 
@@ -577,8 +585,10 @@ Begin_Frame :: proc(state: rawptr) {
 			rl.EndMode2D()
 			b.camera_active = false
 		}
-		b.transform = Transform_State{scale = rl.Vector2{1, 1}}
+		b.transform = identity_transform()
 		clear(&b.transforms)
+		b.draw_calls = 0
+		b.canvas_switches = 0
 		rl.BeginDrawing()
 	}
 }
@@ -964,17 +974,14 @@ Unload_Canvas :: proc(state: rawptr, handle: u64) {
 }
 
 Set_Canvas :: proc(state: rawptr, handle: u64) -> bool {
-	if state == nil {
-		return false
-	}
+	if state == nil { return false }
 	b := cast(^Backend)state
 	entry, ok := find_canvas(b, handle)
-	if !ok || b.canvas_active {
-		return false
-	}
+	if !ok || b.canvas_active { return false }
 	rl.BeginTextureMode(entry.value)
 	b.canvas_active = true
 	b.canvas_handle = handle
+	b.canvas_switches += 1
 	return true
 }
 
@@ -995,6 +1002,7 @@ Draw_Canvas :: proc(state: rawptr, handle: u64, x, y, scale_x, scale_y: f32, r, 
 		return
 	}
 	backend := cast(^Backend)state
+	backend.draw_calls += 1
 	entry, ok := find_canvas(backend, handle)
 	if !ok {
 		return
@@ -1222,6 +1230,27 @@ Set_Shader_Color :: proc(state: rawptr, handle: u64, name: string, r, g, b, a: u
 	}
 }
 
+identity_transform :: proc() -> Transform_State {
+	return Transform_State{matrix_value = rl.Matrix{
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1,
+	}, scale = rl.Vector2{1, 1}}
+}
+
+transform_from_matrix :: proc(m: rl.Matrix) -> Transform_State {
+	sx := f32(math.sqrt(f64(m[0,0]*m[0,0] + m[1,0]*m[1,0])))
+	sy := f32(math.sqrt(f64(m[0,1]*m[0,1] + m[1,1]*m[1,1])))
+	angle := f32(math.atan2(f64(m[1,0]), f64(m[0,0])))*180/f32(math.PI) if sx > 0.0000001 else 0
+	return Transform_State{
+		matrix_value = m,
+		translation = rl.Vector2{m[0, 3], m[1, 3]},
+		scale = rl.Vector2{sx, sy},
+		rotation = angle,
+	}
+}
+
 Push_Transform :: proc(state: rawptr) {
 	if state != nil {
 		b := cast(^Backend)state
@@ -1230,66 +1259,99 @@ Push_Transform :: proc(state: rawptr) {
 }
 
 Pop_Transform :: proc(state: rawptr) {
-	if state == nil {
-		return
-	}
+	if state == nil { return }
 	b := cast(^Backend)state
-	if len(b.transforms) == 0 {
-		return
-	}
-	last := len(b.transforms) - 1
+	if len(b.transforms) == 0 { return }
+	last := len(b.transforms)-1
 	b.transform = b.transforms[last]
-	unordered_remove(&b.transforms, last)
+	pop(&b.transforms)
 }
 
 Translate :: proc(state: rawptr, x, y: f32) {
 	if state != nil {
 		b := cast(^Backend)state
-		b.transform.translation.x += x
-		b.transform.translation.y += y
+		b.transform = transform_from_matrix(b.transform.matrix_value * rl.Matrix{
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		})
 	}
 }
 
 Rotate :: proc(state: rawptr, angle: f32) {
 	if state != nil {
 		b := cast(^Backend)state
-		b.transform.rotation += angle
+		r := angle*f32(math.PI)/180
+		b.transform = transform_from_matrix(b.transform.matrix_value * rl.Matrix{
+			f32(math.cos(r)), -f32(math.sin(r)), 0, 0,
+			f32(math.sin(r)), f32(math.cos(r)), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		})
 	}
 }
 
 Scale :: proc(state: rawptr, x, y: f32) {
 	if state != nil {
 		b := cast(^Backend)state
-		b.transform.scale.x *= x
-		b.transform.scale.y *= y
+		b.transform = transform_from_matrix(b.transform.matrix_value * rl.Matrix{
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		})
 	}
 }
 
 Reset_Transform :: proc(state: rawptr) {
 	if state != nil {
 		b := cast(^Backend)state
-		b.transform = Transform_State{scale = rl.Vector2{1, 1}}
+		b.transform = identity_transform()
 	}
+}
+
+Replace_Transform :: proc(state: rawptr, value: rl.Matrix) {
+	if state != nil {
+		b := cast(^Backend)state
+		b.transform = transform_from_matrix(value)
+	}
+}
+
+Transform_Point :: proc(state: rawptr, x, y: f32) -> (out_x, out_y: f32) {
+	if state == nil { return x, y }
+	p := transform_point((cast(^Backend)state).transform, rl.Vector2{x, y})
+	return p.x, p.y
+}
+
+Inverse_Transform_Point :: proc(state: rawptr, x, y: f32) -> (out_x, out_y: f32) {
+	if state == nil { return x, y }
+	m := (cast(^Backend)state).transform.matrix_value
+	a, b, c, d := m[0,0], m[0,1], m[1,0], m[1,1]
+	det := a*d-b*c
+	if math.abs(det) < 0.00000001 { return x, y }
+	dx, dy := x-m[0,3], y-m[1,3]
+	return (d*dx-b*dy)/det, (a*dy-c*dx)/det
 }
 
 transform_point :: proc(transform: Transform_State, point: rl.Vector2) -> rl.Vector2 {
-	x := point.x * transform.scale.x
-	y := point.y * transform.scale.y
-	radians := transform.rotation * f32(math.PI) / 180
-	cosine := math.cos(radians)
-	sine := math.sin(radians)
-	return rl.Vector2{
-		x * cosine - y * sine + transform.translation.x,
-		x * sine + y * cosine + transform.translation.y,
-	}
+	m := transform.matrix_value
+	return rl.Vector2{m[0,0]*point.x+m[0,1]*point.y+m[0,3], m[1,0]*point.x+m[1,1]*point.y+m[1,3]}
 }
 
 transform_size :: proc(transform: Transform_State, size: rl.Vector2) -> rl.Vector2 {
-	return rl.Vector2{size.x * transform.scale.x, size.y * transform.scale.y}
+	// Retained for rectangle APIs. The absolute axis scale is conservative;
+	// arbitrary affine shapes use Draw_Triangles and are exact.
+	m := transform.matrix_value
+	return rl.Vector2{
+		f32(math.sqrt(f64(m[0,0]*m[0,0]+m[1,0]*m[1,0])))*size.x,
+		f32(math.sqrt(f64(m[0,1]*m[0,1]+m[1,1]*m[1,1])))*size.y,
+	}
 }
 
 transform_scalar :: proc(transform: Transform_State, value: f32) -> f32 {
-	return value * (math.abs(transform.scale.x) + math.abs(transform.scale.y)) * 0.5
+	m := transform.matrix_value
+	return value * (f32(math.sqrt(f64(m[0,0]*m[0,0]+m[1,0]*m[1,0]))) + f32(math.sqrt(f64(m[0,1]*m[0,1]+m[1,1]*m[1,1])))) * 0.5
 }
 
 Camera_World_To_Screen :: proc(state: rawptr, world_x, world_y, target_x, target_y, offset_x, offset_y, rotation, zoom: f32) -> (x, y: f32) {
@@ -1347,6 +1409,7 @@ Clear :: proc(state: rawptr, r, g, b, a: u8) {
 Draw_Rect :: proc(state: rawptr, x, y, w, h: f32, r, g, b, a: u8) {
 	if state != nil {
 		backend := cast(^Backend)state
+		backend.draw_calls += 1
 		position := transform_point(backend.transform, to_vec2(x, y))
 		size := transform_size(backend.transform, to_vec2(w, h))
 		rl.DrawRectanglePro(to_rect(position.x, position.y, size.x, size.y), rl.Vector2{}, backend.transform.rotation, to_color(r, g, b, a))
@@ -1356,6 +1419,7 @@ Draw_Rect :: proc(state: rawptr, x, y, w, h: f32, r, g, b, a: u8) {
 Draw_Rect_Outline :: proc(state: rawptr, x, y, w, h, thickness: f32, r, g, b, a: u8) {
 	if state != nil {
 		backend := cast(^Backend)state
+		backend.draw_calls += 1
 		p0 := transform_point(backend.transform, to_vec2(x, y))
 		p1 := transform_point(backend.transform, to_vec2(x+w, y))
 		p2 := transform_point(backend.transform, to_vec2(x+w, y+h))
@@ -1372,6 +1436,7 @@ Draw_Rect_Outline :: proc(state: rawptr, x, y, w, h, thickness: f32, r, g, b, a:
 Draw_Circle :: proc(state: rawptr, x, y, radius: f32, r, g, b, a: u8) {
 	if state != nil {
 		backend := cast(^Backend)state
+		backend.draw_calls += 1
 		rl.DrawCircleV(transform_point(backend.transform, to_vec2(x, y)), transform_scalar(backend.transform, radius), to_color(r, g, b, a))
 	}
 }
@@ -1379,6 +1444,7 @@ Draw_Circle :: proc(state: rawptr, x, y, radius: f32, r, g, b, a: u8) {
 Draw_Line :: proc(state: rawptr, start_x, start_y, end_x, end_y, thickness: f32, r, g, b, a: u8) {
 	if state != nil {
 		backend := cast(^Backend)state
+		backend.draw_calls += 1
 		rl.DrawLineEx(transform_point(backend.transform, to_vec2(start_x, start_y)), transform_point(backend.transform, to_vec2(end_x, end_y)), transform_scalar(backend.transform, thickness), to_color(r, g, b, a))
 	}
 }
@@ -1387,9 +1453,10 @@ Draw_Text :: proc(state: rawptr, text: string, x, y: f32, size: int, r, g, b, a:
 	if state == nil {
 		return
 	}
+	backend := cast(^Backend)state
+	backend.draw_calls += 1
 	c_text, c_err := strings.clone_to_cstring(text, context.temp_allocator)
 	if c_err == nil {
-		backend := cast(^Backend)state
 		position := transform_point(backend.transform, to_vec2(x, y))
 		font_size := int(transform_scalar(backend.transform, f32(size)))
 		if font_size < 1 {
@@ -1660,9 +1727,10 @@ Draw_Texture :: proc(state: rawptr, handle: u64, x, y: f32, r, g, b, a: u8) {
 	if state == nil {
 		return
 	}
+	backend := cast(^Backend)state
+	backend.draw_calls += 1
 	entry, ok := find_texture(cast(^Backend)state, handle)
 	if ok {
-		backend := cast(^Backend)state
 		position := transform_point(backend.transform, to_vec2(x, y))
 		size := transform_size(backend.transform, to_vec2(f32(entry.value.width), f32(entry.value.height)))
 		rl.DrawTexturePro(entry.value, to_rect(0, 0, f32(entry.value.width), f32(entry.value.height)), to_rect(position.x, position.y, size.x, size.y), rl.Vector2{}, backend.transform.rotation, to_color(r, g, b, a))
@@ -1673,9 +1741,10 @@ Draw_Texture_Ex :: proc(state: rawptr, handle: u64, x, y, rotation, scale: f32, 
 	if state == nil {
 		return
 	}
+	backend := cast(^Backend)state
+	backend.draw_calls += 1
 	entry, ok := find_texture(cast(^Backend)state, handle)
 	if ok {
-		backend := cast(^Backend)state
 		position := transform_point(backend.transform, to_vec2(x, y))
 		combined_scale := transform_scalar(backend.transform, scale)
 		rl.DrawTextureEx(entry.value, position, rotation + backend.transform.rotation, combined_scale, to_color(r, g, b, a))
@@ -1686,9 +1755,10 @@ Draw_Texture_Pro :: proc(state: rawptr, handle: u64, sx, sy, sw, sh, dx, dy, dw,
 	if state == nil {
 		return
 	}
+	backend := cast(^Backend)state
+	backend.draw_calls += 1
 	entry, ok := find_texture(cast(^Backend)state, handle)
 	if ok {
-		backend := cast(^Backend)state
 		position := transform_point(backend.transform, to_vec2(dx, dy))
 		size := transform_size(backend.transform, to_vec2(dw, dh))
 		origin := transform_size(backend.transform, to_vec2(ox, oy))
@@ -1740,8 +1810,45 @@ Set_Line_Width :: proc(state: rawptr, width: f32) -> bool {
 	if state == nil || width <= 0 {
 		return false
 	}
+	b := cast(^Backend)state
+	b.line_width = width
 	rlgl.SetLineWidth(width)
 	return true
+}
+
+Get_Line_Width :: proc(state: rawptr) -> f32 {
+	if state == nil { return 0 }
+	return (cast(^Backend)state).line_width
+}
+
+Get_Point_Size :: proc(state: rawptr) -> f32 {
+	if state == nil { return 0 }
+	return (cast(^Backend)state).point_size
+}
+
+Draw_Triangle :: proc(state: rawptr, x0, y0, x1, y1, x2, y2: f32, r, g, b, a: u8) {
+	if state == nil { return }
+	backend := cast(^Backend)state
+	backend.draw_calls += 1
+	color := to_color(r, g, b, a)
+	rl.DrawTriangle(
+		transform_point(backend.transform, rl.Vector2{x0, y0}),
+		transform_point(backend.transform, rl.Vector2{x1, y1}),
+		transform_point(backend.transform, rl.Vector2{x2, y2}),
+		color,
+	)
+}
+
+Graphics_Stats :: proc(state: rawptr) -> (stats: struct {Draw_Calls, Texture_Memory, Canvas_Count, Mesh_Count: int}) {
+	if state == nil { return }
+	b := cast(^Backend)state
+	stats.Draw_Calls = b.draw_calls
+	stats.Canvas_Count = len(b.canvases)
+	stats.Mesh_Count = len(b.meshes)
+	for texture in b.textures {
+		stats.Texture_Memory += int(texture.value.width) * int(texture.value.height) * 4
+	}
+	return
 }
 
 Renderer_Info :: proc(state: rawptr) -> (name, version: string, gpu_mesh, shader: bool) {

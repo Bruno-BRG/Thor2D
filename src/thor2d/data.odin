@@ -7,7 +7,6 @@ import "core:encoding/json"
 import "core:crypto/hash"
 import "core:c"
 import "core:reflect"
-import "core:strings"
 import lz4 "vendor:compress/lz4"
 import zlib "vendor:zlib"
 
@@ -450,29 +449,19 @@ Compress_With_Level :: proc(data: []byte, format: Compression_Format, level: int
 // .Invalid_Data. The returned string is owned by the caller (delete it).
 // Headless-safe (pure CPU).
 Encode_Base64_Lines :: proc(data: []byte, line_length := 76) -> (string, Error) {
-	if line_length <= 0 {
-		return "", .Invalid_Data
-	}
+	if line_length <= 0 { return "", .Invalid_Data }
 	encoded, encode_err := base64.encode(data)
-	if encode_err != nil {
-		return "", .Serialization_Failed
-	}
-	if len(encoded) <= line_length {
-		return encoded, .None
-	}
-	buf := make([dynamic]byte, 0, len(encoded)+len(encoded)/line_length+1)
+	if encode_err != nil { return "", .Serialization_Failed }
+	if len(encoded) <= line_length { return encoded, .None }
+	output_length := len(encoded) + (len(encoded)-1)/line_length
+	output := make([]byte, output_length)
+	written := 0
 	for i := 0; i < len(encoded); i += line_length {
 		end := min(i+line_length, len(encoded))
-		append(&buf, encoded[i:end])
-		if end < len(encoded) {
-			append(&buf, '\n')
-		}
+		copy(output[written:], encoded[i:end])
+		written += end-i
+		if end < len(encoded) { output[written] = '\n'; written += 1 }
 	}
 	delete(encoded)
-	result, clone_err := strings.clone(string(buf[:]))
-	delete(buf)
-	if clone_err != nil {
-		return "", .Serialization_Failed
-	}
-	return result, .None
+	return transmute(string)(output), .None
 }

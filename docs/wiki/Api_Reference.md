@@ -1,4 +1,4 @@
-# API Reference (v0.10)
+# API Reference (v0.11)
 
 Auto-generated index of every public `thor2d` procedure by source file
 (`python3 scripts/gen_wiki.py --gen`). Curated module pages add LOVE
@@ -390,7 +390,9 @@ mapping and examples.
 - `End_Scissor` — `End_Scissor :: proc`
 - `Take_Screenshot` — `Take_Screenshot :: proc`
 - `Set_Line_Width` — `Set_Line_Width :: proc`
+- `Get_Line_Width` — `Get_Line_Width :: proc`
 - `Set_Point_Size` — `Set_Point_Size :: proc`
+- `Get_Point_Size` — `Get_Point_Size :: proc`
 - `Get_Renderer_Info` — `Get_Renderer_Info :: proc`
 - `Create_Canvas_Format` — `Create_Canvas_Format :: proc`
 - `Is_Canvas_Format_Supported` — `Is_Canvas_Format_Supported :: proc`

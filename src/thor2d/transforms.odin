@@ -15,39 +15,45 @@ End_Camera :: proc(ctx: ^Context) {
 }
 
 Push_Transform :: proc(ctx: ^Context) {
-	if ctx != nil && ctx.backend != nil {
-		backend.Push_Transform(ctx.backend)
-	}
+	if ctx == nil { return }
+	append(&ctx.graphics_transform_stack, ctx.graphics_transform)
+	if ctx.backend != nil { backend.Push_Transform(ctx.backend) }
 }
 
 Pop_Transform :: proc(ctx: ^Context) {
-	if ctx != nil && ctx.backend != nil {
+	if ctx == nil || len(ctx.graphics_transform_stack) == 0 { return }
+	last := len(ctx.graphics_transform_stack)-1
+	ctx.graphics_transform = ctx.graphics_transform_stack[last]
+	pop(&ctx.graphics_transform_stack)
+	if ctx.backend != nil {
 		backend.Pop_Transform(ctx.backend)
+		backend.Replace_Transform(ctx.backend, Transform_Get_Matrix(ctx.graphics_transform))
 	}
 }
 
 Translate :: proc(ctx: ^Context, offset: Vec2) {
-	if ctx != nil && ctx.backend != nil {
-		backend.Translate(ctx.backend, offset.X, offset.Y)
-	}
+	if ctx == nil { return }
+	Transform_Translate(&ctx.graphics_transform, offset)
+	if ctx.backend != nil { backend.Replace_Transform(ctx.backend, Transform_Get_Matrix(ctx.graphics_transform)) }
 }
 
 Rotate :: proc(ctx: ^Context, angle: f32) {
-	if ctx != nil && ctx.backend != nil {
-		backend.Rotate(ctx.backend, angle)
-	}
+	if ctx == nil { return }
+	Transform_Rotate(&ctx.graphics_transform, angle)
+	if ctx.backend != nil { backend.Replace_Transform(ctx.backend, Transform_Get_Matrix(ctx.graphics_transform)) }
 }
 
 Scale :: proc(ctx: ^Context, factor: Vec2) {
-	if ctx != nil && ctx.backend != nil {
-		backend.Scale(ctx.backend, factor.X, factor.Y)
-	}
+	if ctx == nil { return }
+	Transform_Scale(&ctx.graphics_transform, factor)
+	if ctx.backend != nil { backend.Replace_Transform(ctx.backend, Transform_Get_Matrix(ctx.graphics_transform)) }
 }
 
 Reset_Transform :: proc(ctx: ^Context) {
-	if ctx != nil && ctx.backend != nil {
-		backend.Reset_Transform(ctx.backend)
-	}
+	if ctx == nil { return }
+	ctx.graphics_transform = Identity_Transform()
+	clear(&ctx.graphics_transform_stack)
+	if ctx.backend != nil { backend.Reset_Transform(ctx.backend) }
 }
 
 World_To_Screen :: proc(ctx: ^Context, camera: Camera_2D, world: Vec2) -> Vec2 {

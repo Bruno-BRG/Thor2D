@@ -6,8 +6,8 @@ LOVE equivalent: `love.system`. Sources: `system.odin`, `window.odin`.
 
 `Operating_System`, `Processor_Count`, clipboard, `Open_URL`, `Locale`, `Get_Power_Info`, metrics, `Sleep`.
 
-v0.9 version (mirrors `love.getVersion` / `love.isVersionCompatible`):
-`THOR2D_VERSION_MAJOR/MINOR/PATCH` are `0/9/0`; `Thor2D_Version()` returns
+v0.11 version (mirrors `love.getVersion` / `love.isVersionCompatible`):
+`THOR2D_VERSION_MAJOR/MINOR/PATCH` are `0/11/0`; `Thor2D_Version()` returns
 `(major, minor, patch)`; `Is_Version_Compatible(major, minor)` is true for
 the same major with requested minor `<=` current minor.
 
