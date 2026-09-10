@@ -16,7 +16,8 @@ Thor2D currently targets Odin `dev-2026-09` on Linux AMD64.
 ## 2. Read the example
 
 The complete example is in `examples/guide_game_v11/main.odin`. It imports no
-backend package:
+backend package and includes the redistributable Adwaita Sans font in
+`examples/guide_game_v11/assets/`:
 
 ```odin
 import thor2d "thor2d:thor2d"

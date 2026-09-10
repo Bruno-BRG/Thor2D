@@ -6,6 +6,13 @@ import thor2d "thor2d:thor2d"
 player := thor2d.Vec2{320, 240}
 coin := thor2d.Vec2{520, 240}
 score: int
+ui_font: thor2d.Font
+
+load :: proc(ctx: ^thor2d.Context) {
+	loaded_font, err := thor2d.Load_Font(ctx, "assets/AdwaitaSans-Regular.ttf")
+	ui_font = loaded_font
+	if err != .None { fmt.println("font load:", thor2d.Error_String(err)) }
+}
 
 update :: proc(ctx: ^thor2d.Context, delta: f32) {
 	speed: f32 = 220
@@ -24,13 +31,40 @@ update :: proc(ctx: ^thor2d.Context, delta: f32) {
 }
 
 draw :: proc(ctx: ^thor2d.Context) {
-	thor2d.Clear(ctx, thor2d.Color{13, 18, 31, 255})
-	thor2d.Draw_Text(ctx, "THOR2D COIN RUN", thor2d.Vec2{24, 22}, 28, thor2d.White)
-	thor2d.Draw_Text(ctx, "WASD / arrows to move   |   Esc to quit", thor2d.Vec2{24, 52}, 16, thor2d.Gray)
-	thor2d.Draw_Text(ctx, fmt.aprintf("Coins: %d", score), thor2d.Vec2{520, 28}, 20, thor2d.Color{255, 210, 60, 255})
-	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 72, 608, 400}, thor2d.Color{25, 35, 55, 255})
-	thor2d.Draw_Circle(ctx, coin, 14, thor2d.Color{255, 210, 60, 255})
-	thor2d.Draw_Circle(ctx, player, 20, thor2d.Color{60, 220, 220, 255})
+	background := thor2d.RGBA(10, 14, 27, 255)
+	panel := thor2d.RGBA(20, 28, 48, 255)
+	border := thor2d.RGBA(48, 67, 99, 255)
+	ink := thor2d.RGBA(234, 241, 255, 255)
+	muted := thor2d.RGBA(145, 162, 190, 255)
+	gold := thor2d.RGBA(255, 196, 75, 255)
+	cyan := thor2d.RGBA(72, 220, 225, 255)
+	thor2d.Clear(ctx, background)
+	// Subtle layered backdrop gives the arena depth without requiring textures.
+	for x: f32 = 40; x < 640; x += 80 {
+		for y: f32 = 100; y < 480; y += 80 {
+			thor2d.Draw_Circle(ctx, thor2d.Vec2{x, y}, 1.5, thor2d.RGBA(55, 78, 112, 150))
+		}
+	}
+	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 14, 608, 52}, panel)
+	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 14, 608, 2}, cyan)
+	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 72, 608, 400}, panel)
+	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 72, 608, 2}, border)
+	thor2d.Draw_Rect(ctx, thor2d.Rect{16, 470, 608, 2}, border)
+
+	if !thor2d.Font_Invalid(ui_font) {
+		thor2d.Draw_Text_Font(ctx, ui_font, "COIN RUN", thor2d.Vec2{32, 23}, 26, 0, ink)
+		thor2d.Draw_Text_Font(ctx, ui_font, "WASD / ARROWS", thor2d.Vec2{32, 49}, 12, 0, muted)
+		thor2d.Draw_Text_Font(ctx, ui_font, fmt.aprintf("%02d  COINS", score), thor2d.Vec2{496, 28}, 18, 0, gold)
+	} else {
+		thor2d.Draw_Text(ctx, "COIN RUN", thor2d.Vec2{32, 23}, 26, ink)
+	}
+	// Soft shadows are separate shapes so the example stays backend-agnostic.
+	thor2d.Draw_Circle(ctx, thor2d.Vec2{coin.X + 3, coin.Y + 5}, 16, thor2d.RGBA(0, 0, 0, 90))
+	thor2d.Draw_Circle(ctx, coin, 14, gold)
+	thor2d.Draw_Circle(ctx, coin, 8, thor2d.RGBA(255, 226, 125, 255))
+	thor2d.Draw_Circle(ctx, thor2d.Vec2{player.X + 4, player.Y + 6}, 21, thor2d.RGBA(0, 0, 0, 100))
+	thor2d.Draw_Circle(ctx, player, 20, cyan)
+	thor2d.Draw_Circle(ctx, thor2d.Vec2{player.X - 6, player.Y - 7}, 6, thor2d.RGBA(190, 255, 255, 220))
 }
 
 main :: proc() {
@@ -38,6 +72,6 @@ main :: proc() {
 	config.Title = "Thor2D Guide Game"
 	config.Width = 640
 	config.Height = 480
-	err := thor2d.Run(config, thor2d.Game{Update = update, Draw = draw})
+	err := thor2d.Run(config, thor2d.Game{Load = load, Update = update, Draw = draw})
 	if err != .None { fmt.println(thor2d.Error_String(err)) }
 }
