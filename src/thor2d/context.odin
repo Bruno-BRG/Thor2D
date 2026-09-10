@@ -48,15 +48,28 @@ Create :: proc(config: Config) -> (Context, Error) {
 			Registry = New_Registry(),
 			filesystem = filesystem,
 			video_backend = video.Create(),
+			draw_color = White,
+			background_color = Black,
+			blend_mode = .Alpha,
+			color_mask = Color_Mask{R = true, G = true, B = true, A = true},
+			default_filter_min = .Linear,
+			default_filter_mag = .Linear,
+			cursor_visible = true,
+			meter_scale = config.Pixels_Per_Meter,
+			display_sleep_enabled = true,
 		}, .None
 	}
 
-	state, ok := backend.Create(config.Title, config.Width, config.Height, config.Target_FPS, config.Resizable, config.VSync)
+	state, ok := backend.Create(config.Title, config.Width, config.Height, config.Target_FPS, config.Resizable, config.VSync, config.MSAA)
 	if !ok {
 		Destroy_Filesystem(&filesystem)
 		return Context{}, .Backend_Initialization_Failed
 	}
 	audio_state, _ := audio.Create()
+	meter := config.Pixels_Per_Meter
+	if meter <= 0 {
+		meter = 32
+	}
 	return Context{
 		backend = state,
 		audio_backend = audio_state,
@@ -67,6 +80,15 @@ Create :: proc(config: Config) -> (Context, Error) {
 		fixed_delta = 1.0 / 60.0,
 		Registry = New_Registry(),
 		filesystem = filesystem,
+		draw_color = White,
+		background_color = Black,
+		blend_mode = .Alpha,
+		color_mask = Color_Mask{R = true, G = true, B = true, A = true},
+		default_filter_min = .Linear,
+		default_filter_mag = .Linear,
+		cursor_visible = true,
+		meter_scale = meter,
+		display_sleep_enabled = true,
 	}, .None
 }
 
@@ -124,6 +146,12 @@ Run :: proc(config: Config, game: Game) -> Error {
 	}
 	ctx, err := Create(config)
 	if err != .None {
+		// v0.9: no Context exists when Create fails, so On_Error (if set)
+		// is invoked with a nil ctx and the Create error. Callers must
+		// handle a nil ctx in On_Error for this path.
+		if game.On_Error != nil {
+			game.On_Error(nil, err)
+		}
 		return err
 	}
 
@@ -307,6 +335,13 @@ Poll_Events :: proc(ctx: ^Context, callback: proc(ctx: ^Context, event: Event)) 
 			event.Position = Vec2{raw.x, raw.y}
 		case .File_Dropped, .Directory_Dropped:
 			event.Kind = Event_Kind(raw.kind)
+			// v0.10: raylib reports every drop as File_Dropped
+			// (LoadDroppedFiles has no kind). Reclassify real OS
+			// directories via the filesystem so LOVE directorydropped
+			// ports work; missing paths keep the File_Dropped kind.
+			if raw.kind == .File_Dropped && raw.path != "" && os.is_directory(raw.path) {
+				event.Kind = .Directory_Dropped
+			}
 			event.Path = raw.path
 		}
 		Push_Event(ctx, event)
@@ -318,11 +353,17 @@ Poll_Events :: proc(ctx: ^Context, callback: proc(ctx: ^Context, event: Event)) 
 
 // Run_Headless executes the same fixed/update/draw lifecycle without creating
 // a window or touching Raylib. max_frames <= 0 means run until Quit is called.
+// v0.9: a Create failure invokes game.On_Error (if set) with a nil ctx, then
+// returns the error. On_Low_Memory is never invoked on desktop (no OS
+// low-memory signal); it is reserved as mobile-future.
 Run_Headless :: proc(config: Config, game: Game, max_frames: int = 0) -> Error {
 	headless_config := config
 	headless_config.Headless = true
 	ctx, err := Create(headless_config)
 	if err != .None {
+		if game.On_Error != nil {
+			game.On_Error(nil, err)
+		}
 		return err
 	}
 	if game.Load != nil {

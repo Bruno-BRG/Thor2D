@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "project_id": "thor2d.love-port.v08",
+  "name": "Thor2D LOVE Port v0.8",
+  "assets": [],
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Main",
+      "entities": []
+    }
+  ]
+}

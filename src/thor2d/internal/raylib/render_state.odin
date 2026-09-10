@@ -57,3 +57,29 @@ Take_Screenshot :: proc(state: rawptr, path: string) -> bool {
 	rl.TakeScreenshot(c_path)
 	return true
 }
+
+// v0.9 spike result: per-channel color write masking is NOT supported.
+// Evidence: `rg -i "colormask|color_mask"` over vendor/raylib (raylib.odin +
+// rlgl/rlgl.odin) returns zero hits — neither raylib nor its rlgl bindings
+// expose glColorMask or any equivalent. Importing raw OpenGL directly would
+// bypass raylib's render-batch state tracking and break the headless and
+// multi-GL-version abstraction, so no such path was added. Always false;
+// Query_Capability(.Color_Mask) reads this.
+Color_Mask_Supported :: proc(state: rawptr) -> bool {
+	_ = state
+	return false
+}
+
+// v0.9 spike result: stencil testing is NOT supported. Evidence:
+// `rg -i stencil` over vendor/raylib returns exactly one hit —
+// rlgl.FramebufferAttachType.STENCIL, an FBO attachment tag. The bindings
+// expose no stencil-test control (no enable/func/op/mask procs), no stencil
+// clear, and raylib's LoadRenderTexture builds its FBO with a depth
+// renderbuffer only, so there is no stencil buffer to test against on either
+// the default framebuffer or canvases. Assembling a custom stencil FBO via
+// LoadFramebuffer + FramebufferAttach would still leave no test/clear API,
+// so no path was added. Always false; Query_Capability(.Stencil) reads this.
+Stencil_Supported :: proc(state: rawptr) -> bool {
+	_ = state
+	return false
+}

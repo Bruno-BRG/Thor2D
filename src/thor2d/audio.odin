@@ -749,3 +749,456 @@ Get_Audio_Capabilities :: proc(ctx: ^Context) -> Audio_Capabilities {
 		Queue = audio.Available(ctx.audio_backend),
 	}
 }
+
+// v0.9 LOVE audio effect-name support query (love.audio.newEffect types are
+// chorus, compressor, distortion, echo, equalizer, flanger, reverb and
+// ringmodulator).
+//
+// Wired today (backed by miniaudio nodes via Create_Audio_Effect):
+//   "echo"   -> Delay node (Audio_Effect_Kind.Delay)
+//   "reverb" -> feedback-delay small-room approximation
+//              (Audio_Effect_Kind.Reverb; miniaudio ships no reverb node, see
+//              internal/audio Create_Effect)
+// Not wired — no corresponding miniaudio node exists in vendor/miniaudio
+// (rg for chorus/distortion/compressor/flanger/ringmod/equalizer node types
+// finds only delay, lpf/hpf/bpf and biquad-family primitives, none of them
+// plumbed as LOVE-style units), so these report false and no
+// Audio_Effect_Kind variants were added for them (a variant that always fails
+// would be a fake handle):
+//   "chorus", "compressor", "distortion", "equalizer", "flanger",
+//   "ringmodulator". Single-band filtering remains available through
+//   .Low_Pass/.High_Pass/.Band_Pass for equalizer-style ports.
+// Pure CPU, case-sensitive, headless-safe, no Context needed.
+Is_LOVE_Audio_Effect_Supported :: proc(name: string) -> bool {
+	switch name {
+	case "echo", "reverb":
+		return true
+	case:
+		return false
+	}
+}
+
+// v0.10 wave 4: total audio API (LOVE Source/RecordingDevice/SoundData/
+// Decoder parity). All getters are headless-safe: with no audio device (nil
+// backend) or a bad handle they return zero values, never fake data. Live
+// values come from miniaudio ma.sound_get_* accessors; channels/sample rate
+// come from the format captured at decode time. See docs/wiki/modules/
+// Audio.md and Sound.md.
+
+// Audio_Source_Is_Looping mirrors love Source:isLooping.
+Audio_Source_Is_Looping :: proc(ctx: ^Context, source: Audio_Source) -> bool {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return false
+	}
+	looping, ok := audio.Is_Source_Looping(ctx.audio_backend, source.handle, int(source.Kind))
+	return ok && looping
+}
+
+// Audio_Source_Get_Volume mirrors love Source:getVolume.
+Audio_Source_Get_Volume :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	value, ok := audio.Get_Source_Volume(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Audio_Source_Get_Pitch mirrors love Source:getPitch.
+Audio_Source_Get_Pitch :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	value, ok := audio.Get_Source_Pitch(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Audio_Source_Get_Pan reports the live pan set by Set_Audio_Source_Pan
+// (miniaudio ma.sound_get_pan; LOVE has no Source:getPan — stereo pan is a
+// Thor2D extension of the LOVE volume/pitch pair).
+Audio_Source_Get_Pan :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	value, ok := audio.Get_Source_Pan(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Audio_Source_Get_Position mirrors love Source:getPosition projected onto
+// the 2D plane (Z is dropped; setters likewise store Z=0).
+Audio_Source_Get_Position :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return Vec2{}
+	}
+	value, ok := audio.Get_Source_Position(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return Vec2{}
+	}
+	return Vec2{value[0], value[1]}
+}
+
+// Audio_Source_Get_Velocity mirrors love Source:getVelocity (2D projection).
+Audio_Source_Get_Velocity :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return Vec2{}
+	}
+	value, ok := audio.Get_Source_Velocity(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return Vec2{}
+	}
+	return Vec2{value[0], value[1]}
+}
+
+// Audio_Source_Get_Direction mirrors love Source:getDirection (2D projection).
+Audio_Source_Get_Direction :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return Vec2{}
+	}
+	value, ok := audio.Get_Source_Direction(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return Vec2{}
+	}
+	return Vec2{value[0], value[1]}
+}
+
+// Audio_Source_Get_Cone mirrors love Source:getCone: inner and outer angles
+// in radians plus the outer gain.
+Audio_Source_Get_Cone :: proc(ctx: ^Context, source: Audio_Source) -> (inner, outer, gain: f32) {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0, 0, 0
+	}
+	inner_a, outer_a, gain_a, ok := audio.Get_Source_Cone(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0, 0, 0
+	}
+	return inner_a, outer_a, gain_a
+}
+
+// Audio_Source_Get_Rolloff mirrors love Source:getRolloff.
+Audio_Source_Get_Rolloff :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	value, ok := audio.Get_Source_Rolloff(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Audio_Source_Get_Doppler reports the per-source doppler factor applied by
+// Set_Audio_Doppler (LOVE only exposes the global love.audio.getDopplerScale;
+// see Get_Audio_Doppler for the global).
+Audio_Source_Get_Doppler :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	value, ok := audio.Get_Source_Doppler(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Audio_Source_Is_Relative mirrors love Source:isRelative.
+Audio_Source_Is_Relative :: proc(ctx: ^Context, source: Audio_Source) -> bool {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return false
+	}
+	relative, ok := audio.Get_Source_Positioning(ctx.audio_backend, source.handle, int(source.Kind))
+	return ok && relative
+}
+
+// Audio_Source_Channels mirrors love Source:getChannelCount, from the format
+// captured at decode time (no live query needed; the stream format is fixed).
+Audio_Source_Channels :: proc(ctx: ^Context, source: Audio_Source) -> int {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	channels, _, ok := audio.Get_Source_Format(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return channels
+}
+
+// Audio_Source_Sample_Rate reports the stream sample rate captured at decode
+// time (LOVE exposes this via Decoder:getSampleRate; sources carry no rate
+// getter, so this fills the gap from retained real state).
+Audio_Source_Sample_Rate :: proc(ctx: ^Context, source: Audio_Source) -> int {
+	if ctx == nil || ctx.audio_backend == nil || source.handle == 0 {
+		return 0
+	}
+	_, sample_rate, ok := audio.Get_Source_Format(ctx.audio_backend, source.handle, int(source.Kind))
+	if !ok {
+		return 0
+	}
+	return sample_rate
+}
+
+// Audio_Source_Get_Kind mirrors love Source:getType. The kind rides in the
+// handle struct (no backend needed), so this is pure and nil-safe.
+Audio_Source_Get_Kind :: proc(source: Audio_Source) -> Audio_Source_Kind {
+	return source.Kind
+}
+
+// Play_All_Audio mirrors love.audio.play with no arguments: starts every
+// live source. Returns how many sources were started (0 headless).
+Play_All_Audio :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	return audio.Play_All(ctx.audio_backend)
+}
+
+// Pause_All_Audio mirrors love.audio.pause with no arguments: pauses every
+// live source. Returns how many sources were paused (0 headless).
+Pause_All_Audio :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	return audio.Pause_All(ctx.audio_backend)
+}
+
+// Stop_All_Audio mirrors love.audio.stop with no arguments: stops and
+// rewinds every live source. Returns how many sources were stopped.
+Stop_All_Audio :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	return audio.Stop_All(ctx.audio_backend)
+}
+
+// Get_Audio_Doppler mirrors love.audio.getDopplerScale: the global factor
+// stored by Set_Audio_Doppler (default 1). New sources inherit it at
+// creation; 0 means no audio device.
+Get_Audio_Doppler :: proc(ctx: ^Context) -> f32 {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	value, ok := audio.Get_Doppler_Scale(ctx.audio_backend)
+	if !ok {
+		return 0
+	}
+	return value
+}
+
+// Set_Audio_Orientation mirrors love.audio.setOrientation for the 2D plane:
+// forward/up Vec2s are pushed as (x, y, 0). The values are stored backend-
+// side, so Get_Audio_Orientation round-trips them with or without a device
+// query. Extends Set_Audio_Listener (which carries position/direction/
+// velocity but no up vector).
+Set_Audio_Orientation :: proc(ctx: ^Context, forward, up: Vec2) -> Error {
+	if ctx == nil || ctx.audio_backend == nil {
+		return .Backend_Initialization_Failed
+	}
+	if !audio.Set_Orientation(ctx.audio_backend, [3]f32{forward.X, forward.Y, 0}, [3]f32{up.X, up.Y, 0}) {
+		return .Capability_Unavailable
+	}
+	return .None
+}
+
+// Get_Audio_Orientation mirrors love.audio.getOrientation projected onto 2D:
+// returns the stored forward/up vectors (Z dropped). Headless/nil gives
+// zero vectors.
+Get_Audio_Orientation :: proc(ctx: ^Context) -> (forward, up: Vec2) {
+	if ctx == nil || ctx.audio_backend == nil {
+		return Vec2{}, Vec2{}
+	}
+	fwd, up3, ok := audio.Get_Orientation(ctx.audio_backend)
+	if !ok {
+		return Vec2{}, Vec2{}
+	}
+	return Vec2{fwd[0], fwd[1]}, Vec2{up3[0], up3[1]}
+}
+
+// Audio_Recording_Devices mirrors love.audio.getRecordingDevices: the
+// capture-capable subset of Enumerate_Audio_Devices. The first entry is the
+// default capture device when the backend flags one. Ownership follows
+// Enumerate_Audio_Devices (free with Destroy_Audio_Device_Infos).
+Audio_Recording_Devices :: proc(ctx: ^Context) -> ([dynamic]Audio_Device_Info, Error) {
+	devices, err := Enumerate_Audio_Devices(ctx)
+	if err != .None {
+		return nil, err
+	}
+	kept := make([dynamic]Audio_Device_Info, 0, len(devices))
+	for entry in devices {
+		if entry.Capture {
+			append(&kept, entry)
+		} else {
+			delete(entry.Id)
+			delete(entry.Name)
+		}
+	}
+	delete(devices)
+	return kept, .None
+}
+
+// Start_Capture_From_Device selects a capture device before recording.
+// The miniaudio backend always opens the default capture device
+// (ma.device_init with no device ID), so indexed device selection is not
+// wired: this returns .Unsupported by design and documents the
+// default-device-only boundary. Use Start_Audio_Capture instead.
+Start_Capture_From_Device :: proc(ctx: ^Context, device: Audio_Device) -> Error {
+	_ = ctx
+	_ = device
+	return .Unsupported
+}
+
+// Audio_Recording_Device_Name mirrors love RecordingDevice:getName via live
+// enumeration. Returns ("", .Invalid_Handle) for bad handles.
+Audio_Recording_Device_Name :: proc(ctx: ^Context, device: Audio_Device) -> (string, Error) {
+	if ctx == nil || ctx.audio_backend == nil || device.handle == 0 {
+		return "", .Invalid_Handle
+	}
+	devices, err := Enumerate_Audio_Devices(ctx)
+	if err != .None {
+		return "", err
+	}
+	defer Destroy_Audio_Device_Infos(&devices)
+	for entry in devices {
+		if entry.Handle == device.handle {
+			name, clone_err := strings.clone(entry.Name)
+			if clone_err != nil {
+				return "", .Resource_Load_Failed
+			}
+			return name, .None
+		}
+	}
+	return "", .Invalid_Handle
+}
+
+// Is_Audio_Capturing mirrors love RecordingDevice:isRecording.
+Is_Audio_Capturing :: proc(ctx: ^Context) -> bool {
+	if ctx == nil || ctx.audio_backend == nil {
+		return false
+	}
+	_, _, _, recording := audio.Capture_Info(ctx.audio_backend)
+	return recording
+}
+
+// Audio_Capture_Sample_Rate mirrors love RecordingDevice:getSampleRate: the
+// live capture sample rate, or 0 when capture is inactive.
+Audio_Capture_Sample_Rate :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	_, sample_rate, _, recording := audio.Capture_Info(ctx.audio_backend)
+	if !recording {
+		return 0
+	}
+	return sample_rate
+}
+
+// Audio_Capture_Channels mirrors love RecordingDevice:getChannelCount, or 0
+// when capture is inactive.
+Audio_Capture_Channels :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	channels, _, _, recording := audio.Capture_Info(ctx.audio_backend)
+	if !recording {
+		return 0
+	}
+	return channels
+}
+
+// Audio_Capture_Bit_Depth mirrors love RecordingDevice:getBitDepth. The
+// capture ring is f32 PCM, so live capture is always 32-bit; 0 when
+// inactive.
+Audio_Capture_Bit_Depth :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	_, _, _, recording := audio.Capture_Info(ctx.audio_backend)
+	if !recording {
+		return 0
+	}
+	return 32
+}
+
+// Audio_Capture_Sample_Count mirrors love RecordingDevice:getSampleCount:
+// frames currently buffered in the capture ring (0 when inactive).
+Audio_Capture_Sample_Count :: proc(ctx: ^Context) -> int {
+	if ctx == nil || ctx.audio_backend == nil {
+		return 0
+	}
+	_, _, buffered, recording := audio.Capture_Info(ctx.audio_backend)
+	if !recording {
+		return 0
+	}
+	return buffered
+}
+
+// Sound_Data_Sample_Rate mirrors love SoundData:getSampleRate. The format
+// rides in the struct, so this is pure and nil-safe.
+Sound_Data_Sample_Rate :: proc(data: ^Sound_Data) -> int {
+	if data == nil {
+		return 0
+	}
+	return data.Sample_Rate
+}
+
+// Sound_Data_Channels mirrors love SoundData:getChannelCount (pure,
+// nil-safe).
+Sound_Data_Channels :: proc(data: ^Sound_Data) -> int {
+	if data == nil {
+		return 0
+	}
+	return data.Channels
+}
+
+// Sound_Data_Bit_Depth mirrors love SoundData:getBitDepth (pure, nil-safe).
+Sound_Data_Bit_Depth :: proc(data: ^Sound_Data) -> int {
+	if data == nil {
+		return 0
+	}
+	return data.Bit_Depth
+}
+
+// Audio_Decoder_Channels mirrors love Decoder:getChannelCount, from the
+// format retained in the decoder entry. Bad handles give 0, never a guess.
+Audio_Decoder_Channels :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+	if ctx == nil || ctx.audio_backend == nil || decoder.handle == 0 {
+		return 0
+	}
+	channels, _, ok := audio.Decoder_Format(ctx.audio_backend, decoder.handle)
+	if !ok {
+		return 0
+	}
+	return channels
+}
+
+// Audio_Decoder_Sample_Rate mirrors love Decoder:getSampleRate (0 on bad
+// handles).
+Audio_Decoder_Sample_Rate :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+	if ctx == nil || ctx.audio_backend == nil || decoder.handle == 0 {
+		return 0
+	}
+	_, sample_rate, ok := audio.Decoder_Format(ctx.audio_backend, decoder.handle)
+	if !ok {
+		return 0
+	}
+	return sample_rate
+}
+
+// Audio_Decoder_Bit_Depth mirrors love Decoder:getBitDepth. Decoders always
+// produce f32 PCM, so a live decoder is 32-bit; bad handles give 0.
+Audio_Decoder_Bit_Depth :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+	if ctx == nil || ctx.audio_backend == nil || decoder.handle == 0 {
+		return 0
+	}
+	_, _, ok := audio.Decoder_Format(ctx.audio_backend, decoder.handle)
+	if !ok {
+		return 0
+	}
+	return 32
+}

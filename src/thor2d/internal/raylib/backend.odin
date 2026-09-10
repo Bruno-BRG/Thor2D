@@ -34,6 +34,11 @@ Audio_Stream_Entry :: struct {
 Font_Entry :: struct {
 	handle: u64,
 	value: rl.Font,
+	// v0.10 LOVE Font:setLineHeight multiplier (default 1.0). Honored by
+	// Font_Line_Height queries, Measure_Text_Layout (via the public layer)
+	// and multiline Text draw advance; raylib draws use native advance
+	// unless the multiplier differs from 1.0.
+	line_height: f32,
 }
 
 Text_Entry :: struct {
@@ -47,6 +52,10 @@ Canvas_Entry :: struct {
 	handle: u64,
 	value: rl.RenderTexture2D,
 	width, height: int,
+	// v0.10 LOVE Canvas:getMSAA parity. Raylib canvases (LoadRenderTexture)
+	// have no per-canvas MSAA control, so this is always 0; window-level
+	// MSAA comes from Config.MSAA at creation time. Stored for the getter.
+	msaa: int,
 }
 
 Shader_Entry :: struct {
@@ -66,6 +75,11 @@ Sprite_Batch_Entry :: struct {
 	texture_handle: u64,
 	capacity: int,
 	commands: [dynamic]Sprite_Command,
+	// v0.10 LOVE SpriteBatch:setDrawRange subset. 0-based start; count < 0
+	// draws everything from start (the default). Thor2D indices are 0-based;
+	// LOVE sprite ids are 1-based (see the public wrapper docs).
+	draw_start: int,
+	draw_count: int,
 }
 
 Particle_Config_Internal :: struct {
@@ -75,6 +89,18 @@ Particle_Config_Internal :: struct {
 	gravity: rl.Vector2,
 	start_size, end_size: f32,
 	start_color, end_color: rl.Color,
+	// v0.10 LOVE-parity tuning (ParticleSystem set*). Angles in radians,
+	// spin in radians/second, matching LOVE units. The backend stores
+	// radians; emit converts spin to degrees/second for Particle_State.
+	direction, spread: f32,
+	speed_min, speed_max: f32,
+	linear_accel_min, linear_accel_max: rl.Vector2,
+	radial_min, radial_max: f32,
+	tangential_min, tangential_max: f32,
+	damping_min, damping_max: f32,
+	spin_min, spin_max: f32,
+	// Emitter budget in seconds; <= 0 means infinite emission.
+	emitter_lifetime: f32,
 }
 
 Particle_State :: struct {
@@ -82,6 +108,10 @@ Particle_State :: struct {
 	life, lifetime: f32,
 	rotation, angular_velocity: f32,
 	scale: f32,
+	// v0.10 per-particle draws, fixed at emit (uniform in the min..max
+	// ranges above) so live particles keep their own coefficients.
+	linear_accel: rl.Vector2,
+	radial_accel, tangential_accel, damping: f32,
 }
 
 Particle_System_Entry :: struct {
@@ -91,6 +121,18 @@ Particle_System_Entry :: struct {
 	particles: [dynamic]Particle_State,
 	emission_remainder: f32,
 	seed: u32,
+	// v0.10 lifecycle: new systems start active (Thor2D CType behavior:
+	// Update emits at the configured rate without an explicit start;
+	// call Stop_Particles for LOVE's initially-stopped flow).
+	active: bool,
+	paused: bool,
+	emitter_age: f32,
+	// v0.10 appearance tracks (LOVE setSizes/setColors, max 8 stops).
+	// Fixed arrays so Unload/Destroy need no extra cleanup.
+	sizes: [8]f32,
+	size_count: int,
+	colors: [8]rl.Color,
+	color_count: int,
 }
 
 Mesh_Vertex_Internal :: struct {
@@ -111,6 +153,12 @@ Mesh_Entry :: struct {
 	gpu_vao, gpu_position, gpu_texcoord, gpu_normal, gpu_color, gpu_indices: c.uint,
 	gpu_ready: bool,
 	mode: int,
+	// v0.10 LOVE Mesh parity: bound texture (Mesh:setTexture; 0 = none, so
+	// Draw_Mesh draws untextured) and draw range (Mesh:setDrawRange; 0-based
+	// start, count < 0 draws to the end — the default (0, -1) draws all).
+	texture_handle: u64,
+	draw_start: int,
+	draw_count: int,
 }
 
 Texture_Cache_Entry :: struct {
@@ -202,6 +250,10 @@ Backend :: struct {
 	transform: Transform_State,
 	camera_active: bool,
 	canvas_active: bool,
+	// v0.10 which canvas Set_Canvas targeted (0 when rendering to screen).
+	// Needed by the Get_Active_Canvas parity query; canvas_active alone only
+	// says THAT a canvas is targeted, not which one.
+	canvas_handle: u64,
 	shader_active: u64,
 	next_handle: u64,
 	next_asset_id: u64,
@@ -214,14 +266,22 @@ Backend :: struct {
 	frame_time_cursor, frame_time_count: int,
 	gpu_mesh_supported: bool,
 	point_size: f32,
+	// v0.9 requested MSAA samples (window creation hint only).
+	msaa_samples: int,
+	// v0.10 default-font (handle 0) line-height multiplier. Named fonts store
+	// theirs on Font_Entry; the default font has no entry, so it lives here
+	// (1.0 unless Font_Set_Line_Height_Multiplier changes it).
+	default_font_line_height: f32,
 }
 
-Create :: proc(title: string, width, height, target_fps: int, resizable, vsync: bool) -> (rawptr, bool) {
+Create :: proc(title: string, width, height, target_fps: int, resizable, vsync: bool, msaa_samples := 0) -> (rawptr, bool) {
 	b := new(Backend)
 	b.next_handle = 1
 	b.next_asset_id = 1
 	b.transform = Transform_State{scale = rl.Vector2{1, 1}}
 	b.point_size = 2
+	b.msaa_samples = msaa_samples if msaa_samples > 0 else 0
+	b.default_font_line_height = 1
 
 	flags := rl.ConfigFlags{}
 	if resizable {
@@ -229,6 +289,11 @@ Create :: proc(title: string, width, height, target_fps: int, resizable, vsync: 
 	}
 	if vsync {
 		flags += {.VSYNC_HINT}
+	}
+	if b.msaa_samples > 0 {
+		// Raylib exposes a single 4x MSAA hint; any positive request maps
+		// to it. Must precede InitWindow. v0.9: wired from Config.MSAA.
+		flags += {.MSAA_4X_HINT}
 	}
 	rl.SetConfigFlags(flags)
 
@@ -269,6 +334,7 @@ Destroy :: proc(state: rawptr) {
 		rl.EndTextureMode()
 		b.canvas_active = false
 	}
+	b.canvas_handle = 0
 	if b.camera_active {
 		rl.EndMode2D()
 		b.camera_active = false
@@ -285,7 +351,9 @@ Destroy :: proc(state: rawptr) {
 		rl.UnloadFont(entry.value)
 	}
 	for entry in b.texts {
-		delete(entry.value)
+		if len(entry.value) > 0 {
+			delete(entry.value)
+		}
 	}
 	for entry in b.canvases {
 		rl.UnloadRenderTexture(entry.value)
@@ -504,6 +572,7 @@ Begin_Frame :: proc(state: rawptr) {
 			rl.EndTextureMode()
 			b.canvas_active = false
 		}
+		b.canvas_handle = 0
 		if b.camera_active {
 			rl.EndMode2D()
 			b.camera_active = false
@@ -688,6 +757,111 @@ Is_Fullscreen :: proc(state: rawptr) -> bool {
 	return state != nil && rl.IsWindowFullscreen()
 }
 
+Is_Window_Open :: proc(state: rawptr) -> bool {
+	return state != nil && rl.IsWindowReady() && !rl.WindowShouldClose()
+}
+
+Has_Focus :: proc(state: rawptr) -> bool {
+	return state != nil && rl.IsWindowFocused()
+}
+
+Has_Mouse_Focus :: proc(state: rawptr) -> bool {
+	return state != nil && rl.IsWindowFocused()
+}
+
+Is_Visible :: proc(state: rawptr) -> bool {
+	return state != nil && !rl.IsWindowHidden()
+}
+
+Is_Maximized :: proc(state: rawptr) -> bool {
+	return state != nil && rl.IsWindowMaximized()
+}
+
+Maximize_Window :: proc(state: rawptr) {
+	if state != nil && !rl.IsWindowMaximized() {
+		rl.MaximizeWindow()
+	}
+}
+
+Minimize_Window :: proc(state: rawptr) {
+	if state != nil && !rl.IsWindowMinimized() {
+		rl.MinimizeWindow()
+	}
+}
+
+Restore_Window :: proc(state: rawptr) {
+	if state != nil && (rl.IsWindowMaximized() || rl.IsWindowMinimized()) {
+		rl.RestoreWindow()
+	}
+}
+
+Get_VSync :: proc(state: rawptr) -> bool {
+	return state != nil && rl.IsWindowState({.VSYNC_HINT})
+}
+
+Get_Display_Count :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 0
+	}
+	return int(rl.GetMonitorCount())
+}
+
+Get_Display_Info :: proc(state: rawptr, index: int) -> (name: string, x, y, w, h: int, ok: bool) {
+	if state == nil {
+		return "", 0, 0, 0, 0, false
+	}
+	count := int(rl.GetMonitorCount())
+	if index < 0 || index >= count {
+		return "", 0, 0, 0, 0, false
+	}
+	pos := rl.GetMonitorPosition(c.int(index))
+	return string(rl.GetMonitorName(c.int(index))), int(pos.x), int(pos.y), int(rl.GetMonitorWidth(c.int(index))), int(rl.GetMonitorHeight(c.int(index))), true
+}
+
+Set_Window_Icon_RGBA :: proc(state: rawptr, width, height: int, pixels: []u8) -> bool {
+	if state == nil || width <= 0 || height <= 0 || len(pixels) < width*height*4 {
+		return false
+	}
+	image := rl.Image{
+		data = raw_data(pixels),
+		width = c.int(width),
+		height = c.int(height),
+		mipmaps = 1,
+		format = .UNCOMPRESSED_R8G8B8A8,
+	}
+	rl.SetWindowIcon(image)
+	return true
+}
+
+Set_Mouse_Position :: proc(state: rawptr, x, y: f32) {
+	if state != nil {
+		rl.SetMousePosition(c.int(x), c.int(y))
+	}
+}
+
+Set_System_Cursor :: proc(state: rawptr, cursor: int) {
+	if state == nil {
+		return
+	}
+	// 0=arrow 1=ibeam 2=crosshair 3=hand(pointing) 4=resize-ew 5=resize-ns 6=not-allowed
+	switch cursor {
+	case 1:
+		rl.SetMouseCursor(.IBEAM)
+	case 2:
+		rl.SetMouseCursor(.CROSSHAIR)
+	case 3:
+		rl.SetMouseCursor(.POINTING_HAND)
+	case 4:
+		rl.SetMouseCursor(.RESIZE_EW)
+	case 5:
+		rl.SetMouseCursor(.RESIZE_NS)
+	case 6:
+		rl.SetMouseCursor(.NOT_ALLOWED)
+	case:
+		rl.SetMouseCursor(.ARROW)
+	}
+}
+
 Begin_Camera :: proc(state: rawptr, target_x, target_y, offset_x, offset_y, rotation, zoom: f32) {
 	if state == nil {
 		return
@@ -740,8 +914,32 @@ Create_Canvas :: proc(state: rawptr, width, height: int) -> (u64, bool) {
 	}
 	handle := b.next_handle
 	b.next_handle += 1
-	append(&b.canvases, Canvas_Entry{handle, canvas, width, height})
+	append(&b.canvases, Canvas_Entry{handle = handle, value = canvas, width = width, height = height, msaa = 0})
 	return handle, true
+}
+
+// v0.9 typed canvas creation. format is the Canvas_Format ordinal
+// (0=RGBA8, 1=RGBA16F, 2=RGBA32F, 3=Depth_Stencil). Only RGBA8 maps to a real
+// raylib resource: LoadRenderTexture produces an RGBA8 color buffer plus a
+// depth renderbuffer. Float and explicit depth-stencil FBOs would need custom
+// framebuffer assembly (LoadFramebuffer + FramebufferAttach + float texture
+// upload) outside raylib's render-batch state tracking, so they report
+// failure here and the public wrapper returns .Unsupported instead of a fake
+// handle. Per-canvas MSAA is handled by the caller (window MSAA comes from
+// Config.MSAA at creation time); this proc never takes an msaa argument.
+Create_Canvas_Format :: proc(state: rawptr, width, height, format: int) -> (u64, bool) {
+	if state == nil || width <= 0 || height <= 0 {
+		return 0, false
+	}
+	if format != 0 {
+		return 0, false
+	}
+	return Create_Canvas(state, width, height)
+}
+
+// v0.9 per-format canvas query. Only RGBA8 (0) is honored by Create_Canvas_Format.
+Is_Canvas_Format_Supported :: proc(state: rawptr, format: int) -> bool {
+	return state != nil && format == 0
 }
 
 Unload_Canvas :: proc(state: rawptr, handle: u64) {
@@ -754,6 +952,9 @@ Unload_Canvas :: proc(state: rawptr, handle: u64) {
 			if b.canvas_active && b.canvases[i].handle == handle {
 				rl.EndTextureMode()
 				b.canvas_active = false
+			}
+			if b.canvas_handle == handle {
+				b.canvas_handle = 0
 			}
 			rl.UnloadRenderTexture(b.canvases[i].value)
 			unordered_remove(&b.canvases, i)
@@ -773,6 +974,7 @@ Set_Canvas :: proc(state: rawptr, handle: u64) -> bool {
 	}
 	rl.BeginTextureMode(entry.value)
 	b.canvas_active = true
+	b.canvas_handle = handle
 	return true
 }
 
@@ -785,6 +987,7 @@ Reset_Canvas :: proc(state: rawptr) {
 		rl.EndTextureMode()
 		b.canvas_active = false
 	}
+	b.canvas_handle = 0
 }
 
 Draw_Canvas :: proc(state: rawptr, handle: u64, x, y, scale_x, scale_y: f32, r, g, b, a: u8) {
@@ -1222,7 +1425,7 @@ Load_Font :: proc(state: rawptr, path: string) -> (u64, bool) {
 	}
 	handle := b.next_handle
 	b.next_handle += 1
-	append(&b.fonts, Font_Entry{handle, font})
+	append(&b.fonts, Font_Entry{handle = handle, value = font, line_height = 1})
 	return handle, true
 }
 
@@ -1326,7 +1529,9 @@ Set_Text :: proc(state: rawptr, handle: u64, value: string) -> bool {
 	if err != nil {
 		return false
 	}
-	delete(entry.value)
+	if len(entry.value) > 0 {
+		delete(entry.value)
+	}
 	entry.value = owned
 	return true
 }
@@ -1342,6 +1547,14 @@ Draw_Text_Object :: proc(state: rawptr, handle: u64, x, y: f32, r, g, b, a: u8) 
 	}
 	position := rl.Vector2{x, y}
 	color := to_color(r, g, b, a)
+	// v0.10 per-text line advance: when the text font's line-height
+	// multiplier differs from 1.0, multiline text is drawn line-by-line so
+	// each advance equals size * multiplier (LOVE Font:setLineHeight). The
+	// default path keeps raylib's native DrawTextPro advance.
+	if text_line_height(backend, entry) != 1 && strings.contains(entry.value, "\n") {
+		draw_text_object_multiline(backend, entry, position, color)
+		return
+	}
 	c_text, c_err := strings.clone_to_cstring(entry.value, context.temp_allocator)
 	if c_err != nil {
 		return
@@ -1363,7 +1576,9 @@ Unload_Text :: proc(state: rawptr, handle: u64) {
 	b := cast(^Backend)state
 	for i := 0; i < len(b.texts); i += 1 {
 		if b.texts[i].handle == handle {
-			delete(b.texts[i].value)
+			if len(b.texts[i].value) > 0 {
+				delete(b.texts[i].value)
+			}
 			unordered_remove(&b.texts, i)
 			return
 		}
@@ -1535,4 +1750,363 @@ Renderer_Info :: proc(state: rawptr) -> (name, version: string, gpu_mesh, shader
 	}
 	b := cast(^Backend)state
 	return "raylib", "private", b.gpu_mesh_supported, true
+}
+
+// --- v0.10 text/canvas/shader completion (LOVE Font/Text/Canvas/Shader parity) ---
+//
+// Font metrics note: the vendored raylib Font exposes baseSize, glyphCount,
+// glyphPadding, the atlas texture, glyph rectangles and per-glyph info — but
+// no TrueType ascent/descent/line-gap tables. The public layer therefore
+// reports proportional metrics (ascent 0.8em, descent 0.2em, baseline at the
+// ascent, line advance size * multiplier) validated against the entries
+// below, and documents the approximation. Only baseSize is read here.
+
+// Font_Base_Size returns the raster base size, or 0 for unknown handles.
+Font_Base_Size :: proc(state: rawptr, handle: u64) -> int {
+	if state == nil || handle == 0 {
+		return 0
+	}
+	entry, ok := find_font(cast(^Backend)state, handle)
+	if !ok {
+		return 0
+	}
+	return int(entry.value.baseSize)
+}
+
+// Font_Line_Height_Multiplier returns the stored LOVE setLineHeight value
+// (1.0 default; stored values <= 0 read back as 1.0). Handle 0 is the
+// default font, whose multiplier lives on the Backend.
+Font_Line_Height_Multiplier :: proc(state: rawptr, handle: u64) -> f32 {
+	if state == nil {
+		return 0
+	}
+	b := cast(^Backend)state
+	stored := b.default_font_line_height
+	if handle != 0 {
+		entry, ok := find_font(b, handle)
+		if !ok {
+			return 0
+		}
+		stored = entry.line_height
+	}
+	if stored <= 0 {
+		return 1
+	}
+	return stored
+}
+
+Font_Set_Line_Height_Multiplier :: proc(state: rawptr, handle: u64, multiplier: f32) -> bool {
+	if state == nil || multiplier <= 0 {
+		return false
+	}
+	b := cast(^Backend)state
+	if handle == 0 {
+		b.default_font_line_height = multiplier
+		return true
+	}
+	entry, ok := find_font(b, handle)
+	if !ok {
+		return false
+	}
+	entry.line_height = multiplier
+	return true
+}
+
+// Font_Has_Codepoint reports whether codepoint has a glyph slot in the font.
+// Best-effort: it scans the loaded glyph table for an exact codepoint match.
+// Ligature/substitution shaping (a font rendering a codepoint only via
+// fallback or composition) is not detected — documented approximation.
+Font_Has_Codepoint :: proc(state: rawptr, handle: u64, codepoint: rune) -> bool {
+	if state == nil {
+		return false
+	}
+	b := cast(^Backend)state
+	if handle == 0 {
+		default_font := rl.GetFontDefault()
+		return glyph_table_contains(default_font, codepoint)
+	}
+	entry, ok := find_font(b, handle)
+	if !ok {
+		return false
+	}
+	return glyph_table_contains(entry.value, codepoint)
+}
+
+glyph_table_contains :: proc(font: rl.Font, codepoint: rune) -> bool {
+	if font.glyphCount <= 0 || font.glyphs == nil {
+		return false
+	}
+	for glyph in font.glyphs[:font.glyphCount] {
+		if glyph.value == codepoint {
+			return true
+		}
+	}
+	return false
+}
+
+// Text_Append appends suffix to the stored string (LOVE Text:add subset:
+// plain-text append; transforms and colored runs are out of scope).
+Text_Append :: proc(state: rawptr, handle: u64, suffix: string) -> bool {
+	if state == nil {
+		return false
+	}
+	entry, ok := find_text(cast(^Backend)state, handle)
+	if !ok {
+		return false
+	}
+	if len(suffix) == 0 {
+		return true
+	}
+	joined := strings.concatenate({entry.value, suffix})
+	if len(entry.value) > 0 {
+		delete(entry.value)
+	}
+	entry.value = joined
+	return true
+}
+
+// Text_Clear resets the stored string to empty (Set_Text rejects empty
+// input, so clearing needs this dedicated path).
+Text_Clear :: proc(state: rawptr, handle: u64) -> bool {
+	if state == nil {
+		return false
+	}
+	entry, ok := find_text(cast(^Backend)state, handle)
+	if !ok {
+		return false
+	}
+	if len(entry.value) > 0 {
+		delete(entry.value)
+	}
+	entry.value = ""
+	return true
+}
+
+Text_Font_Handle :: proc(state: rawptr, handle: u64) -> (u64, bool) {
+	if state == nil {
+		return 0, false
+	}
+	entry, ok := find_text(cast(^Backend)state, handle)
+	if !ok {
+		return 0, false
+	}
+	return entry.font_handle, true
+}
+
+// Text_Set_Font_Handle overrides the per-text font (LOVE Text:setFont).
+// Font 0 selects the default font; any other handle must exist.
+Text_Set_Font_Handle :: proc(state: rawptr, handle, font_handle: u64) -> bool {
+	if state == nil {
+		return false
+	}
+	b := cast(^Backend)state
+	entry, ok := find_text(b, handle)
+	if !ok {
+		return false
+	}
+	if font_handle != 0 {
+		if _, font_ok := find_font(b, font_handle); !font_ok {
+			return false
+		}
+	}
+	entry.font_handle = font_handle
+	return true
+}
+
+// text_line_height resolves the advance multiplier for a text entry.
+text_line_height :: proc(b: ^Backend, entry: ^Text_Entry) -> f32 {
+	if b == nil || entry == nil {
+		return 1
+	}
+	if entry.font_handle == 0 {
+		if b.default_font_line_height <= 0 {
+			return 1
+		}
+		return b.default_font_line_height
+	}
+	font, ok := find_font(b, entry.font_handle)
+	if !ok || font.line_height <= 0 {
+		return 1
+	}
+	return font.line_height
+}
+
+// draw_text_object_multiline draws each \n-separated line with a
+// size * multiplier advance (LOVE setLineHeight effect on Text draw).
+draw_text_object_multiline :: proc(b: ^Backend, entry: ^Text_Entry, position: rl.Vector2, color: rl.Color) {
+	multiplier := text_line_height(b, entry)
+	advance := entry.size * multiplier
+	font := rl.GetFontDefault()
+	use_default := entry.font_handle == 0
+	if !use_default {
+		named, ok := find_font(b, entry.font_handle)
+		if !ok {
+			return
+		}
+		font = named.value
+	}
+	line_y := position.y
+	start := 0
+	for i := 0; i <= len(entry.value); i += 1 {
+		if i == len(entry.value) || entry.value[i] == '\n' {
+			line := entry.value[start:i]
+			c_line, c_err := strings.clone_to_cstring(line, context.temp_allocator)
+			if c_err == nil {
+				rl.DrawTextPro(font, c_line, rl.Vector2{position.x, line_y}, rl.Vector2{}, b.transform.rotation, entry.size, entry.spacing, color)
+			}
+			line_y += advance
+			start = i+1
+		}
+	}
+}
+
+// Canvas_MSAA_Samples returns the stored MSAA sample count (always 0:
+// LoadRenderTexture canvases have no per-canvas MSAA; see Create_Canvas).
+Canvas_MSAA_Samples :: proc(state: rawptr, handle: u64) -> int {
+	if state == nil {
+		return 0
+	}
+	entry, ok := find_canvas(cast(^Backend)state, handle)
+	if !ok {
+		return 0
+	}
+	return entry.msaa
+}
+
+// Canvas_Exists reports whether handle names a live canvas.
+Canvas_Exists :: proc(state: rawptr, handle: u64) -> bool {
+	if state == nil || handle == 0 {
+		return false
+	}
+	_, ok := find_canvas(cast(^Backend)state, handle)
+	return ok
+}
+
+// Canvas_To_RGBA reads a canvas back into CPU RGBA8 pixels (LOVE
+// Canvas:newImageData subset: full-canvas capture, no slice/mipmap args).
+// Rows are flipped vertically so the image matches Draw_Canvas orientation
+// (canvas textures are stored upside-down in GL; Draw_Canvas compensates
+// with a negative-height source rect).
+Canvas_To_RGBA :: proc(state: rawptr, handle: u64) -> (pixels: [dynamic]u8, width, height: int, ok: bool) {
+	if state == nil {
+		return nil, 0, 0, false
+	}
+	entry, found := find_canvas(cast(^Backend)state, handle)
+	if !found {
+		return nil, 0, 0, false
+	}
+	image := rl.LoadImageFromTexture(entry.value.texture)
+	if !rl.IsImageValid(image) {
+		return nil, 0, 0, false
+	}
+	defer rl.UnloadImage(image)
+	rl.ImageFormat(&image, .UNCOMPRESSED_R8G8B8A8)
+	width = int(image.width)
+	height = int(image.height)
+	if width <= 0 || height <= 0 || image.data == nil {
+		return nil, 0, 0, false
+	}
+	size := int(rl.GetPixelDataSize(image.width, image.height, .UNCOMPRESSED_R8G8B8A8))
+	if size != width*height*4 {
+		return nil, 0, 0, false
+	}
+	raw := ([^]u8)(image.data)[:size]
+	pixels = make([dynamic]u8, size)
+	stride := width*4
+	for y := 0; y < height; y += 1 {
+		src := (height-1-y)*stride
+		copy(pixels[y*stride:(y+1)*stride], raw[src:src+stride])
+	}
+	return pixels, width, height, true
+}
+
+// Shader_Has_Uniform reports whether name is an active uniform (LOVE
+// Shader:hasUniform). Optimized-out uniforms report false, matching LOVE:
+// drivers drop uniforms that do not affect the output.
+Shader_Has_Uniform :: proc(state: rawptr, handle: u64, name: string) -> bool {
+	if state == nil || len(name) == 0 {
+		return false
+	}
+	b := cast(^Backend)state
+	entry, ok := find_shader(b, handle)
+	if !ok {
+		return false
+	}
+	c_name, c_err := strings.clone_to_cstring(name, context.temp_allocator)
+	if c_err != nil {
+		return false
+	}
+	return rl.GetShaderLocation(entry.value, c_name) >= 0
+}
+
+// --- v0.10 wave 5 niche GPU + mesh/video completion queries ---
+//
+// Active_Canvas_Handle names the canvas Set_Canvas targeted (second return
+// false when rendering to screen). Active_Shader_Handle does the same for
+// Begin_Shader. Transform_Stack_Depth is len(transforms): the Push/Pop
+// nesting depth. Texture_Exists / Shader_Exists validate handles for the
+// readability/validation parity queries without exposing entries.
+
+// Active_Canvas_Handle returns the targeted canvas handle, if any.
+Active_Canvas_Handle :: proc(state: rawptr) -> (u64, bool) {
+	if state == nil {
+		return 0, false
+	}
+	b := cast(^Backend)state
+	if !b.canvas_active || b.canvas_handle == 0 {
+		return 0, false
+	}
+	return b.canvas_handle, true
+}
+
+// Active_Shader_Handle returns the active shader handle, if any.
+Active_Shader_Handle :: proc(state: rawptr) -> (u64, bool) {
+	if state == nil {
+		return 0, false
+	}
+	b := cast(^Backend)state
+	if b.shader_active == 0 {
+		return 0, false
+	}
+	return b.shader_active, true
+}
+
+// Transform_Stack_Depth returns the Push_Transform nesting depth.
+Transform_Stack_Depth :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 0
+	}
+	return len((cast(^Backend)state).transforms)
+}
+
+// Texture_Exists reports whether handle names a live texture.
+Texture_Exists :: proc(state: rawptr, handle: u64) -> bool {
+	if state == nil || handle == 0 {
+		return false
+	}
+	_, ok := find_texture(cast(^Backend)state, handle)
+	return ok
+}
+
+// Texture_Mipmaps reports the stored mipmap level count (raylib textures
+// carry their count; the backend never generates mipmaps, so this is 1 for
+// every texture it creates). Zero for unknown handles.
+Texture_Mipmaps :: proc(state: rawptr, handle: u64) -> int {
+	if state == nil {
+		return 0
+	}
+	entry, ok := find_texture(cast(^Backend)state, handle)
+	if !ok {
+		return 0
+	}
+	return int(entry.value.mipmaps)
+}
+
+// Shader_Exists reports whether handle names a live shader.
+Shader_Exists :: proc(state: rawptr, handle: u64) -> bool {
+	if state == nil || handle == 0 {
+		return false
+	}
+	_, ok := find_shader(cast(^Backend)state, handle)
+	return ok
 }

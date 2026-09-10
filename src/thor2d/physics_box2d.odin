@@ -57,6 +57,13 @@ Physics_World_Entry :: struct {
 	native: b2.WorldId,
 	sub_steps: int,
 	events: [dynamic]Physics_Event,
+	// v0.10 wave 2: LOVE-style World callbacks (see Set_Physics_Callbacks in
+	// physics_extra.odin). Nil means unregistered. They fire post-step from
+	// fire_physics_callbacks, after the poll queue is filled.
+	on_begin_contact: Physics_Contact_Callback,
+	on_end_contact: Physics_Contact_Callback,
+	on_pre_solve: Physics_Contact_Callback,
+	on_post_solve: Physics_Contact_Callback,
 }
 
 Physics_Body_Entry :: struct {
@@ -474,6 +481,10 @@ Create_Physics_Joint :: proc(ctx: ^Context, world: Physics_World, def: Physics_J
 		native = b2.Thor2D_Create_Prismatic_Joint(world_entry.native, body_a.native, body_b.native, b2.Vec2{def.Anchor_A.X, def.Anchor_A.Y}, b2.Vec2{def.Anchor_B.X, def.Anchor_B.Y}, b2.Vec2{def.Axis.X, def.Axis.Y}, def.Collide_Connected)
 	case .Wheel:
 		native = b2.Thor2D_Create_Wheel_Joint(world_entry.native, body_a.native, body_b.native, b2.Vec2{def.Anchor_A.X, def.Anchor_A.Y}, b2.Vec2{def.Anchor_B.X, def.Anchor_B.Y}, b2.Vec2{def.Axis.X, def.Axis.Y}, def.Collide_Connected)
+	case .Pulley, .Rope, .Friction, .Gear:
+		// Box2D 3.x removed these joint types. Return an explicit error so
+		// LOVE ports fail loudly instead of getting a fake handle.
+		return Physics_Joint{}, .Unsupported
 	}
 	if !b2.Joint_IsValid(native) {
 		return Physics_Joint{}, .Resource_Load_Failed
@@ -946,6 +957,13 @@ Step_Physics :: proc(ctx: ^Context, world: Physics_World, delta := f32(1.0/60.0)
 	if !ok {
 		return
 	}
+	if entry.on_post_solve != nil {
+		// Hit events back the post_solve callback and are opt-in per shape
+		// in Box2D. Refresh here (not just at registration) so shapes
+		// created after Set_Physics_Callbacks report too. Worlds without a
+		// post_solve callback keep the exact prior event stream.
+		physics_set_hit_events(ctx, entry, true)
+	}
 	b2.World_Step(entry.native, delta, c.int(entry.sub_steps))
 	clear(&entry.events)
 	begin: [dynamic]b2.Thor2D_Contact_Event
@@ -976,15 +994,28 @@ Step_Physics :: proc(ctx: ^Context, world: Physics_World, delta := f32(1.0/60.0)
 	delete(sensor_begin)
 	delete(sensor_end)
 	delete(hits)
+	// Fire LOVE-style callbacks last: the poll queue above stays intact and
+	// pollable. This must be the final use of `entry` — callbacks may create
+	// or destroy worlds/bodies, invalidating it.
+	fire_physics_callbacks(ctx, world)
 }
 
 Step_All_Physics :: proc(ctx: ^Context, delta: f32) {
 	if ctx == nil {
 		return
 	}
-	for world in ctx.physics.worlds {
-		Step_Physics(ctx, Physics_World{world.handle}, delta)
+	// Snapshot handles first: Step callbacks may create or destroy worlds, so
+	// iterating the live array could skip or double-step worlds. Worlds
+	// created mid-call are stepped on the next call; destroyed ones resolve
+	// to no-ops inside Step_Physics.
+	handles := make([dynamic]u64, len(ctx.physics.worlds))
+	for world, i in ctx.physics.worlds {
+		handles[i] = world.handle
 	}
+	for handle in handles {
+		Step_Physics(ctx, Physics_World{handle}, delta)
+	}
+	delete(handles)
 	iterator := Query(&ctx.Registry, Rigid_Body_2D)
 	for {
 		entity, _, ok := Query_Next(&iterator)
@@ -1029,4 +1060,175 @@ Sync_Physics_Entity :: proc(ctx: ^Context, entity: Entity) {
 	case .Manual:
 		// The caller owns synchronization in manual mode.
 	}
+}
+
+// The shape material procs below mirror love.physics Fixture setters at
+// runtime. Friction, restitution, and density map directly to Box2D 3.x shape
+// state; chains apply to (and read from) their segments since Box2D expands a
+// chain into segment shapes internally. Sensor state is fixed at creation via
+// Physics_Shape_Def.Sensor because Box2D 3.x forbids sensor<->solid
+// transitions, so the sensor setter reports .Unsupported instead of faking.
+// All procs are headless-safe (pure Box2D CPU state, no backend).
+
+// Physics_Shape_Set_Friction mirrors love Fixture:setFriction.
+Physics_Shape_Set_Friction :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+	if ctx == nil {
+		return .Invalid_Handle
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return .Invalid_Handle
+	}
+	if b2.Shape_IsValid(entry.native) {
+		b2.Shape_SetFriction(entry.native, value)
+		return .None
+	}
+	if len(entry.chain_segments) > 0 {
+		for segment in entry.chain_segments {
+			b2.Shape_SetFriction(segment, value)
+		}
+		return .None
+	}
+	return .Invalid_Handle
+}
+
+// Physics_Shape_Set_Restitution mirrors love Fixture:setRestitution.
+Physics_Shape_Set_Restitution :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+	if ctx == nil {
+		return .Invalid_Handle
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return .Invalid_Handle
+	}
+	if b2.Shape_IsValid(entry.native) {
+		b2.Shape_SetRestitution(entry.native, value)
+		return .None
+	}
+	if len(entry.chain_segments) > 0 {
+		for segment in entry.chain_segments {
+			b2.Shape_SetRestitution(segment, value)
+		}
+		return .None
+	}
+	return .Invalid_Handle
+}
+
+// Physics_Shape_Set_Density mirrors love Fixture:setDensity and updates the
+// parent body mass, like Box2D does when shapes are created with a density.
+Physics_Shape_Set_Density :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+	if ctx == nil {
+		return .Invalid_Handle
+	}
+	if value < 0 {
+		return .Invalid_Data
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return .Invalid_Handle
+	}
+	if b2.Shape_IsValid(entry.native) {
+		b2.Shape_SetDensity(entry.native, value, true)
+		return .None
+	}
+	if len(entry.chain_segments) > 0 {
+		for segment in entry.chain_segments {
+			b2.Shape_SetDensity(segment, value, true)
+		}
+		return .None
+	}
+	return .Invalid_Handle
+}
+
+// Physics_Shape_Set_Sensor mirrors love Fixture:setSensor. Box2D 3.x cannot
+// change a shape from sensor to solid (or back) after creation, so this is a
+// no-op success when the shape already has the requested state and
+// .Unsupported otherwise; set Physics_Shape_Def.Sensor at creation instead.
+Physics_Shape_Set_Sensor :: proc(ctx: ^Context, shape: Physics_Shape, sensor: bool) -> Error {
+	if ctx == nil {
+		return .Invalid_Handle
+	}
+	if _, ok := find_physics_shape(&ctx.physics, shape.handle); !ok {
+		return .Invalid_Handle
+	}
+	if Physics_Shape_Is_Sensor(ctx, shape) == sensor {
+		return .None
+	}
+	return .Unsupported
+}
+
+// Physics_Shape_Friction mirrors love Fixture:getFriction. Chains report
+// their first segment; unknown handles read as 0.
+Physics_Shape_Friction :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+	if ctx == nil {
+		return 0
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return 0
+	}
+	if b2.Shape_IsValid(entry.native) {
+		return b2.Shape_GetFriction(entry.native)
+	}
+	if len(entry.chain_segments) > 0 {
+		return b2.Shape_GetFriction(entry.chain_segments[0])
+	}
+	return 0
+}
+
+// Physics_Shape_Restitution mirrors love Fixture:getRestitution. Chains report
+// their first segment; unknown handles read as 0.
+Physics_Shape_Restitution :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+	if ctx == nil {
+		return 0
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return 0
+	}
+	if b2.Shape_IsValid(entry.native) {
+		return b2.Shape_GetRestitution(entry.native)
+	}
+	if len(entry.chain_segments) > 0 {
+		return b2.Shape_GetRestitution(entry.chain_segments[0])
+	}
+	return 0
+}
+
+// Physics_Shape_Density mirrors love Fixture:getDensity. Chains report their
+// first segment; unknown handles read as 0.
+Physics_Shape_Density :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+	if ctx == nil {
+		return 0
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return 0
+	}
+	if b2.Shape_IsValid(entry.native) {
+		return b2.Shape_GetDensity(entry.native)
+	}
+	if len(entry.chain_segments) > 0 {
+		return b2.Shape_GetDensity(entry.chain_segments[0])
+	}
+	return 0
+}
+
+// Physics_Shape_Is_Sensor mirrors love Fixture:isSensor. Chains report their
+// first segment; unknown handles read as false.
+Physics_Shape_Is_Sensor :: proc(ctx: ^Context, shape: Physics_Shape) -> bool {
+	if ctx == nil {
+		return false
+	}
+	entry, ok := find_physics_shape(&ctx.physics, shape.handle)
+	if !ok {
+		return false
+	}
+	if b2.Shape_IsValid(entry.native) {
+		return b2.Shape_IsSensor(entry.native)
+	}
+	if len(entry.chain_segments) > 0 {
+		return b2.Shape_IsSensor(entry.chain_segments[0])
+	}
+	return false
 }

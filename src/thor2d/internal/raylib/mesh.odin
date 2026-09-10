@@ -12,7 +12,7 @@ Create_Mesh :: proc(state: rawptr, vertices: []Mesh_Vertex_Internal, indices: []
 	b := cast(^Backend)state
 	handle := b.next_handle
 	b.next_handle += 1
-	entry := Mesh_Entry{handle = handle, mode = mode}
+	entry := Mesh_Entry{handle = handle, mode = mode, draw_start = 0, draw_count = -1}
 	entry.vertices = make([dynamic]Mesh_Vertex_Internal, len(vertices))
 	copy(entry.vertices[:], vertices)
 	entry.positions = make([dynamic]f32, len(vertices)*2)
@@ -203,8 +203,44 @@ mesh_tint :: proc(a: rl.Color, b: rl.Color) -> rl.Color {
 	}
 }
 
-draw_mesh_gpu :: proc(entry: ^Mesh_Entry, texture: rl.Texture2D, use_texture: bool, x, y, rotation, scale_x, scale_y: f32) {
+// mesh_draw_span resolves the LOVE setDrawRange subset to a clamped
+// [start, end) span over the index list. An unset range (draw_count < 0)
+// spans everything; a set range clamps the end at len(indices) and draws
+// nothing when start is past the end.
+mesh_draw_span :: proc(entry: ^Mesh_Entry) -> (start, end: int) {
+	if entry == nil {
+		return 0, 0
+	}
+	if entry.draw_count < 0 {
+		return 0, len(entry.indices)
+	}
+	s := clamp(entry.draw_start, 0, len(entry.indices))
+	e := min(s+max(0, entry.draw_count), len(entry.indices))
+	return s, e
+}
+
+// mesh_bound_texture resolves the LOVE Mesh:getTexture binding: the bound
+// texture while it still exists in the backend, nothing otherwise. A stale
+// binding (texture unloaded after binding) draws untextured — documented on
+// the public wrapper.
+mesh_bound_texture :: proc(b: ^Backend, entry: ^Mesh_Entry) -> (rl.Texture2D, bool) {
+	if entry == nil || entry.texture_handle == 0 {
+		return rl.Texture2D{}, false
+	}
+	texture, ok := find_texture(b, entry.texture_handle)
+	if !ok {
+		return rl.Texture2D{}, false
+	}
+	return texture.value, true
+}
+
+draw_mesh_gpu :: proc(entry: ^Mesh_Entry, texture: rl.Texture2D, use_texture: bool, x, y, rotation, scale_x, scale_y: f32, start, end: int) {
 	if entry == nil || !entry.gpu_ready {
+		return
+	}
+	s := clamp(start, 0, len(entry.indices))
+	e := clamp(end, s, len(entry.indices))
+	if e <= s {
 		return
 	}
 	rlgl.PushMatrix()
@@ -219,8 +255,23 @@ draw_mesh_gpu :: proc(entry: ^Mesh_Entry, texture: rl.Texture2D, use_texture: bo
 	rlgl.EnableVertexBuffer(entry.gpu_texcoord)
 	rlgl.EnableVertexBuffer(entry.gpu_normal)
 	rlgl.EnableVertexBuffer(entry.gpu_color)
-	rlgl.EnableVertexBufferElement(entry.gpu_indices)
-	rlgl.DrawVertexArrayElements(0, c.int(len(entry.indices)), nil)
+	if e-s == len(entry.indices) {
+		rlgl.EnableVertexBufferElement(entry.gpu_indices)
+		rlgl.DrawVertexArrayElements(0, c.int(len(entry.indices)), nil)
+	} else {
+		// Subset draw without relying on driver index-offset semantics:
+		// the sliced indices go to a temporary element buffer that is
+		// drawn from and dropped. Only paid when a custom range is set;
+		// full draws keep the existing zero-upload path.
+		tmp := rlgl.LoadVertexBufferElement(raw_data(entry.indices[s:e]), c.int((e-s)*size_of(u32)), false)
+		if tmp != 0 {
+			rlgl.EnableVertexBufferElement(tmp)
+			rlgl.DrawVertexArrayElements(0, c.int(e-s), nil)
+			rlgl.DisableVertexBufferElement()
+			rlgl.DisableVertexBuffer()
+			rlgl.UnloadVertexBuffer(tmp)
+		}
+	}
 	rlgl.DisableVertexBufferElement()
 	rlgl.DisableVertexBuffer()
 	rlgl.DisableVertexArray()
@@ -241,7 +292,11 @@ Draw_Mesh :: proc(state: rawptr, handle: u64, x, y, rotation, scale_x, scale_y: 
 	}
 	tint := rl.Color{r, g, b, a}
 	if entry.gpu_ready {
-		draw_mesh_gpu(entry, rl.Texture2D{}, false, x, y, rotation, scale_x, scale_y)
+		// v0.10: a bound texture (Set_Mesh_Texture) shades the GPU draw,
+		// matching LOVE draw(mesh) with Mesh:getTexture set.
+		texture, use_texture := mesh_bound_texture(backend, entry)
+		s, e := mesh_draw_span(entry)
+		draw_mesh_gpu(entry, texture, use_texture, x, y, rotation, scale_x, scale_y, s, e)
 		return
 	}
 	points := make([dynamic]rl.Vector2, len(entry.vertices))
@@ -255,22 +310,38 @@ Draw_Mesh :: proc(state: rawptr, handle: u64, x, y, rotation, scale_x, scale_y: 
 		colors[i] = mesh_tint(rl.Color{vertex.r, vertex.g, vertex.b, vertex.a}, tint)
 	}
 
+	// v0.10: a set draw range slices the index list (LOVE setDrawRange
+	// restricts the vertex map). Unset, the span is the full list, so
+	// triangulation is unchanged. Textured CPU draws stay flat-shaded:
+	// the CPU path has no UV rasterizer (same documented limit as
+	// Draw_Mesh_Textured below), so the bound texture only affects GPU.
+	s, e := mesh_draw_span(entry)
+	span := entry.indices[s:e]
+	ranged := entry.draw_count >= 0
 	switch entry.mode {
 	case 0: // triangles
-		for i := 0; i+2 < len(entry.indices); i += 3 {
-		draw_mesh_triangle(points[:], colors[:], int(entry.indices[i]), int(entry.indices[i+1]), int(entry.indices[i+2]))
+		for i := 0; i+2 < len(span); i += 3 {
+		draw_mesh_triangle(points[:], colors[:], int(span[i]), int(span[i+1]), int(span[i+2]))
 		}
 	case 1: // fan
-		for i := 1; i+1 < len(entry.indices); i += 1 {
-			draw_mesh_triangle(points[:], colors[:], int(entry.indices[0]), int(entry.indices[i]), int(entry.indices[i+1]))
+		for i := 1; i+1 < len(span); i += 1 {
+			draw_mesh_triangle(points[:], colors[:], int(span[0]), int(span[i]), int(span[i+1]))
 		}
 	case 2: // strip
-		for i := 0; i+2 < len(entry.indices); i += 1 {
-			draw_mesh_triangle(points[:], colors[:], int(entry.indices[i]), int(entry.indices[i+1]), int(entry.indices[i+2]))
+		for i := 0; i+2 < len(span); i += 1 {
+			draw_mesh_triangle(points[:], colors[:], int(span[i]), int(span[i+1]), int(span[i+2]))
 		}
 	case 3: // points
-		for point in points {
-			rl.DrawCircleV(point, backend.point_size*0.5, tint)
+		if ranged {
+			for idx in span {
+				if int(idx) >= 0 && int(idx) < len(points) {
+					rl.DrawCircleV(points[idx], backend.point_size*0.5, tint)
+				}
+			}
+		} else {
+			for point in points {
+				rl.DrawCircleV(point, backend.point_size*0.5, tint)
+			}
 		}
 	}
 }
@@ -286,7 +357,8 @@ Draw_Mesh_Textured :: proc(state: rawptr, handle, texture_handle: u64, x, y, rot
 		return
 	}
 	if entry.gpu_ready {
-		draw_mesh_gpu(entry, texture.value, true, x, y, rotation, scale_x, scale_y)
+		s, e := mesh_draw_span(entry)
+		draw_mesh_gpu(entry, texture.value, true, x, y, rotation, scale_x, scale_y, s, e)
 	} else {
 		Draw_Mesh(state, handle, x, y, rotation, scale_x, scale_y, 255, 255, 255, 255)
 	}
@@ -303,4 +375,205 @@ draw_mesh_triangle :: proc(points: []rl.Vector2, colors: []rl.Color, i0, i1, i2:
 		u8((u16(colors[i0].a)+u16(colors[i1].a)+u16(colors[i2].a))/3),
 	}
 	rl.DrawTriangle(points[i0], points[i1], points[i2], color)
+}
+
+// v0.9 GPU instanced draw. Returns true when the mesh has resident GPU vertex
+// buffers (gpu_ready) and all `count` copies were issued from them via
+// draw_mesh_gpu, so no CPU triangulation happened; the caller maps that to
+// Error.None. Returns false when the mesh is missing or has no GPU buffers
+// (GL 1.1, non-triangle draw modes), in which case the caller falls back to
+// the per-instance Draw_Mesh CPU path and reports .Unsupported.
+//
+// Design note (spike evidence): rlgl also exposes
+// DrawVertexArrayElementsInstanced (single-call glDrawElementsInstanced) and
+// raylib exposes DrawMeshInstanced (rl.Mesh + Material + per-instance Matrix
+// array). Both were evaluated and deliberately NOT used here:
+//   - The public API carries one shared transform, not a per-instance array,
+//     so a single instanced call would rasterize N identical overlapping
+//     copies — pixel-identical to this loop, with no visual or API gain.
+//   - rl.DrawMeshInstanced needs an rl.Mesh/Material conversion that
+//     duplicates the resident VBOs and needs shader/material setup the 2D
+//     backend does not own.
+//   - glDrawElementsInstanced is not core on OpenGL ES 2.0 without an
+//     extension, while the draw_mesh_gpu path is already proven on every
+//     backend configuration Draw_Mesh supports.
+// A future per-instance-transform overload can adopt divisor attributes
+// (rlgl.SetVertexAttributeDivisor exists) plus DrawVertexArrayElementsInstanced.
+Draw_Mesh_Instanced :: proc(state: rawptr, handle: u64, count: int, x, y, rotation, scale_x, scale_y: f32, r, g, b, a: u8) -> bool {
+	if state == nil || count <= 0 {
+		return false
+	}
+	b := cast(^Backend)state
+	entry, ok := find_mesh(b, handle)
+	if !ok || !entry.gpu_ready {
+		return false
+	}
+	// Tint matches Draw_Mesh GPU behavior: draw_mesh_gpu shades from the
+	// per-vertex colors and ignores the flat tint on the GPU path.
+	_ = r
+	_ = g
+	_ = b
+	_ = a
+	s, e := mesh_draw_span(entry)
+	for i := 0; i < count; i += 1 {
+		draw_mesh_gpu(entry, rl.Texture2D{}, false, x, y, rotation, scale_x, scale_y, s, e)
+	}
+	return true
+}
+
+// --- v0.10 wave 5 mesh accessors (LOVE Mesh getVertex/getVertexCount/
+// setVertex/getDrawMode/setDrawMode/getTexture/setTexture/
+// setDrawRange/getDrawRange subset). Indices are 0-based into the CPU vertex
+// copy every mesh keeps (LOVE ids are 1-based: subtract 1 when porting).
+// attachAttribute/detachAttribute, custom vertex formats, setVertices and
+// the vertex map stay out of scope: the backend has one fixed format and
+// treats indices as the map.
+
+// Mesh_Vertex_At reads one vertex from the CPU copy.
+Mesh_Vertex_At :: proc(state: rawptr, handle: u64, index: int) -> (Mesh_Vertex_Internal, bool) {
+	if state == nil || index < 0 {
+		return {}, false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok || index >= len(entry.vertices) {
+		return {}, false
+	}
+	return entry.vertices[index], true
+}
+
+// Mesh_Vertex_Count returns the CPU vertex count (0 for unknown handles).
+Mesh_Vertex_Count :: proc(state: rawptr, handle: u64) -> int {
+	if state == nil {
+		return 0
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok {
+		return 0
+	}
+	return len(entry.vertices)
+}
+
+// Mesh_Set_Vertex patches one vertex in the CPU copy plus the upload arrays
+// and re-uploads the GPU buffers (same unload/upload cycle as Update_Mesh),
+// so GPU and CPU copies stay in sync.
+Mesh_Set_Vertex :: proc(state: rawptr, handle: u64, index: int, vertex: Mesh_Vertex_Internal) -> bool {
+	if state == nil || index < 0 {
+		return false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok || index >= len(entry.vertices) {
+		return false
+	}
+	entry.vertices[index] = vertex
+	entry.positions[index*2+0] = vertex.position_x
+	entry.positions[index*2+1] = vertex.position_y
+	entry.texcoords[index*2+0] = vertex.uv_x
+	entry.texcoords[index*2+1] = vertex.uv_y
+	entry.normals[index*2+0] = vertex.normal_x
+	entry.normals[index*2+1] = vertex.normal_y
+	entry.colors[index*4+0] = vertex.r
+	entry.colors[index*4+1] = vertex.g
+	entry.colors[index*4+2] = vertex.b
+	entry.colors[index*4+3] = vertex.a
+	if entry.gpu_ready {
+		unload_mesh_gpu(entry)
+	}
+	entry.gpu_ready = upload_mesh_gpu(entry)
+	return true
+}
+
+// Mesh_Mode returns the stored draw mode ordinal (matches Mesh_Draw_Mode
+// order: 0=Triangles, 1=Triangle_Fan, 2=Triangle_Strip, 3=Points).
+Mesh_Mode :: proc(state: rawptr, handle: u64) -> (int, bool) {
+	if state == nil {
+		return 0, false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok {
+		return 0, false
+	}
+	return entry.mode, true
+}
+
+// Mesh_Set_Mode switches the stored draw mode and rebuilds the GPU object
+// (unload + upload). Non-triangle modes have no GPU upload path
+// (upload_mesh_gpu accepts mode 0 only), so they draw via the CPU fallback —
+// the same rule Create_Mesh applies. The mode switch itself always succeeds
+// for valid modes; only GPU residency varies. Mode must be 0..3.
+Mesh_Set_Mode :: proc(state: rawptr, handle: u64, mode: int) -> bool {
+	if state == nil || mode < 0 || mode > 3 {
+		return false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok {
+		return false
+	}
+	entry.mode = mode
+	if entry.gpu_ready {
+		unload_mesh_gpu(entry)
+	}
+	entry.gpu_ready = upload_mesh_gpu(entry)
+	return true
+}
+
+// Mesh_Texture returns the bound texture handle (0 = none).
+Mesh_Texture :: proc(state: rawptr, handle: u64) -> (u64, bool) {
+	if state == nil {
+		return 0, false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok {
+		return 0, false
+	}
+	return entry.texture_handle, true
+}
+
+// Mesh_Set_Texture binds a texture for Draw_Mesh (LOVE Mesh:setTexture).
+// Texture 0 clears the binding; any other handle must name a live texture.
+Mesh_Set_Texture :: proc(state: rawptr, handle, texture: u64) -> bool {
+	if state == nil {
+		return false
+	}
+	b := cast(^Backend)state
+	entry, ok := find_mesh(b, handle)
+	if !ok {
+		return false
+	}
+	if texture != 0 {
+		if _, tex_ok := find_texture(b, texture); !tex_ok {
+			return false
+		}
+	}
+	entry.texture_handle = texture
+	return true
+}
+
+// Mesh_Draw_Range returns the stored draw range (0-based start, count with
+// -1 meaning "to the end"). (0, -1) is the default (draw all).
+Mesh_Draw_Range :: proc(state: rawptr, handle: u64) -> (start, count: int, ok: bool) {
+	if state == nil {
+		return 0, 0, false
+	}
+	entry, found := find_mesh(cast(^Backend)state, handle)
+	if !found {
+		return 0, 0, false
+	}
+	return entry.draw_start, entry.draw_count, true
+}
+
+// Mesh_Set_Draw_Range restricts drawing to indices [start, start+count)
+// (LOVE Mesh:setDrawRange; 0-based, count < 0 draws to the end, reset with
+// (0, -1)). Mirrors the SpriteBatch range validation: negative starts and
+// count == 0 report failure. The end clamps at draw (see mesh_draw_span).
+Mesh_Set_Draw_Range :: proc(state: rawptr, handle: u64, start, count: int) -> bool {
+	if state == nil || start < 0 || (count <= 0 && count != -1) {
+		return false
+	}
+	entry, ok := find_mesh(cast(^Backend)state, handle)
+	if !ok {
+		return false
+	}
+	entry.draw_start = start
+	entry.draw_count = count
+	return true
 }

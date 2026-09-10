@@ -125,6 +125,9 @@ case "${1:-help}" in
         "${THOR2D_ROOT}/build.sh" check
         "${THOR2D_ROOT}/build.sh" test
         "${THOR2D_ROOT}/build.sh" project-check examples/platformer_v03
+        "${THOR2D_ROOT}/build.sh" project-check examples/love_port_v08
+        "${THOR2D_ROOT}/build.sh" project-check examples/net_echo_v09
+        python3 "${THOR2D_ROOT}/scripts/gen_wiki.py" --check
         python3 -m py_compile "${THOR2D_ROOT}/scripts/validate_project.py" "${THOR2D_ROOT}/scripts/create_package_manifest.py"
         if rg -n 'vendor:raylib|vendor:box2d|vendor:miniaudio|foreign import' "${THOR2D_ROOT}/examples"; then
             printf 'Native backend import found in examples.\n' >&2
@@ -165,6 +168,16 @@ case "${1:-help}" in
     smoke-v07)
         THOR2D_SMOKE=1 exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/multimedia_showcase_v07" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-smoke-v07"
         ;;
+    love-port)
+        THOR2D_SMOKE=1 exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/love_port_v08" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-love-port-v08"
+        ;;
+    particles)
+        THOR2D_SMOKE=1 exec "${THOR2D_ODIN}" run "${THOR2D_ROOT}/examples/particles_v10" "${THOR2D_COLLECTION}" -debug -out:"${THOR2D_ROOT}/bin/thor2d-particles-v10"
+        ;;
+    editor)
+        mkdir -p "${THOR2D_ROOT}/bin"
+        exec "${THOR2D_ODIN}" build "${THOR2D_ROOT}/tools/editor_v09" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-editor-v09" -o:speed
+        ;;
     test)
         # Box2D owns process-global solver configuration; keep native physics
         # tests deterministic while pure Odin tests remain independent.
@@ -172,9 +185,10 @@ case "${1:-help}" in
         ;;
     check)
         "${THOR2D_ODIN}" check "${THOR2D_ROOT}/src/thor2d" "${THOR2D_COLLECTION}" -no-entry-point -vet
-        for example in hello pong showcase_v02 showcase_v04 platformer_v03 physics_lab project_scene headless_simulation_v05 capabilities_v05 audio_lab_v05 video_player_v05 physics_complete_v05 package_runner_v05 audio_lab_v07 audio_capture_v07 video_player_v07 multimedia_showcase_v07 async_assets_v07; do
+        for example in hello pong showcase_v02 showcase_v04 platformer_v03 physics_lab project_scene headless_simulation_v05 capabilities_v05 audio_lab_v05 video_player_v05 physics_complete_v05 package_runner_v05 audio_lab_v07 audio_capture_v07 video_player_v07 multimedia_showcase_v07 async_assets_v07 love_port_v08 net_echo_v09 particles_v10; do
             "${THOR2D_ODIN}" check "${THOR2D_ROOT}/examples/${example}" "${THOR2D_COLLECTION}" -vet
         done
+        "${THOR2D_ODIN}" check "${THOR2D_ROOT}/tools/editor_v09" "${THOR2D_COLLECTION}" -vet
         ;;
     build)
         mkdir -p "${THOR2D_ROOT}/bin"
@@ -193,6 +207,9 @@ case "${1:-help}" in
 		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/audio_capture_v07" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-audio-capture-v07" -o:speed
 		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/video_player_v07" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-video-player-v07" -o:speed
 		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/multimedia_showcase_v07" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-multimedia-showcase-v07" -o:speed
+		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/love_port_v08" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-love-port-v08" -o:speed
+		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/net_echo_v09" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-net-echo-v09" -o:speed
+		"${THOR2D_ODIN}" build "${THOR2D_ROOT}/tools/editor_v09" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-editor-v09" -o:speed
 		exec "${THOR2D_ODIN}" build "${THOR2D_ROOT}/examples/async_assets_v07" "${THOR2D_COLLECTION}" -out:"${THOR2D_ROOT}/bin/thor2d-async-assets-v07" -o:speed
         ;;
     *)
@@ -217,9 +234,11 @@ Thor2D development commands:
   ./build.sh video-adapter Build the optional FFmpeg adapter when available
   ./build.sh video-build Compile the video example with FFmpeg enabled
   ./build.sh video-smoke Run the optional FFmpeg decode/seek smoke test
-  ./build.sh smoke-v07 Run the v0.7 multimedia smoke example
-  ./build.sh smoke Run the graphics smoke showcase
-  ./build.sh test    Run framework tests
+   ./build.sh smoke-v07 Run the v0.7 multimedia smoke example
+   ./build.sh smoke Run the graphics smoke showcase
+   ./build.sh particles Run the v0.10 particle tuning demo
+   ./build.sh editor  Build the v0.9 CLI project inspector
+   ./build.sh test    Run framework tests
   ./build.sh check   Check the framework package
   ./build.sh build   Build a standalone hello binary
 

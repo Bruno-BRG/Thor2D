@@ -7,6 +7,7 @@ import "core:encoding/json"
 import "core:crypto/hash"
 import "core:c"
 import "core:reflect"
+import "core:strings"
 import lz4 "vendor:compress/lz4"
 import zlib "vendor:zlib"
 
@@ -273,6 +274,16 @@ Decode_CBOR :: proc(data: []byte, value: ^$T) -> Error {
 // blocks. This makes the safe one-shot decoders usable without trusting an
 // allocation size supplied by untrusted input.
 compressed_with_size :: proc(format: Compression_Format, data: []byte, capacity: int) -> (Compressed_Data, Error) {
+	// v0.10: historical entry point keeps default-level behavior exactly;
+	// Compress_With_Level exposes the level parameter via compressed_with_level.
+	return compressed_with_level(format, data, capacity, zlib.DEFAULT_COMPRESSION)
+}
+
+// compressed_with_level is the level-parameterized compressor. level follows
+// zlib conventions (0 = no compression .. 9 = best, -1 = default) and applies
+// to ZLIB/GZIP/DEFLATE; LZ4 has no level API in vendor:compress/lz4, so the
+// level is ignored for .LZ4 (documented in Compress_With_Level).
+compressed_with_level :: proc(format: Compression_Format, data: []byte, capacity: int, level: c.int) -> (Compressed_Data, Error) {
 	if capacity <= 0 {
 		return Compressed_Data{}, .Compression_Failed
 	}
@@ -291,7 +302,7 @@ compressed_with_size :: proc(format: Compression_Format, data: []byte, capacity:
 	case .ZLIB:
 		if len(data) > 0 {
 			out_size := zlib.uLongf(capacity)
-			status := zlib.compress2(&output[8], &out_size, &data[0], zlib.uLong(len(data)), zlib.DEFAULT_COMPRESSION)
+			status := zlib.compress2(&output[8], &out_size, &data[0], zlib.uLong(len(data)), level)
 			if status != zlib.OK {
 				delete(output)
 				return Compressed_Data{}, .Compression_Failed
@@ -307,7 +318,7 @@ compressed_with_size :: proc(format: Compression_Format, data: []byte, capacity:
 				window_bits = -15
 			}
 			stream := zlib.z_stream{}
-			if zlib.deflateInit2(&stream, zlib.DEFAULT_COMPRESSION, zlib.DEFLATED, c.int(window_bits), 8, zlib.DEFAULT_STRATEGY) != zlib.OK {
+			if zlib.deflateInit2(&stream, level, zlib.DEFLATED, c.int(window_bits), 8, zlib.DEFAULT_STRATEGY) != zlib.OK {
 				delete(output)
 				return Compressed_Data{}, .Compression_Failed
 			}
@@ -406,4 +417,62 @@ Decompress_Data :: proc(data: Compressed_Data) -> (Byte_Buffer, Error) {
 		return Byte_Buffer{}, .Compression_Failed
 	}
 	return Byte_Buffer{Bytes = output}, .None
+}
+
+// v0.10 data completion.
+
+// Compress_With_Level compresses with an explicit zlib level (mirrors the
+// level knobs archive writers need; LOVE exposes compression through
+// love.data.compress at a fixed default, which Create_Compressed_Data keeps).
+// level is clamped to 0 (no compression) .. 9 (best) and applies to
+// .ZLIB/.GZIP/.DEFLATE via vendor:zlib. .LZ4 ignores the level
+// (vendor:compress/lz4 exposes compress_default only) but still compresses.
+// Capacities match Create_Compressed_Data, so outputs decode with
+// Decompress_Data either way. Headless-safe (pure CPU).
+Compress_With_Level :: proc(data: []byte, format: Compression_Format, level: int) -> (Compressed_Data, Error) {
+	clamped := clamp(level, 0, 9)
+	capacity := len(data) + len(data)/255 + 64
+	if format == .ZLIB {
+		capacity = int(zlib.compressBound(zlib.uLong(len(data))))
+	}
+	if format == .LZ4 {
+		capacity = int(lz4.compressBound(c.int(len(data))))
+	}
+	if format == .GZIP || format == .DEFLATE {
+		capacity = len(data) + len(data)/1000 + 128
+	}
+	return compressed_with_level(format, data, capacity, c.int(clamped))
+}
+
+// Encode_Base64_Lines encodes like Encode_Base64 but wraps the output at
+// line_length characters with \n (MIME-style; mirrors writers that need
+// line-limited Base64 for text formats). line_length <= 0 maps to
+// .Invalid_Data. The returned string is owned by the caller (delete it).
+// Headless-safe (pure CPU).
+Encode_Base64_Lines :: proc(data: []byte, line_length := 76) -> (string, Error) {
+	if line_length <= 0 {
+		return "", .Invalid_Data
+	}
+	encoded, encode_err := base64.encode(data)
+	if encode_err != nil {
+		return "", .Serialization_Failed
+	}
+	if len(encoded) <= line_length {
+		return encoded, .None
+	}
+	buf := make([dynamic]byte, 0, len(encoded)+len(encoded)/line_length+1)
+	for i := 0; i < len(encoded); i += line_length {
+		end := min(i+line_length, len(encoded))
+		append(&buf, encoded[i:end])
+		if end < len(encoded) {
+			append(&buf, '\n')
+		}
+	}
+	delete(encoded)
+	result, clone_err := strings.clone(string(buf[:]))
+	delete(buf)
+	if clone_err != nil {
+		return "", .Serialization_Failed
+	}
+	return result, .None
 }

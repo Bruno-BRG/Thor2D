@@ -90,6 +90,11 @@ Audio_Backend :: struct {
 	capture: ^Capture_Entry,
 	master_volume: f32,
 	distance_model: ma.attenuation_model,
+	doppler_scale: f32,
+	listener_position: [3]f32,
+	listener_velocity: [3]f32,
+	listener_direction: [3]f32,
+	listener_up: [3]f32,
 }
 
 result_ok :: proc "contextless" (value: ma.result) -> bool {
@@ -208,11 +213,17 @@ Create :: proc() -> (rawptr, bool) {
 	b.next_handle = 1
 	b.master_volume = 1
 	b.distance_model = .inverse
+	b.doppler_scale = 1
+	// LOVE listener defaults: forward (0,0,-1), up (0,1,0).
+	b.listener_direction = [3]f32{0, 0, -1}
+	b.listener_up = [3]f32{0, 1, 0}
 	if !init_engine(b) {
 		free(b)
 		return nil, false
 	}
 	b.initialized = true
+	ma.engine_listener_set_direction(&b.engine, 0, 0, 0, -1)
+	ma.engine_listener_set_world_up(&b.engine, 0, 0, 1, 0)
 	return rawptr(b), true
 }
 
@@ -370,6 +381,8 @@ init_sound :: proc(b: ^Audio_Backend, source: ^Source_Entry, bus: ^Bus_Entry = n
 		return false
 	}
 	source.sound_ready = true
+	ma.sound_set_attenuation_model(&source.sound, b.distance_model)
+	ma.sound_set_doppler_factor(&source.sound, max(0, b.doppler_scale))
 	return true
 }
 
@@ -781,6 +794,36 @@ Set_Master :: proc(state: rawptr, value: f32) {
 	ma.engine_set_volume(&b.engine, b.master_volume)
 }
 
+Get_Master :: proc(state: rawptr) -> f32 {
+	if state == nil {
+		return 0
+	}
+	return (cast(^Audio_Backend)state).master_volume
+}
+
+Get_Distance_Model :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 1
+	}
+	#partial switch (cast(^Audio_Backend)state).distance_model {
+	case .none:
+		return 0
+	case .linear:
+		return 3
+	case .exponential:
+		return 5
+	}
+	return 1
+}
+
+Get_Listener :: proc(state: rawptr) -> (position, velocity: [3]f32) {
+	if state == nil {
+		return [3]f32{}, [3]f32{}
+	}
+	b := cast(^Audio_Backend)state
+	return b.listener_position, b.listener_velocity
+}
+
 Set_Pitch :: proc(state: rawptr, handle: u64, kind: int, value: f32) {
 	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
 		ma.sound_set_pitch(&source.sound, max(0.01, value))
@@ -836,6 +879,175 @@ Length_Seconds :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
 		return value, result_ok(ma.sound_get_length_in_seconds(&source.sound, &value))
 	}
 	return 0, false
+}
+
+// v0.10 wave 4 source getters (LOVE Source:get* parity). All query live
+// miniaudio state where a ma.sound_get_* accessor exists, so the values are
+// real engine state, never stored guesses. Channels/sample rate come from
+// the entry fields captured at decode time. Bad handles return zero values
+// with ok=false; callers map those to stored/zero values, never fake data.
+
+Get_Source_Volume :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_volume(&source.sound), true
+	}
+	return 0, false
+}
+
+Get_Source_Pitch :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_pitch(&source.sound), true
+	}
+	return 0, false
+}
+
+Get_Source_Pan :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_pan(&source.sound), true
+	}
+	return 0, false
+}
+
+Get_Source_Position :: proc(state: rawptr, handle: u64, kind: int) -> ([3]f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		v := ma.sound_get_position(&source.sound)
+		return [3]f32{v.x, v.y, v.z}, true
+	}
+	return [3]f32{}, false
+}
+
+Get_Source_Velocity :: proc(state: rawptr, handle: u64, kind: int) -> ([3]f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		v := ma.sound_get_velocity(&source.sound)
+		return [3]f32{v.x, v.y, v.z}, true
+	}
+	return [3]f32{}, false
+}
+
+Get_Source_Direction :: proc(state: rawptr, handle: u64, kind: int) -> ([3]f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		v := ma.sound_get_direction(&source.sound)
+		return [3]f32{v.x, v.y, v.z}, true
+	}
+	return [3]f32{}, false
+}
+
+Get_Source_Cone :: proc(state: rawptr, handle: u64, kind: int) -> (inner, outer, gain: f32, ok: bool) {
+	if source, found := find_source(cast(^Audio_Backend)state, handle, kind); found && source.sound_ready {
+		ma.sound_get_cone(&source.sound, &inner, &outer, &gain)
+		return inner, outer, gain, true
+	}
+	return 0, 0, 0, false
+}
+
+Get_Source_Rolloff :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_rolloff(&source.sound), true
+	}
+	return 0, false
+}
+
+Get_Source_Doppler :: proc(state: rawptr, handle: u64, kind: int) -> (f32, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_doppler_factor(&source.sound), true
+	}
+	return 0, false
+}
+
+Get_Source_Positioning :: proc(state: rawptr, handle: u64, kind: int) -> (bool, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return ma.sound_get_positioning(&source.sound) == .relative, true
+	}
+	return false, false
+}
+
+Is_Source_Looping :: proc(state: rawptr, handle: u64, kind: int) -> (bool, bool) {
+	if source, ok := find_source(cast(^Audio_Backend)state, handle, kind); ok && source.sound_ready {
+		return b32_to_bool(ma.sound_is_looping(&source.sound)), true
+	}
+	return false, false
+}
+
+Get_Source_Format :: proc(state: rawptr, handle: u64, kind: int) -> (channels, sample_rate: int, ok: bool) {
+	if source, found := find_source(cast(^Audio_Backend)state, handle, kind); found && source.channels > 0 && source.sample_rate > 0 {
+		return source.channels, source.sample_rate, true
+	}
+	return 0, 0, false
+}
+
+// Play/Pause/Stop_All iterate the live source list (LOVE love.audio.play/
+// pause/stop with no arguments) and return how many sources were acted on.
+Play_All :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 0
+	}
+	b := cast(^Audio_Backend)state
+	count := 0
+	for source in b.sources {
+		if source.sound_ready {
+			source.paused = false
+			ma.sound_start(&source.sound)
+			count += 1
+		}
+	}
+	return count
+}
+
+Pause_All :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 0
+	}
+	b := cast(^Audio_Backend)state
+	count := 0
+	for source in b.sources {
+		if source.sound_ready {
+			source.paused = true
+			ma.node_set_state(cast(^ma.node)&source.sound.engineNode.baseNode, .stopped)
+			count += 1
+		}
+	}
+	return count
+}
+
+Stop_All :: proc(state: rawptr) -> int {
+	if state == nil {
+		return 0
+	}
+	b := cast(^Audio_Backend)state
+	count := 0
+	for source in b.sources {
+		if source.sound_ready {
+			source.paused = false
+			ma.sound_stop(&source.sound)
+			ma.sound_seek_to_pcm_frame(&source.sound, 0)
+			count += 1
+		}
+	}
+	return count
+}
+
+// Decoder_Format reports the decoded stream format retained in the decoder
+// entry (LOVE Decoder:getChannelCount/getSampleRate parity). Decoders always
+// produce f32 PCM, so bit depth is 32 wherever a live decoder exists.
+Decoder_Format :: proc(state: rawptr, handle: u64) -> (channels, sample_rate: int, ok: bool) {
+	if decoder, found := find_decoder(cast(^Audio_Backend)state, handle); found && decoder.ready {
+		return decoder.channels, decoder.sample_rate, true
+	}
+	return 0, 0, false
+}
+
+// Capture_Info reports the live capture ring state (LOVE RecordingDevice
+// getSampleRate/getChannelCount/getSampleCount/isRecording parity). The ring
+// is f32 PCM, so bit depth is 32 wherever capture is active.
+Capture_Info :: proc(state: rawptr) -> (channels, sample_rate, buffered_frames: int, recording: bool) {
+	if state == nil {
+		return 0, 0, 0, false
+	}
+	capture := (cast(^Audio_Backend)state).capture
+	if capture == nil || !capture.ready {
+		return 0, 0, 0, false
+	}
+	return capture.channels, capture.sample_rate, int(ma.pcm_rb_available_read(&capture.ring)), true
 }
 
 Set_Position :: proc(state: rawptr, handle: u64, kind: int, x, y: f32) -> bool {
@@ -929,9 +1141,10 @@ Set_Doppler_All :: proc(state: rawptr, factor: f32) -> bool {
 	if !b.initialized {
 		return false
 	}
+	b.doppler_scale = max(0, factor)
 	for source in b.sources {
 		if source.sound_ready {
-			ma.sound_set_doppler_factor(&source.sound, max(0, factor))
+			ma.sound_set_doppler_factor(&source.sound, b.doppler_scale)
 		}
 	}
 	return true
@@ -962,10 +1175,42 @@ Set_Listener :: proc(state: rawptr, position, direction, velocity: [3]f32) -> bo
 		return false
 	}
 	b := cast(^Audio_Backend)state
+	b.listener_position = position
+	b.listener_velocity = velocity
+	b.listener_direction = direction
 	ma.engine_listener_set_position(&b.engine, 0, position[0], position[1], position[2])
 	ma.engine_listener_set_direction(&b.engine, 0, direction[0], direction[1], direction[2])
 	ma.engine_listener_set_velocity(&b.engine, 0, velocity[0], velocity[1], velocity[2])
 	return true
+}
+
+// Set_Orientation stores the listener forward/up vectors (v0.10 wave 4: LOVE
+// getOrientation/setOrientation parity) and pushes them to the engine.
+Set_Orientation :: proc(state: rawptr, forward, up: [3]f32) -> bool {
+	if state == nil {
+		return false
+	}
+	b := cast(^Audio_Backend)state
+	b.listener_direction = forward
+	b.listener_up = up
+	ma.engine_listener_set_direction(&b.engine, 0, forward[0], forward[1], forward[2])
+	ma.engine_listener_set_world_up(&b.engine, 0, up[0], up[1], up[2])
+	return true
+}
+
+Get_Orientation :: proc(state: rawptr) -> (forward, up: [3]f32, ok: bool) {
+	if state == nil {
+		return [3]f32{}, [3]f32{}, false
+	}
+	b := cast(^Audio_Backend)state
+	return b.listener_direction, b.listener_up, true
+}
+
+Get_Doppler_Scale :: proc(state: rawptr) -> (f32, bool) {
+	if state == nil {
+		return 0, false
+	}
+	return (cast(^Audio_Backend)state).doppler_scale, true
 }
 
 Start_Capture :: proc(state: rawptr, channels := 2, sample_rate := 48000) -> bool {

@@ -228,6 +228,86 @@ Mesh_Draw_Mode :: enum {
 	Points,
 }
 
+// v0.8 LOVE-parity draw state.
+Draw_Mode :: enum {
+	Fill,
+	Line,
+}
+
+Arc_Type :: enum {
+	Pie,
+	Open,
+	Closed,
+}
+
+Line_Join :: enum {
+	Miter,
+	Bevel,
+	None,
+}
+
+Line_Style :: enum {
+	Smooth,
+	Rough,
+}
+
+Cull_Mode :: enum {
+	None,
+	Back,
+	Front,
+}
+
+Winding :: enum {
+	Clockwise,
+	Counter_Clockwise,
+}
+
+Color_Mask :: struct {
+	R, G, B, A: bool,
+}
+
+Default_Color_Mask :: proc() -> Color_Mask {
+	return Color_Mask{R = true, G = true, B = true, A = true}
+}
+
+Graphics_Stats :: struct {
+	Draw_Calls: int,
+	Texture_Memory: int,
+	Canvas_Count: int,
+	Mesh_Count: int,
+}
+
+System_Limits :: struct {
+	Texture_Size: int,
+	Canvas_Size: int,
+	Multi_Canvas: bool,
+	Instancing: bool,
+	Stencil: bool,
+}
+
+Display_Info :: struct {
+	Index: int,
+	Name: string,
+	X, Y, W, H: int,
+}
+
+Power_Info :: struct {
+	// State mirrors love.system.getPowerInfo states: "unknown", "battery",
+	// "nobattery", "charging", "charged". Desktop reports "nobattery".
+	State: string,
+	Percent: int,
+}
+
+Cursor_Type :: enum {
+	Arrow,
+	IBeam,
+	Crosshair,
+	Hand,
+	HResize,
+	VResize,
+	Not_Allowed,
+}
+
 Blend_Mode :: enum {
 	Alpha,
 	Additive,
@@ -248,6 +328,18 @@ Texture_Wrap :: enum {
 	Clamp,
 	Mirror_Repeat,
 	Mirror_Clamp,
+}
+
+// v0.9 canvas pixel formats (mirrors love.graphics.newCanvas format/precision
+// variants). Only RGBA8 is backed by the raylib backend
+// (LoadRenderTexture is RGBA8 + a depth renderbuffer); the rest are accepted
+// by the type system so LOVE ports compile, but Create_Canvas_Format returns
+// .Unsupported for them instead of a fake handle. See Graphics.md.
+Canvas_Format :: enum {
+	RGBA8,
+	RGBA16F,
+	RGBA32F,
+	Depth_Stencil,
 }
 
 Text_Align :: enum {
@@ -319,6 +411,11 @@ Capability :: enum {
 	GPU_Mesh,
 	Audio_Decoder,
 	Audio_Buses,
+	Stencil,
+	Instancing,
+	Color_Mask,
+	System_Cursor,
+	Gamepad_Mapping,
 }
 
 Physics_World :: struct {
@@ -378,6 +475,13 @@ Physics_Joint_Kind :: enum {
 	Mouse,
 	Prismatic,
 	Wheel,
+	// v0.8: Box2D 3.x removed pulley/rope/friction/gear joints. The kinds
+	// below are accepted by the type system so LOVE ports compile, but
+	// Create_Physics_Joint returns .Unsupported for them. See Porting_From_LOVE.
+	Pulley,
+	Rope,
+	Friction,
+	Gear,
 }
 
 Physics_Joint_Def :: struct {
@@ -390,6 +494,12 @@ Physics_Joint_Def :: struct {
 	Max_Force, Max_Torque: f32,
 	Angular_Offset: f32,
 	Collide_Connected: bool,
+	// v0.8 extended fields for LOVE-parity joint kinds. Used by future
+	// backends; Box2D 3.x returns .Unsupported when Pulley/Rope/Friction/Gear
+	// is requested.
+	Ground_A, Ground_B: Vec2,
+	Max_Length: f32,
+	Ratio: f32,
 }
 
 Physics_Raycast_Hit :: struct {
@@ -607,6 +717,12 @@ Config :: struct {
 	Save_Directory: string,
 	Headless: bool,
 	Package_Path: string,
+	// v0.9 MSAA sample request (mirrors love.window.setMode msaa flag).
+	// Honored at window creation via the raylib MSAA_4X_HINT config flag:
+	// 0 (default) disables MSAA; any positive value requests 4x MSAA
+	// (raylib exposes only a 4x hint, so the exact count is not selectable).
+	// Must be set before Create/Run; changing it later has no effect.
+	MSAA: int,
 }
 
 Default_Config :: proc() -> Config {
@@ -623,6 +739,7 @@ Default_Config :: proc() -> Config {
 		Save_Directory = ".thor2d-save",
 		Headless = false,
 		Package_Path = "",
+		MSAA = 0,
 	}
 }
 
@@ -640,6 +757,11 @@ Error :: enum {
 	Path_Outside_Sandbox,
 	Project_Invalid,
 	Capability_Unavailable,
+	// v0.9 non-blocking I/O: a non-blocking socket operation (TCP_Accept,
+	// TCP_Send/TCP_Receive, UDP_Receive_From) has no data/peer ready yet.
+	// Poll again later; never treat as failure. Appended last so existing
+	// Error ordinals are unchanged.
+	Not_Ready,
 }
 
 Error_String :: proc(err: Error) -> string {
@@ -670,6 +792,8 @@ Error_String :: proc(err: Error) -> string {
 		return "invalid Thor2D project"
 	case .Capability_Unavailable:
 		return "capability is unavailable on this platform or device"
+	case .Not_Ready:
+		return "non-blocking operation is not ready yet; try again later"
 	}
 	return "unknown Thor2D error"
 }
@@ -690,6 +814,37 @@ Context :: struct {
 	filesystem: Filesystem,
 	events: [dynamic]Event,
 	threads: [dynamic]Thread,
+	// v0.8 LOVE-parity graphics state (mirrors love.graphics state).
+	draw_color: Color,
+	background_color: Color,
+	current_font: Font,
+	blend_mode: Blend_Mode,
+	scissor: Rect,
+	scissor_enabled: bool,
+	color_mask: Color_Mask,
+	line_join: Line_Join,
+	line_style: Line_Style,
+	default_filter_min: Texture_Filter,
+	default_filter_mag: Texture_Filter,
+	stencil_enabled: bool,
+	wireframe: bool,
+	cull_mode: Cull_Mode,
+	// v0.8 input state.
+	key_repeat: bool,
+	text_input: bool,
+	cursor_visible: bool,
+	cursor_grabbed: bool,
+	relative_mode: bool,
+	mouse_x, mouse_y: f32,
+	// v0.8 physics meter scale (mirrors love.physics.setMeter). Initialized
+	// from Config.Pixels_Per_Meter on world creation.
+	meter_scale: f32,
+	// v0.10 window state. window_has_icon records a successful Set_Window_Icon
+	// (no backend icon getter exists); display_sleep_enabled records the
+	// Set_Display_Sleep_Enabled intent (default true; desktop still returns
+	// .Unsupported because there is no display-sleep API to honor it).
+	window_has_icon: bool,
+	display_sleep_enabled: bool,
 }
 
 Byte_Buffer :: struct {
@@ -737,6 +892,11 @@ Filesystem :: struct {
 	Source_Directory: string,
 	Save_Directory: string,
 	archives: [dynamic]Filesystem_Archive,
+	// v0.10 LOVE symlink intent flag (mirrors love.filesystem symlink policy
+	// queries). The backend follows OS symlinks on reads; this flag records
+	// game intent (default true) and never weakens the sandbox: paths
+	// escaping via ".." are still rejected. See Filesystem.md.
+	Symlinks_Enabled: bool,
 }
 
 File_Open_Mode :: enum {
@@ -805,4 +965,77 @@ Game :: struct {
 	Shutdown: proc(ctx: ^Context),
 	On_Event: proc(ctx: ^Context, event: Event),
 	Fixed_Update: proc(ctx: ^Context, delta: f32),
+	// v0.9 LOVE-parity runtime gaps (mirrors love.errorhandler / love.lowmemory).
+	// Appended at the end so existing Game literals stay compatible.
+	// On_Error is invoked by Run/Run_Headless when Create fails. ctx is nil
+	// in that case because no Context was created; future runtime errors
+	// will pass a valid ctx. On_Low_Memory is never invoked on desktop
+	// (no OS low-memory signal); reserved as mobile-future.
+	On_Error: proc(ctx: ^Context, err: Error),
+	On_Low_Memory: proc(ctx: ^Context),
+}
+
+// v0.9 custom cursor handle (mirrors love.mouse.newCursor).
+// Raylib has no custom-OS-cursor API, so a Cursor derives from a Texture:
+// Load_Cursor_From_Image hides the OS cursor and the game draws the cursor
+// texture itself at Mouse_Position minus the hotspot (draw-it-yourself).
+Cursor :: struct {
+	handle: u64,
+}
+
+Cursor_Invalid :: proc(cursor: Cursor) -> bool {
+	return cursor.handle == 0
+}
+
+// v0.9 framework version (mirrors love.getVersion). Patch is 0 for v0.9.0.
+THOR2D_VERSION_MAJOR :: 0
+THOR2D_VERSION_MINOR :: 10
+THOR2D_VERSION_PATCH :: 0
+
+// v0.9 CPU-side image font (mirrors love.graphics.newImageFont).
+//
+// LOVE lays the glyphs out left-to-right in a single image row; cell width is
+// image.width / len(glyphs). The raylib backend's LoadFontFromImage assumes
+// sequential codepoints from a firstChar instead, so it cannot represent an
+// arbitrary LOVE glyph string faithfully. Image_Font therefore stays CPU-side:
+// Glyphs/Cell_W/Cell_H drive Measure_Text_Image_Font anywhere (headless-safe),
+// while Texture backs Draw_Text_Image_Font only when a graphics backend exists
+// (headless fonts keep a zero Texture and draw as a no-op).
+//
+// Glyphs is an owned ASCII clone freed by Unload_Image_Font. Validity is about
+// the CPU data (glyphs + cell dims), not the GPU handle, so a headless-loaded
+// font reports valid for measure/unload purposes.
+Image_Font :: struct {
+	Texture: Texture,
+	Glyphs: string,
+	Cell_W, Cell_H: int,
+}
+
+Image_Font_Invalid :: proc(font: Image_Font) -> bool {
+	return len(font.Glyphs) == 0 || font.Cell_W <= 0 || font.Cell_H <= 0
+}
+
+// v0.10 CPU-side texture array (LOVE newArrayImage subset).
+//
+// Raylib exposes no 2D array/volume texture API (LoadTextureCubemap is a 3D
+// skybox samplerCube path with no 2D layer draw), so this is an honest
+// emulation, not a GPU array: an owned list of 2D Texture layers drawn one
+// layer at a time via Draw_Texture_Array_Layer. Single owner: load once,
+// unload once with Unload_Texture_Array (which also frees Layers).
+Texture_Array :: struct {
+	Layers: [dynamic]Texture,
+}
+
+Texture_Array_Invalid :: proc(array: Texture_Array) -> bool {
+	return len(array.Layers) == 0
+}
+
+// v0.10 LOVE File:setBuffer/getBuffer parity (mirrors love.filesystem
+// BufferMode). The Thor2D file backend is unbuffered (os.read/os.write go
+// straight to the OS), so only .None is honored; requesting .Line/.Full
+// returns .Unsupported. See Filesystem.md.
+File_Buffer_Mode :: enum {
+	None,
+	Line,
+	Full,
 }

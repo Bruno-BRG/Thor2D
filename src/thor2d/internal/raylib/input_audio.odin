@@ -138,3 +138,16 @@ Random_Int :: proc(state: rawptr, minimum, maximum: int) -> int {
 	}
 	return int(rl.GetRandomValue(c.int(minimum), c.int(maximum)))
 }
+
+// v0.9 gamepad rumble (raylib SetGamepadVibration). duration is seconds;
+// motors are 0..1. Returns false when there is no backend or no gamepad.
+Set_Gamepad_Vibration :: proc(state: rawptr, index: int, left, right, duration: f32) -> bool {
+	if state == nil || index < 0 || index >= 8 {
+		return false
+	}
+	if !rl.IsGamepadAvailable(c.int(index)) {
+		return false
+	}
+	rl.SetGamepadVibration(c.int(index), left, right, duration)
+	return true
+}

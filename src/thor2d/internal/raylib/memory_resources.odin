@@ -63,7 +63,7 @@ Load_Font_From_Memory :: proc(state: rawptr, path: string, data: []byte, size: i
 	}
 	handle := b.next_handle
 	b.next_handle += 1
-	append(&b.fonts, Font_Entry{handle = handle, value = font})
+	append(&b.fonts, Font_Entry{handle = handle, value = font, line_height = 1})
 	return handle, true
 }
 

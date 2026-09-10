@@ -158,11 +158,50 @@ Set_Cursor_Visible :: proc(ctx: ^Context, visible: bool) -> Error {
 		return .Backend_Initialization_Failed
 	}
 	backend.Set_Cursor_Visible(ctx.backend, visible)
+	ctx.cursor_visible = visible
 	return .None
 }
 
+Is_Cursor_Visible :: proc(ctx: ^Context) -> bool {
+	if ctx == nil {
+		return true
+	}
+	return ctx.cursor_visible
+}
+
 Set_Mouse_Grab :: proc(ctx: ^Context, grab: bool) {
-	if ctx != nil && ctx.backend != nil {
+	if ctx == nil {
+		return
+	}
+	ctx.cursor_grabbed = grab
+	if ctx.backend != nil {
 		backend.Set_Mouse_Grab(ctx.backend, grab)
 	}
+}
+
+// Thor2D_Version mirrors love.getVersion (without codename). Returns the
+// THOR2D_VERSION_* constants. No ctx needed; pure compile-time version.
+Thor2D_Version :: proc() -> (major, minor, patch: int) {
+	return THOR2D_VERSION_MAJOR, THOR2D_VERSION_MINOR, THOR2D_VERSION_PATCH
+}
+
+// Is_Version_Compatible mirrors love.isVersionCompatible for the major.minor
+// subset. Same major and requested minor <= current minor is compatible.
+Is_Version_Compatible :: proc(major, minor: int) -> bool {
+	if major < 0 || minor < 0 {
+		return false
+	}
+	return major == THOR2D_VERSION_MAJOR && minor <= THOR2D_VERSION_MINOR
+}
+
+// Vibrate is a mobile-future stub (mirrors love.system.vibrate).
+// Desktop has no vibration hardware, so any positive duration returns
+// .Unsupported instead of a fake buzz. Non-positive durations are rejected
+// with .Invalid_Data before the backend is touched. A future mobile backend
+// will vibrate for `seconds` and return .None. See guides/Mobile.md.
+Vibrate :: proc(seconds: f32) -> Error {
+	if !(seconds > 0) {
+		return .Invalid_Data
+	}
+	return .Unsupported
 }

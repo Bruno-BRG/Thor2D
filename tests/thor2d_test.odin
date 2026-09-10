@@ -402,3 +402,108 @@ test_managed_thread_lifecycle :: proc(t: ^testing.T) {
 		testing.expect(t, thor2d.Thread_State_Of(&worker) == .Joined)
 	}
 }
+
+@(test)
+test_v08_graphics_state :: proc(t: ^testing.T) {
+	config := thor2d.Default_Config()
+	config.Headless = true
+	ctx, err := thor2d.Create(config)
+	testing.expect(t, err == .None)
+	if err != .None {
+		return
+	}
+	defer thor2d.Destroy(&ctx)
+	thor2d.Set_Color(&ctx, thor2d.Red)
+	testing.expect(t, thor2d.Get_Color(&ctx) == thor2d.Red)
+	thor2d.Set_Background_Color(&ctx, thor2d.Blue)
+	testing.expect(t, thor2d.Get_Background_Color(&ctx) == thor2d.Blue)
+	thor2d.Set_Blend_Mode(&ctx, .Alpha)
+	testing.expect(t, thor2d.Get_Blend_Mode(&ctx) == .Alpha)
+	thor2d.Set_Scissor(&ctx, thor2d.Rect{0, 0, 100, 100})
+	rect, enabled := thor2d.Get_Scissor(&ctx)
+	testing.expect(t, enabled && rect.W == 100)
+	thor2d.Reset_Scissor(&ctx)
+	_, enabled_after := thor2d.Get_Scissor(&ctx)
+	testing.expect(t, !enabled_after)
+	testing.expect(t, thor2d.Get_Width(&ctx) == 0) // headless: no window
+	testing.expect(t, !thor2d.Is_Graphics_Supported(&ctx, "stencil"))
+	testing.expect(t, !thor2d.Query_Capability(&ctx, .Stencil))
+	// Primitives are headless no-ops and must not crash.
+	thor2d.Draw_Arc(&ctx, thor2d.Vec2{10, 10}, 5, 0, 3.14, .Fill)
+	thor2d.Draw_Ellipse(&ctx, thor2d.Vec2{10, 10}, 5, 3, .Line)
+	thor2d.Draw_Polygon(&ctx, []thor2d.Vec2{{0, 0}, {4, 0}, {0, 4}}, .Fill)
+	thor2d.Draw_Points(&ctx, []thor2d.Vec2{{1, 1}})
+	thor2d.Print(&ctx, "hi", thor2d.Vec2{0, 0})
+	thor2d.Printf(&ctx, "hi", thor2d.Rect{0, 0, 100, 20}, .Left)
+	testing.expect(t, thor2d.Set_Color_Mask(&ctx, thor2d.Default_Color_Mask()) == .Unsupported)
+	testing.expect(t, thor2d.Set_Stencil_Test(&ctx, true) == .Unsupported)
+}
+
+@(test)
+test_v08_window_and_input_state :: proc(t: ^testing.T) {
+	config := thor2d.Default_Config()
+	config.Headless = true
+	ctx, err := thor2d.Create(config)
+	testing.expect(t, err == .None)
+	if err != .None {
+		return
+	}
+	defer thor2d.Destroy(&ctx)
+	testing.expect(t, thor2d.Window_Title(&ctx) == config.Title)
+	testing.expect(t, !thor2d.Window_Is_Open(&ctx))
+	testing.expect(t, !thor2d.Window_Is_Visible(&ctx))
+	testing.expect(t, thor2d.Get_Display_Count(&ctx) == 0)
+	testing.expect(t, thor2d.Get_VSync(&ctx) == false)
+	testing.expect(t, thor2d.Set_VSync(&ctx, true) == .Unsupported)
+	testing.expect(t, thor2d.Show_Message_Box(&ctx, "t", "m") == .Unsupported)
+	thor2d.Set_Key_Repeat(&ctx, true)
+	testing.expect(t, thor2d.Has_Key_Repeat(&ctx))
+	thor2d.Set_Text_Input(&ctx, true)
+	testing.expect(t, thor2d.Has_Text_Input(&ctx))
+	key, key_err := thor2d.Get_Key_From_Scancode(65)
+	testing.expect(t, key_err == .None && key == .A)
+	testing.expect(t, thor2d.Get_Joystick_Count(&ctx) == 0)
+	testing.expect(t, len(thor2d.Get_Touch_Ids(&ctx)) == 0)
+	testing.expect(t, thor2d.Get_Master_Volume(&ctx) == 0) // no audio backend headless
+	packed_size, packed_err := thor2d.Get_Packed_Size("u32")
+	testing.expect(t, packed_err == .None && packed_size == 4)
+}
+
+@(test)
+test_v08_filesystem_and_physics_gaps :: proc(t: ^testing.T) {
+	filesystem, fs_err := thor2d.Init_Filesystem(".", ".thor2d-test-save")
+	testing.expect(t, fs_err == .None)
+	if fs_err != .None {
+		return
+	}
+	defer thor2d.Destroy_Filesystem(&filesystem)
+	testing.expect(t, thor2d.Create_Directory(&filesystem, "v08_test") == .None)
+	testing.expect(t, thor2d.Write_Save(&filesystem, "v08_test/a.txt", transmute([]u8)string("x")) == .None)
+	testing.expect(t, thor2d.Append_Save(&filesystem, "v08_test/a.txt", transmute([]u8)string("y")) == .None)
+	size, size_err := thor2d.File_Size(&filesystem, "v08_test/a.txt")
+	testing.expect(t, size_err == .None && size == 2)
+	testing.expect(t, thor2d.Is_File(&filesystem, "v08_test/a.txt"))
+	testing.expect(t, thor2d.Is_Directory(&filesystem, "v08_test"))
+	testing.expect(t, thor2d.Remove_Path(&filesystem, "v08_test/a.txt") == .None)
+	testing.expect(t, thor2d.Remove_Path(&filesystem, "v08_test") == .None)
+	testing.expect(t, !thor2d.Is_Fused(&filesystem))
+
+	ctx := thor2d.Context{config = thor2d.Default_Config()}
+	testing.expect(t, thor2d.Set_Meter(&ctx, 32) == .None)
+	testing.expect(t, thor2d.Get_Meter(&ctx) == 32)
+	world, world_err := thor2d.Create_Physics_World(&ctx)
+	testing.expect(t, world_err == .None)
+	if world_err == .None {
+		a, _ := thor2d.Create_Physics_Body(&ctx, world)
+		b, _ := thor2d.Create_Physics_Body(&ctx, world)
+		_, gear_err := thor2d.Create_Physics_Joint(&ctx, world, thor2d.Physics_Joint_Def{Kind = .Gear, Body_A = a, Body_B = b})
+		testing.expect(t, gear_err == .Unsupported)
+		_, rope_err := thor2d.Create_Physics_Joint(&ctx, world, thor2d.Physics_Joint_Def{Kind = .Rope, Body_A = a, Body_B = b})
+		testing.expect(t, rope_err == .Unsupported)
+	}
+	thor2d.Destroy_All_Physics(&ctx)
+	g := thor2d.New_Random_Generator(7)
+	testing.expect(t, thor2d.Get_Random_Seed(&g) == g.State)
+	n := thor2d.Random_Normal(&g, 0, 1)
+	testing.expect(t, n == n) // no NaN
+}

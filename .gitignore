@@ -1,6 +1,8 @@
 .odin/
 bin/
 build/
+.thor2d-save/
+.thor2d-test-save/
 src/thor2d/internal/video/lib/
 .DS_Store
 *.user

@@ -160,6 +160,10 @@ backend changes possible without rewriting game code.
 | `video_player_v07` | Optional FFmpeg load, seek and frame metadata |
 | `multimedia_showcase_v07` | Windowed graphics and dedicated audio |
 | `async_assets_v07` | Headless runtime lifecycle and project execution |
+| `love_port_v08` | LOVE-port proof: color state, arc/ellipse/polygon/points, window getters |
+| `net_echo_v09` | Non-blocking TCP/UDP loopback demo (headless-safe) |
+| `particles_v10` | Full ParticleSystem tuning showcase |
+| `net_echo_v09` | Headless TCP ping/echo round-trip on 127.0.0.1 (non-blocking net demo) |
 
 ## Compatibility status
 
@@ -170,14 +174,23 @@ copy Lua signatures and it does not promise identical behavior across every
 platform or GPU.
 
 The detailed implementation matrix, capability rules and known boundaries are
-maintained in [docs/love2d-parity.md](docs/love2d-parity.md). Dependency and
+maintained in [docs/love2d-parity.md](docs/love2d-parity.md). The browsable
+LOVE-style reference (module pages, porting table, full API index) lives in
+[docs/wiki/Main_Page.md](docs/wiki/Main_Page.md). Dependency and
 build details are in [docs/dependencies.md](docs/dependencies.md).
 
 ## Current boundaries
 
-The v0.7 focus is runtime parity and release-quality foundations, not the
-visual editor. Some capabilities remain intentionally explicit:
+The v0.8 focus is LOVE-parity depth (graphics state, window/filesystem/input
+getters, meter, audio/math/data getters) plus the wiki. Some capabilities
+remain intentionally explicit:
 
+- Stencil, color-mask, depth, cull, wireframe and GPU instancing have no
+  dedicated backend path yet: setters store state and return
+  `Error.Unsupported` instead of fake behavior.
+- `Pulley`, `Rope`, `Friction` and `Gear` joints return `Error.Unsupported`:
+  Box2D 3.x removed them upstream.
+- Gamepad remapping returns `Error.Unsupported` (no mapping database).
 - FFmpeg video audio-track mixing is not included yet.
 - `Image_Data` currently uses RGBA8.
 - Non-triangle Mesh modes use the tested CPU fallback.

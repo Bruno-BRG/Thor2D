@@ -106,6 +106,64 @@ Supply :: proc(channel: ^Channel($T), value: T) -> bool {
 	return Send(channel, value)
 }
 
+// v0.10 LOVE Channel introspection (love.thread Channel:getCount/peek/clear/
+// hasRead subset). All nil-safe; all headless-safe (pure CPU).
+
+// Channel_Get_Count returns the number of buffered values (mirrors love
+// Channel:getCount). Wraps core:sync/chan len; nil channels report 0.
+Channel_Get_Count :: proc(channel: ^Channel($T)) -> int {
+	if channel == nil || channel.inner.impl == nil {
+		return 0
+	}
+	return sync_chan.len(channel.inner.impl)
+}
+
+// Channel_Has_Data reports whether a value can be received without blocking
+// (love "hasRead" spelling). Wraps can_recv; nil channels report false.
+Channel_Has_Data :: proc(channel: ^Channel($T)) -> bool {
+	if channel == nil || channel.inner.impl == nil {
+		return false
+	}
+	return sync_chan.can_recv(channel.inner.impl)
+}
+
+// Channel_Clear drains all buffered values (mirrors love Channel:clear) and
+// returns how many were dropped. Best-effort under concurrent senders: it
+// drains until try_recv fails once. Nil channels drop 0.
+Channel_Clear :: proc(channel: ^Channel($T)) -> int {
+	if channel == nil || channel.inner.impl == nil {
+		return 0
+	}
+	cleared := 0
+	for {
+		_, ok := sync_chan.try_recv(channel.inner)
+		if !ok {
+			break
+		}
+		cleared += 1
+	}
+	return cleared
+}
+
+// Channel_Peek would mirror love Channel:peek (read without popping), but
+// core:sync/chan exposes no peek primitive — any "peek" would have to pop
+// and re-queue, which reorders under concurrency and is therefore a fake.
+// This always returns (zero, .Unsupported) on live channels (nil channels
+// map to .Invalid_Handle). Use Try_Receive + Send to emulate explicitly.
+// See Thread.md.
+Channel_Peek :: proc(channel: ^Channel($T)) -> (T, Error) {
+	if channel == nil || channel.inner.impl == nil {
+		return T{}, .Invalid_Handle
+	}
+	return T{}, .Unsupported
+}
+
+// NOTE (v0.10, wontfix by design): LOVE's getChannel string registry is NOT
+// implemented. Channels are typed Channel($T); a heterogeneous string->any
+// registry would need type-erased rawptr storage with runtime type tags, and
+// a wrong-type claim would be memory-unsafe in Odin. Games should store
+// named channels in their own struct/map instead. See Thread.md.
+
 Thread :: struct {
 	native: ^odin_thread.Thread,
 	managed: ^Managed_Thread_Data,

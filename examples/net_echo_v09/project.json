@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "project_id": "thor2d.net-echo.v09",
+  "name": "Thor2D Net Echo v0.9",
+  "assets": [],
+  "scenes": [
+    {
+      "id": "main",
+      "name": "Main",
+      "entities": []
+    }
+  ]
+}

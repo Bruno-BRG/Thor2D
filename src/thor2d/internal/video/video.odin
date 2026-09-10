@@ -55,6 +55,13 @@ Video_Entry :: struct {
 	duration, position: f64,
 	looping: bool,
 	playing: bool,
+	// v0.10 completion: source path (Video_Source_Path; owned clone freed on
+	// unload) and stored frame-texture filter (Set_Video_Filter; Texture_Filter
+	// ordinal, applied to each new frame texture in Update since frames
+	// re-upload every decode).
+	path: string,
+	filter: int,
+	filter_set: bool,
 }
 
 Video_Backend :: struct {
@@ -110,8 +117,16 @@ Load :: proc(state: rawptr, path: string) -> (u64, bool) {
 		entry.height = int(thor_video_height(decoder))
 		entry.frame_rate = thor_video_frame_rate(decoder)
 		entry.duration = thor_video_duration(decoder)
+		cloned, clone_err := strings.clone(path)
+		if clone_err != nil {
+			thor_video_close(decoder)
+			free(entry)
+			return 0, false
+		}
+		entry.path = cloned
 		if entry.width <= 0 || entry.height <= 0 {
 			thor_video_close(decoder)
+			delete(entry.path)
 			free(entry)
 			return 0, false
 		}
@@ -205,6 +220,12 @@ Update :: proc(state: rawptr, graphics_state: rawptr, handle: u64, delta: f32) -
 		}
 		if graphics_state != nil {
 			entry.texture, _ = graphics.Create_Texture_From_RGBA(graphics_state, int(width), int(height), entry.frame[:])
+			// v0.10: frames re-upload every decode, so the stored filter is
+			// re-applied to each new texture (raylib keeps no per-texture
+			// filter memory beyond the GL state itself).
+			if entry.texture != 0 && entry.filter_set {
+				graphics.Set_Texture_Filter(graphics_state, entry.texture, entry.filter)
+			}
 		}
 		entry.width = int(width)
 		entry.height = int(height)
@@ -268,6 +289,7 @@ Unload :: proc(state: rawptr, graphics_state: rawptr, handle: u64) {
 			graphics.Unload_Texture(graphics_state, entry.texture)
 		}
 		delete(entry.frame)
+		delete(entry.path)
 		free(entry)
 		unordered_remove(&backend.entries, index)
 		return
@@ -287,8 +309,73 @@ Destroy :: proc(state: rawptr, graphics_state: rawptr) {
 			graphics.Unload_Texture(graphics_state, entry.texture)
 		}
 		delete(entry.frame)
+		delete(entry.path)
 		free(entry)
 	}
 	delete(backend.entries)
 	free(backend)
+}
+
+// v0.9 video+audio spike: always false. The FFmpeg shim (video_shim.c)
+// exposes no audio frames — Thor_Video has no audio codec/stream/packet
+// fields, thor_video_open selects only the best VIDEO stream, and the foreign
+// block declares no thor_video_audio_* symbols — so no entry can carry an
+// audio track. Public Video_Has_Audio routes here to keep the layering
+// honest; flip this (plus the shim) when audio demux lands.
+Has_Audio :: proc(state: rawptr, handle: u64) -> bool {
+	if state == nil || handle == 0 {
+		return false
+	}
+	return false
+}
+
+// --- v0.10 video completion (LOVE Video parity subset) ---
+//
+// Is_Playing reports the stored play state (set by Play/Pause). False for
+// missing backends and unknown handles — headless-safe (entries exist
+// headless under an FFmpeg build; decode state needs no window).
+Is_Playing :: proc(state: rawptr, handle: u64) -> bool {
+	entry, found := find(cast(^Video_Backend)state, handle)
+	if !found {
+		return false
+	}
+	return entry.playing
+}
+
+// Source_Path returns the path Load stored (borrowed: valid until Unload).
+// Empty for unknown handles.
+Source_Path :: proc(state: rawptr, handle: u64) -> string {
+	entry, found := find(cast(^Video_Backend)state, handle)
+	if !found {
+		return ""
+	}
+	return entry.path
+}
+
+// Frame_Texture returns the graphics-backend handle of the current decoded
+// frame (0 when no frame has been decoded yet). The public Set_Video_Filter
+// routes through here to reach the shared texture-filter path.
+Frame_Texture :: proc(state: rawptr, handle: u64) -> (u64, bool) {
+	entry, found := find(cast(^Video_Backend)state, handle)
+	if !found {
+		return 0, false
+	}
+	return entry.texture, true
+}
+
+// Set_Filter stores the frame-texture filter (Texture_Filter ordinal 0..2).
+// The stored value is applied to the live frame texture by the public layer
+// and re-applied to every new frame texture in Update (frames re-upload on
+// each decode, which would otherwise reset the GL filter state).
+Set_Filter :: proc(state: rawptr, handle: u64, filter: int) -> bool {
+	if filter < 0 || filter > 2 {
+		return false
+	}
+	entry, found := find(cast(^Video_Backend)state, handle)
+	if !found {
+		return false
+	}
+	entry.filter = filter
+	entry.filter_set = true
+	return true
 }

@@ -59,6 +59,7 @@ Set_Mouse_Relative :: proc(ctx: ^Context, relative: bool) -> Error {
 		return .Backend_Initialization_Failed
 	}
 	backend.Set_Mouse_Relative(ctx.backend, relative)
+	ctx.relative_mode = relative
 	return .None
 }
 

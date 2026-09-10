@@ -44,7 +44,7 @@ Init_Filesystem :: proc(source_directory, save_directory: string) -> (Filesystem
 		return Filesystem{}, .Path_Outside_Sandbox
 	}
 	identity, _ := strings.clone("thor2d")
-	return Filesystem{Identity = identity, Source_Directory = source, Save_Directory = save}, .None
+	return Filesystem{Identity = identity, Source_Directory = source, Save_Directory = save, Symlinks_Enabled = true}, .None
 }
 
 Destroy_Filesystem :: proc(filesystem: ^Filesystem) {
@@ -187,8 +187,11 @@ Write_Save :: proc(filesystem: ^Filesystem, relative: string, data: []byte) -> E
 		return err
 	}
 	defer delete(path)
-	if os.make_directory_all(os.dir(path)) != nil {
-		return .File_Not_Found
+	parent := os.dir(path)
+	if !os.exists(parent) {
+		if os.make_directory_all(parent) != nil {
+			return .File_Not_Found
+		}
 	}
 	if os.write_entire_file(path, data) != nil {
 		return .File_Not_Found
@@ -210,7 +213,10 @@ Get_File_Info :: proc(filesystem: ^Filesystem, relative: string) -> (Thor2D_File
 		return Thor2D_File_Info{}, err
 	}
 	defer delete(path)
-	if os.exists(save_path) && !os.is_directory(save_path) {
+	if os.exists(save_path) {
+		if os.is_directory(save_path) {
+			return Thor2D_File_Info{Exists = true, Directory = true}, .None
+		}
 		file, open_err := os.open(save_path)
 		if open_err != nil {
 			return Thor2D_File_Info{}, .File_Not_Found
@@ -372,9 +378,16 @@ Unmount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error 
 // entries remain read-through File_Data values for now; they are intentionally
 // not exposed as a seekable OS handle because compressed entries have no
 // stable native descriptor.
+//
+// v0.10: Path/Mode/Buffer_Mode record the Open_File arguments (LOVE
+// File:getFilename/getMode/getBuffer) so File_Name/File_Mode keep working
+// after Close_File. Path is an owned clone.
 File :: struct {
 	native: ^os.File,
 	writable: bool,
+	Path: string,
+	Mode: File_Open_Mode,
+	Buffer_Mode: File_Buffer_Mode,
 }
 
 Open_File :: proc(filesystem: ^Filesystem, relative: string, mode := File_Open_Mode.Read) -> (^File, Error) {
@@ -418,6 +431,10 @@ Open_File :: proc(filesystem: ^Filesystem, relative: string, mode := File_Open_M
 	file := new(File)
 	file.native = native
 	file.writable = writable
+	// v0.10: remember the LOVE-visible identity. The clone is best-effort: a
+	// failed clone still yields a usable handle with an empty name.
+	file.Path, _ = strings.clone(relative)
+	file.Mode = mode
 	return file, .None
 }
 
