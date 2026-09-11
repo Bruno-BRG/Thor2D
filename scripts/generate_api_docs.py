@@ -21,10 +21,26 @@ def main() -> int:
         if not entries:
             continue
         lines += [f"## `{path.stem}`", "", f"Source: `src/thor2d/{path.name}`", ""]
-        text = path.read_text().splitlines()
+        source = path.read_text()
+        text = source.splitlines()
         for name in entries:
-            line = next((x.strip() for x in text if re.match(rf"^{re.escape(name)}\s*::\s*proc", x)), f"{name} :: proc")
-            lines += [f"### `{name}`", "", f"```odin\n{line}\n```", "", f"See [API index](Api_Reference.md) and the relevant module page for behavior.", ""]
+            start = next(i for i, x in enumerate(text) if re.match(rf"^{re.escape(name)}\s*::\s*proc", x))
+            declaration = []
+            for part in text[start:]:
+                declaration.append(part)
+                if "{" in part:
+                    break
+            signature = "\n".join(declaration).split("{", 1)[0].strip()
+            comments = []
+            previous = start - 1
+            while previous >= 0 and text[previous].strip().startswith("//"):
+                comments.insert(0, text[previous].strip()[2:].strip())
+                previous -= 1
+            url = f"https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/{path.name}#L{start + 1}"
+            lines += [f"### `{name}`", "", f"```odin\n{signature}\n```", ""]
+            if comments:
+                lines += ["\n".join(comments), ""]
+            lines += [f"[Implementation and error branches]({url})", ""]
             total += 1
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"wrote {OUT} with {total} procedure entries")

@@ -11,882 +11,1013 @@ Source: `src/thor2d/audio.odin`
 ### `New_Sound_Data`
 
 ```odin
-New_Sound_Data :: proc(sample_rate, channels, frames: int, bit_depth := 32) -> (Sound_Data, Error) {
+New_Sound_Data :: proc(sample_rate, channels, frames: int, bit_depth := 32) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L7)
 
 ### `Destroy_Sound_Data`
 
 ```odin
-Destroy_Sound_Data :: proc(data: ^Sound_Data) {
+Destroy_Sound_Data :: proc(data: ^Sound_Data)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L19)
 
 ### `Sound_Data_Sample_Count`
 
 ```odin
-Sound_Data_Sample_Count :: proc(data: ^Sound_Data) -> int {
+Sound_Data_Sample_Count :: proc(data: ^Sound_Data) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L26)
 
 ### `Clone_Sound_Data`
 
 ```odin
-Clone_Sound_Data :: proc(data: ^Sound_Data) -> (Sound_Data, Error) {
+Clone_Sound_Data :: proc(data: ^Sound_Data) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L33)
 
 ### `Sound_Data_Frame_Count`
 
 ```odin
-Sound_Data_Frame_Count :: proc(data: ^Sound_Data) -> int {
+Sound_Data_Frame_Count :: proc(data: ^Sound_Data) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L47)
 
 ### `Sound_Data_Duration`
 
 ```odin
-Sound_Data_Duration :: proc(data: ^Sound_Data) -> f32 {
+Sound_Data_Duration :: proc(data: ^Sound_Data) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L54)
 
 ### `Convert_Sound_Data`
 
 ```odin
-Convert_Sound_Data :: proc(data: ^Sound_Data, sample_rate, channels: int) -> (Sound_Data, Error) {
+Convert_Sound_Data :: proc(data: ^Sound_Data, sample_rate, channels: int) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Convert_Sound_Data performs deterministic linear resampling and channel
+mapping. It keeps the public representation float PCM, while accepting the
+same format-independent contract used by the decoder and capture APIs.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L64)
 
 ### `Set_Sound_Data_Sample`
 
 ```odin
-Set_Sound_Data_Sample :: proc(data: ^Sound_Data, index: int, value: f32) -> Error {
+Set_Sound_Data_Sample :: proc(data: ^Sound_Data, index: int, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L104)
 
 ### `Get_Sound_Data_Sample`
 
 ```odin
-Get_Sound_Data_Sample :: proc(data: ^Sound_Data, index: int) -> (f32, Error) {
+Get_Sound_Data_Sample :: proc(data: ^Sound_Data, index: int) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L112)
 
 ### `Fill_Sine_Wave`
 
 ```odin
-Fill_Sine_Wave :: proc(data: ^Sound_Data, frequency, amplitude: f32) -> Error {
+Fill_Sine_Wave :: proc(data: ^Sound_Data, frequency, amplitude: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L119)
 
 ### `Sound_Data_From_Buffer`
 
 ```odin
-Sound_Data_From_Buffer :: proc(ctx: ^Context, buffer: ^Byte_Buffer) -> (Sound_Data, Error) {
+Sound_Data_From_Buffer :: proc(ctx: ^Context, buffer: ^Byte_Buffer) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L133)
 
 ### `Sound_Data_From_Bytes`
 
 ```odin
-Sound_Data_From_Bytes :: proc(ctx: ^Context, bytes: []byte) -> (Sound_Data, Error) {
+Sound_Data_From_Bytes :: proc(ctx: ^Context, bytes: []byte) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L140)
 
 ### `Load_Sound_Data`
 
 ```odin
-Load_Sound_Data :: proc(ctx: ^Context, path: string) -> (Sound_Data, Error) {
+Load_Sound_Data :: proc(ctx: ^Context, path: string) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L179)
 
 ### `Load_Sound`
 
 ```odin
-Load_Sound :: proc(ctx: ^Context, path: string) -> (Sound, Error) {
+Load_Sound :: proc(ctx: ^Context, path: string) -> (Sound, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L191)
 
 ### `Unload_Sound`
 
 ```odin
-Unload_Sound :: proc(ctx: ^Context, sound: Sound) {
+Unload_Sound :: proc(ctx: ^Context, sound: Sound)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L207)
 
 ### `Play_Sound`
 
 ```odin
-Play_Sound :: proc(ctx: ^Context, sound: Sound) {
+Play_Sound :: proc(ctx: ^Context, sound: Sound)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L213)
 
 ### `Stop_Sound`
 
 ```odin
-Stop_Sound :: proc(ctx: ^Context, sound: Sound) {
+Stop_Sound :: proc(ctx: ^Context, sound: Sound)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L219)
 
 ### `Set_Sound_Volume`
 
 ```odin
-Set_Sound_Volume :: proc(ctx: ^Context, sound: Sound, volume: f32) {
+Set_Sound_Volume :: proc(ctx: ^Context, sound: Sound, volume: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L225)
 
 ### `Load_Music`
 
 ```odin
-Load_Music :: proc(ctx: ^Context, path: string) -> (Music, Error) {
+Load_Music :: proc(ctx: ^Context, path: string) -> (Music, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L231)
 
 ### `Unload_Music`
 
 ```odin
-Unload_Music :: proc(ctx: ^Context, music: Music) {
+Unload_Music :: proc(ctx: ^Context, music: Music)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L247)
 
 ### `Play_Music`
 
 ```odin
-Play_Music :: proc(ctx: ^Context, music: Music) {
+Play_Music :: proc(ctx: ^Context, music: Music)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L253)
 
 ### `Update_Music`
 
 ```odin
-Update_Music :: proc(ctx: ^Context, music: Music) {
+Update_Music :: proc(ctx: ^Context, music: Music)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L259)
 
 ### `Set_Master_Volume`
 
 ```odin
-Set_Master_Volume :: proc(ctx: ^Context, volume: f32) {
+Set_Master_Volume :: proc(ctx: ^Context, volume: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L265)
 
 ### `Load_Audio_Source`
 
 ```odin
-Load_Audio_Source :: proc(ctx: ^Context, path: string, kind: Audio_Source_Kind) -> (Audio_Source, Error) {
+Load_Audio_Source :: proc(ctx: ^Context, path: string, kind: Audio_Source_Kind) -> (Audio_Source, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L271)
 
 ### `Create_Queueable_Source`
 
 ```odin
-Create_Queueable_Source :: proc(ctx: ^Context) -> (Audio_Source, Error) {
+Create_Queueable_Source :: proc(ctx: ^Context) -> (Audio_Source, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L292)
 
 ### `Create_Audio_Source_From_Data`
 
 ```odin
-Create_Audio_Source_From_Data :: proc(ctx: ^Context, data: Sound_Data) -> (Audio_Source, Error) {
+Create_Audio_Source_From_Data :: proc(ctx: ^Context, data: Sound_Data) -> (Audio_Source, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L303)
 
 ### `Destroy_Audio_Source`
 
 ```odin
-Destroy_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) {
+Destroy_Audio_Source :: proc(ctx: ^Context, source: Audio_Source)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L321)
 
 ### `Play_Audio_Source`
 
 ```odin
-Play_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) {
+Play_Audio_Source :: proc(ctx: ^Context, source: Audio_Source)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L328)
 
 ### `Pause_Audio_Source`
 
 ```odin
-Pause_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) {
+Pause_Audio_Source :: proc(ctx: ^Context, source: Audio_Source)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L334)
 
 ### `Resume_Audio_Source`
 
 ```odin
-Resume_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) {
+Resume_Audio_Source :: proc(ctx: ^Context, source: Audio_Source)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L340)
 
 ### `Stop_Audio_Source`
 
 ```odin
-Stop_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) {
+Stop_Audio_Source :: proc(ctx: ^Context, source: Audio_Source)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L346)
 
 ### `Rewind_Audio_Source`
 
 ```odin
-Rewind_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> Error {
+Rewind_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L352)
 
 ### `Clone_Audio_Source`
 
 ```odin
-Clone_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> (Audio_Source, Error) {
+Clone_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> (Audio_Source, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L362)
 
 ### `Get_Audio_Source_State`
 
 ```odin
-Get_Audio_Source_State :: proc(ctx: ^Context, source: Audio_Source) -> Audio_Source_State {
+Get_Audio_Source_State :: proc(ctx: ^Context, source: Audio_Source) -> Audio_Source_State
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L373)
 
 ### `Set_Audio_Source_Volume`
 
 ```odin
-Set_Audio_Source_Volume :: proc(ctx: ^Context, source: Audio_Source, volume: f32) {
+Set_Audio_Source_Volume :: proc(ctx: ^Context, source: Audio_Source, volume: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L380)
 
 ### `Set_Audio_Source_Pitch`
 
 ```odin
-Set_Audio_Source_Pitch :: proc(ctx: ^Context, source: Audio_Source, pitch: f32) {
+Set_Audio_Source_Pitch :: proc(ctx: ^Context, source: Audio_Source, pitch: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L386)
 
 ### `Set_Audio_Source_Pan`
 
 ```odin
-Set_Audio_Source_Pan :: proc(ctx: ^Context, source: Audio_Source, pan: f32) {
+Set_Audio_Source_Pan :: proc(ctx: ^Context, source: Audio_Source, pan: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L392)
 
 ### `Queue_Audio_Data`
 
 ```odin
-Queue_Audio_Data :: proc(ctx: ^Context, source: Audio_Source, data: Sound_Data) -> Error {
+Queue_Audio_Data :: proc(ctx: ^Context, source: Audio_Source, data: Sound_Data) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L398)
 
 ### `Set_Audio_Source_Looping`
 
 ```odin
-Set_Audio_Source_Looping :: proc(ctx: ^Context, source: Audio_Source, looping: bool) -> Error {
+Set_Audio_Source_Looping :: proc(ctx: ^Context, source: Audio_Source, looping: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L408)
 
 ### `Set_Audio_Source_Relative`
 
 ```odin
-Set_Audio_Source_Relative :: proc(ctx: ^Context, source: Audio_Source, relative: bool) -> Error {
+Set_Audio_Source_Relative :: proc(ctx: ^Context, source: Audio_Source, relative: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L418)
 
 ### `Set_Audio_Source_Direction`
 
 ```odin
-Set_Audio_Source_Direction :: proc(ctx: ^Context, source: Audio_Source, direction: Vec2) -> Error {
+Set_Audio_Source_Direction :: proc(ctx: ^Context, source: Audio_Source, direction: Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L428)
 
 ### `Set_Audio_Source_Cone`
 
 ```odin
-Set_Audio_Source_Cone :: proc(ctx: ^Context, source: Audio_Source, inner_angle, outer_angle, outer_gain: f32) -> Error {
+Set_Audio_Source_Cone :: proc(ctx: ^Context, source: Audio_Source, inner_angle, outer_angle, outer_gain: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L435)
 
 ### `Seek_Audio_Source`
 
 ```odin
-Seek_Audio_Source :: proc(ctx: ^Context, source: Audio_Source, seconds: f32) -> Error {
+Seek_Audio_Source :: proc(ctx: ^Context, source: Audio_Source, seconds: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L442)
 
 ### `Tell_Audio_Source`
 
 ```odin
-Tell_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> (f32, Error) {
+Tell_Audio_Source :: proc(ctx: ^Context, source: Audio_Source) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L449)
 
 ### `Audio_Source_Length`
 
 ```odin
-Audio_Source_Length :: proc(ctx: ^Context, source: Audio_Source) -> (f32, Error) {
+Audio_Source_Length :: proc(ctx: ^Context, source: Audio_Source) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L460)
 
 ### `Set_Audio_Listener`
 
 ```odin
-Set_Audio_Listener :: proc(ctx: ^Context, position, direction, velocity: Vec2) -> Error {
+Set_Audio_Listener :: proc(ctx: ^Context, position, direction, velocity: Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L471)
 
 ### `Enumerate_Audio_Devices`
 
 ```odin
-Enumerate_Audio_Devices :: proc(ctx: ^Context) -> ([dynamic]Audio_Device_Info, Error) {
+Enumerate_Audio_Devices :: proc(ctx: ^Context) -> ([dynamic]Audio_Device_Info, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L478)
 
 ### `Destroy_Audio_Device_Infos`
 
 ```odin
-Destroy_Audio_Device_Infos :: proc(devices: ^[dynamic]Audio_Device_Info) {
+Destroy_Audio_Device_Infos :: proc(devices: ^[dynamic]Audio_Device_Info)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L507)
 
 ### `Select_Audio_Device`
 
 ```odin
-Select_Audio_Device :: proc(ctx: ^Context, device: Audio_Device) -> Error {
+Select_Audio_Device :: proc(ctx: ^Context, device: Audio_Device) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L518)
 
 ### `Audio_Device_From_Info`
 
 ```odin
-Audio_Device_From_Info :: proc(info: Audio_Device_Info) -> Audio_Device {
+Audio_Device_From_Info :: proc(info: Audio_Device_Info) -> Audio_Device
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L528)
 
 ### `Load_Audio_Decoder`
 
 ```odin
-Load_Audio_Decoder :: proc(ctx: ^Context, path: string) -> (Audio_Decoder, Error) {
+Load_Audio_Decoder :: proc(ctx: ^Context, path: string) -> (Audio_Decoder, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L532)
 
 ### `Unload_Audio_Decoder`
 
 ```odin
-Unload_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder) {
+Unload_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L548)
 
 ### `Read_Audio_Decoder`
 
 ```odin
-Read_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder, max_frames: int) -> (Sound_Data, Error) {
+Read_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder, max_frames: int) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L554)
 
 ### `Seek_Audio_Decoder`
 
 ```odin
-Seek_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder, seconds: f32) -> Error {
+Seek_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder, seconds: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L565)
 
 ### `Tell_Audio_Decoder`
 
 ```odin
-Tell_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder) -> (f32, Error) {
+Tell_Audio_Decoder :: proc(ctx: ^Context, decoder: Audio_Decoder) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L572)
 
 ### `Audio_Decoder_Length`
 
 ```odin
-Audio_Decoder_Length :: proc(ctx: ^Context, decoder: Audio_Decoder) -> (f32, Error) {
+Audio_Decoder_Length :: proc(ctx: ^Context, decoder: Audio_Decoder) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L583)
 
 ### `Set_Audio_Position`
 
 ```odin
-Set_Audio_Position :: proc(ctx: ^Context, source: Audio_Source, position: Vec2) -> Error {
+Set_Audio_Position :: proc(ctx: ^Context, source: Audio_Source, position: Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L594)
 
 ### `Set_Audio_Velocity`
 
 ```odin
-Set_Audio_Velocity :: proc(ctx: ^Context, source: Audio_Source, velocity: Vec2) -> Error {
+Set_Audio_Velocity :: proc(ctx: ^Context, source: Audio_Source, velocity: Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L601)
 
 ### `Set_Audio_Attenuation`
 
 ```odin
-Set_Audio_Attenuation :: proc(ctx: ^Context, source: Audio_Source, rolloff: f32) -> Error {
+Set_Audio_Attenuation :: proc(ctx: ^Context, source: Audio_Source, rolloff: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L608)
 
 ### `Set_Audio_Distance_Model`
 
 ```odin
-Set_Audio_Distance_Model :: proc(ctx: ^Context, model: int) -> Error {
+Set_Audio_Distance_Model :: proc(ctx: ^Context, model: int) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L615)
 
 ### `Set_Audio_Doppler`
 
 ```odin
-Set_Audio_Doppler :: proc(ctx: ^Context, factor: f32) -> Error {
+Set_Audio_Doppler :: proc(ctx: ^Context, factor: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L622)
 
 ### `Start_Audio_Capture`
 
 ```odin
-Start_Audio_Capture :: proc(ctx: ^Context) -> Error {
+Start_Audio_Capture :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L629)
 
 ### `Stop_Audio_Capture`
 
 ```odin
-Stop_Audio_Capture :: proc(ctx: ^Context) -> Error {
+Stop_Audio_Capture :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L639)
 
 ### `Read_Audio_Capture`
 
 ```odin
-Read_Audio_Capture :: proc(ctx: ^Context, max_frames: int) -> (Sound_Data, Error) {
+Read_Audio_Capture :: proc(ctx: ^Context, max_frames: int) -> (Sound_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L647)
 
 ### `Create_Audio_Bus`
 
 ```odin
-Create_Audio_Bus :: proc(ctx: ^Context, name: string) -> (Audio_Bus, Error) {
+Create_Audio_Bus :: proc(ctx: ^Context, name: string) -> (Audio_Bus, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L658)
 
 ### `Set_Audio_Bus_Volume`
 
 ```odin
-Set_Audio_Bus_Volume :: proc(ctx: ^Context, bus: Audio_Bus, volume: f32) -> Error {
+Set_Audio_Bus_Volume :: proc(ctx: ^Context, bus: Audio_Bus, volume: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L669)
 
 ### `Destroy_Audio_Bus`
 
 ```odin
-Destroy_Audio_Bus :: proc(ctx: ^Context, bus: Audio_Bus) {
+Destroy_Audio_Bus :: proc(ctx: ^Context, bus: Audio_Bus)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L676)
 
 ### `Set_Audio_Source_Bus`
 
 ```odin
-Set_Audio_Source_Bus :: proc(ctx: ^Context, source: Audio_Source, bus: Audio_Bus) -> Error {
+Set_Audio_Source_Bus :: proc(ctx: ^Context, source: Audio_Source, bus: Audio_Bus) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L682)
 
 ### `Create_Audio_Effect`
 
 ```odin
-Create_Audio_Effect :: proc(ctx: ^Context, kind: int) -> (Audio_Effect, Error) {
+Create_Audio_Effect :: proc(ctx: ^Context, kind: int) -> (Audio_Effect, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L692)
 
 ### `Destroy_Audio_Effect`
 
 ```odin
-Destroy_Audio_Effect :: proc(ctx: ^Context, effect: Audio_Effect) {
+Destroy_Audio_Effect :: proc(ctx: ^Context, effect: Audio_Effect)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L703)
 
 ### `Attach_Audio_Effect`
 
 ```odin
-Attach_Audio_Effect :: proc(ctx: ^Context, source: Audio_Source, effect: Audio_Effect) -> Error {
+Attach_Audio_Effect :: proc(ctx: ^Context, source: Audio_Source, effect: Audio_Effect) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L709)
 
 ### `Detach_Audio_Effect`
 
 ```odin
-Detach_Audio_Effect :: proc(ctx: ^Context, source: Audio_Source, effect: Audio_Effect) -> Error {
+Detach_Audio_Effect :: proc(ctx: ^Context, source: Audio_Source, effect: Audio_Effect) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L716)
 
 ### `Set_Audio_Effect_Volume`
 
 ```odin
-Set_Audio_Effect_Volume :: proc(ctx: ^Context, effect: Audio_Effect, volume: f32) -> Error {
+Set_Audio_Effect_Volume :: proc(ctx: ^Context, effect: Audio_Effect, volume: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L723)
 
 ### `Active_Audio_Source_Count`
 
 ```odin
-Active_Audio_Source_Count :: proc(ctx: ^Context) -> int {
+Active_Audio_Source_Count :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L733)
 
 ### `Get_Audio_Capabilities`
 
 ```odin
-Get_Audio_Capabilities :: proc(ctx: ^Context) -> Audio_Capabilities {
+Get_Audio_Capabilities :: proc(ctx: ^Context) -> Audio_Capabilities
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L740)
 
 ### `Is_LOVE_Audio_Effect_Supported`
 
 ```odin
-Is_LOVE_Audio_Effect_Supported :: proc(name: string) -> bool {
+Is_LOVE_Audio_Effect_Supported :: proc(name: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 LOVE audio effect-name support query (love.audio.newEffect types are
+chorus, compressor, distortion, echo, equalizer, flanger, reverb and
+ringmodulator).
+
+Wired today (backed by miniaudio nodes via Create_Audio_Effect):
+"echo"   -> Delay node (Audio_Effect_Kind.Delay)
+"reverb" -> feedback-delay small-room approximation
+(Audio_Effect_Kind.Reverb; miniaudio ships no reverb node, see
+internal/audio Create_Effect)
+Not wired — no corresponding miniaudio node exists in vendor/miniaudio
+(rg for chorus/distortion/compressor/flanger/ringmod/equalizer node types
+finds only delay, lpf/hpf/bpf and biquad-family primitives, none of them
+plumbed as LOVE-style units), so these report false and no
+Audio_Effect_Kind variants were added for them (a variant that always fails
+would be a fake handle):
+"chorus", "compressor", "distortion", "equalizer", "flanger",
+"ringmodulator". Single-band filtering remains available through
+.Low_Pass/.High_Pass/.Band_Pass for equalizer-style ports.
+Pure CPU, case-sensitive, headless-safe, no Context needed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L772)
 
 ### `Audio_Source_Is_Looping`
 
 ```odin
-Audio_Source_Is_Looping :: proc(ctx: ^Context, source: Audio_Source) -> bool {
+Audio_Source_Is_Looping :: proc(ctx: ^Context, source: Audio_Source) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Is_Looping mirrors love Source:isLooping.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L789)
 
 ### `Audio_Source_Get_Volume`
 
 ```odin
-Audio_Source_Get_Volume :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+Audio_Source_Get_Volume :: proc(ctx: ^Context, source: Audio_Source) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Volume mirrors love Source:getVolume.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L798)
 
 ### `Audio_Source_Get_Pitch`
 
 ```odin
-Audio_Source_Get_Pitch :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+Audio_Source_Get_Pitch :: proc(ctx: ^Context, source: Audio_Source) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Pitch mirrors love Source:getPitch.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L810)
 
 ### `Audio_Source_Get_Pan`
 
 ```odin
-Audio_Source_Get_Pan :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+Audio_Source_Get_Pan :: proc(ctx: ^Context, source: Audio_Source) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Pan reports the live pan set by Set_Audio_Source_Pan
+(miniaudio ma.sound_get_pan; LOVE has no Source:getPan — stereo pan is a
+Thor2D extension of the LOVE volume/pitch pair).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L824)
 
 ### `Audio_Source_Get_Position`
 
 ```odin
-Audio_Source_Get_Position :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+Audio_Source_Get_Position :: proc(ctx: ^Context, source: Audio_Source) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Position mirrors love Source:getPosition projected onto
+the 2D plane (Z is dropped; setters likewise store Z=0).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L837)
 
 ### `Audio_Source_Get_Velocity`
 
 ```odin
-Audio_Source_Get_Velocity :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+Audio_Source_Get_Velocity :: proc(ctx: ^Context, source: Audio_Source) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Velocity mirrors love Source:getVelocity (2D projection).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L849)
 
 ### `Audio_Source_Get_Direction`
 
 ```odin
-Audio_Source_Get_Direction :: proc(ctx: ^Context, source: Audio_Source) -> Vec2 {
+Audio_Source_Get_Direction :: proc(ctx: ^Context, source: Audio_Source) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Direction mirrors love Source:getDirection (2D projection).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L861)
 
 ### `Audio_Source_Get_Cone`
 
 ```odin
-Audio_Source_Get_Cone :: proc(ctx: ^Context, source: Audio_Source) -> (inner, outer, gain: f32) {
+Audio_Source_Get_Cone :: proc(ctx: ^Context, source: Audio_Source) -> (inner, outer, gain: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Cone mirrors love Source:getCone: inner and outer angles
+in radians plus the outer gain.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L874)
 
 ### `Audio_Source_Get_Rolloff`
 
 ```odin
-Audio_Source_Get_Rolloff :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+Audio_Source_Get_Rolloff :: proc(ctx: ^Context, source: Audio_Source) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Rolloff mirrors love Source:getRolloff.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L886)
 
 ### `Audio_Source_Get_Doppler`
 
 ```odin
-Audio_Source_Get_Doppler :: proc(ctx: ^Context, source: Audio_Source) -> f32 {
+Audio_Source_Get_Doppler :: proc(ctx: ^Context, source: Audio_Source) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Doppler reports the per-source doppler factor applied by
+Set_Audio_Doppler (LOVE only exposes the global love.audio.getDopplerScale;
+see Get_Audio_Doppler for the global).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L900)
 
 ### `Audio_Source_Is_Relative`
 
 ```odin
-Audio_Source_Is_Relative :: proc(ctx: ^Context, source: Audio_Source) -> bool {
+Audio_Source_Is_Relative :: proc(ctx: ^Context, source: Audio_Source) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Is_Relative mirrors love Source:isRelative.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L912)
 
 ### `Audio_Source_Channels`
 
 ```odin
-Audio_Source_Channels :: proc(ctx: ^Context, source: Audio_Source) -> int {
+Audio_Source_Channels :: proc(ctx: ^Context, source: Audio_Source) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Channels mirrors love Source:getChannelCount, from the format
+captured at decode time (no live query needed; the stream format is fixed).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L922)
 
 ### `Audio_Source_Sample_Rate`
 
 ```odin
-Audio_Source_Sample_Rate :: proc(ctx: ^Context, source: Audio_Source) -> int {
+Audio_Source_Sample_Rate :: proc(ctx: ^Context, source: Audio_Source) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Sample_Rate reports the stream sample rate captured at decode
+time (LOVE exposes this via Decoder:getSampleRate; sources carry no rate
+getter, so this fills the gap from retained real state).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L936)
 
 ### `Audio_Source_Get_Kind`
 
 ```odin
-Audio_Source_Get_Kind :: proc(source: Audio_Source) -> Audio_Source_Kind {
+Audio_Source_Get_Kind :: proc(source: Audio_Source) -> Audio_Source_Kind
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Source_Get_Kind mirrors love Source:getType. The kind rides in the
+handle struct (no backend needed), so this is pure and nil-safe.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L949)
 
 ### `Play_All_Audio`
 
 ```odin
-Play_All_Audio :: proc(ctx: ^Context) -> int {
+Play_All_Audio :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Play_All_Audio mirrors love.audio.play with no arguments: starts every
+live source. Returns how many sources were started (0 headless).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L955)
 
 ### `Pause_All_Audio`
 
 ```odin
-Pause_All_Audio :: proc(ctx: ^Context) -> int {
+Pause_All_Audio :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Pause_All_Audio mirrors love.audio.pause with no arguments: pauses every
+live source. Returns how many sources were paused (0 headless).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L964)
 
 ### `Stop_All_Audio`
 
 ```odin
-Stop_All_Audio :: proc(ctx: ^Context) -> int {
+Stop_All_Audio :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Stop_All_Audio mirrors love.audio.stop with no arguments: stops and
+rewinds every live source. Returns how many sources were stopped.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L973)
 
 ### `Get_Audio_Doppler`
 
 ```odin
-Get_Audio_Doppler :: proc(ctx: ^Context) -> f32 {
+Get_Audio_Doppler :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Audio_Doppler mirrors love.audio.getDopplerScale: the global factor
+stored by Set_Audio_Doppler (default 1). New sources inherit it at
+creation; 0 means no audio device.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L983)
 
 ### `Set_Audio_Orientation`
 
 ```odin
-Set_Audio_Orientation :: proc(ctx: ^Context, forward, up: Vec2) -> Error {
+Set_Audio_Orientation :: proc(ctx: ^Context, forward, up: Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Audio_Orientation mirrors love.audio.setOrientation for the 2D plane:
+forward/up Vec2s are pushed as (x, y, 0). The values are stored backend-
+side, so Get_Audio_Orientation round-trips them with or without a device
+query. Extends Set_Audio_Listener (which carries position/direction/
+velocity but no up vector).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L999)
 
 ### `Get_Audio_Orientation`
 
 ```odin
-Get_Audio_Orientation :: proc(ctx: ^Context) -> (forward, up: Vec2) {
+Get_Audio_Orientation :: proc(ctx: ^Context) -> (forward, up: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Audio_Orientation mirrors love.audio.getOrientation projected onto 2D:
+returns the stored forward/up vectors (Z dropped). Headless/nil gives
+zero vectors.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1012)
 
 ### `Audio_Recording_Devices`
 
 ```odin
-Audio_Recording_Devices :: proc(ctx: ^Context) -> ([dynamic]Audio_Device_Info, Error) {
+Audio_Recording_Devices :: proc(ctx: ^Context) -> ([dynamic]Audio_Device_Info, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Recording_Devices mirrors love.audio.getRecordingDevices: the
+capture-capable subset of Enumerate_Audio_Devices. The first entry is the
+default capture device when the backend flags one. Ownership follows
+Enumerate_Audio_Devices (free with Destroy_Audio_Device_Infos).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1027)
 
 ### `Start_Capture_From_Device`
 
 ```odin
-Start_Capture_From_Device :: proc(ctx: ^Context, device: Audio_Device) -> Error {
+Start_Capture_From_Device :: proc(ctx: ^Context, device: Audio_Device) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Start_Capture_From_Device selects a capture device before recording.
+The miniaudio backend always opens the default capture device
+(ma.device_init with no device ID), so indexed device selection is not
+wired: this returns .Unsupported by design and documents the
+default-device-only boundary. Use Start_Audio_Capture instead.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1050)
 
 ### `Audio_Recording_Device_Name`
 
 ```odin
-Audio_Recording_Device_Name :: proc(ctx: ^Context, device: Audio_Device) -> (string, Error) {
+Audio_Recording_Device_Name :: proc(ctx: ^Context, device: Audio_Device) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Recording_Device_Name mirrors love RecordingDevice:getName via live
+enumeration. Returns ("", .Invalid_Handle) for bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1058)
 
 ### `Is_Audio_Capturing`
 
 ```odin
-Is_Audio_Capturing :: proc(ctx: ^Context) -> bool {
+Is_Audio_Capturing :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Is_Audio_Capturing mirrors love RecordingDevice:isRecording.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1080)
 
 ### `Audio_Capture_Sample_Rate`
 
 ```odin
-Audio_Capture_Sample_Rate :: proc(ctx: ^Context) -> int {
+Audio_Capture_Sample_Rate :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Capture_Sample_Rate mirrors love RecordingDevice:getSampleRate: the
+live capture sample rate, or 0 when capture is inactive.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1090)
 
 ### `Audio_Capture_Channels`
 
 ```odin
-Audio_Capture_Channels :: proc(ctx: ^Context) -> int {
+Audio_Capture_Channels :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Capture_Channels mirrors love RecordingDevice:getChannelCount, or 0
+when capture is inactive.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1103)
 
 ### `Audio_Capture_Bit_Depth`
 
 ```odin
-Audio_Capture_Bit_Depth :: proc(ctx: ^Context) -> int {
+Audio_Capture_Bit_Depth :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Capture_Bit_Depth mirrors love RecordingDevice:getBitDepth. The
+capture ring is f32 PCM, so live capture is always 32-bit; 0 when
+inactive.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1117)
 
 ### `Audio_Capture_Sample_Count`
 
 ```odin
-Audio_Capture_Sample_Count :: proc(ctx: ^Context) -> int {
+Audio_Capture_Sample_Count :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Capture_Sample_Count mirrors love RecordingDevice:getSampleCount:
+frames currently buffered in the capture ring (0 when inactive).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1130)
 
 ### `Sound_Data_Sample_Rate`
 
 ```odin
-Sound_Data_Sample_Rate :: proc(data: ^Sound_Data) -> int {
+Sound_Data_Sample_Rate :: proc(data: ^Sound_Data) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sound_Data_Sample_Rate mirrors love SoundData:getSampleRate. The format
+rides in the struct, so this is pure and nil-safe.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1143)
 
 ### `Sound_Data_Channels`
 
 ```odin
-Sound_Data_Channels :: proc(data: ^Sound_Data) -> int {
+Sound_Data_Channels :: proc(data: ^Sound_Data) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sound_Data_Channels mirrors love SoundData:getChannelCount (pure,
+nil-safe).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1152)
 
 ### `Sound_Data_Bit_Depth`
 
 ```odin
-Sound_Data_Bit_Depth :: proc(data: ^Sound_Data) -> int {
+Sound_Data_Bit_Depth :: proc(data: ^Sound_Data) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sound_Data_Bit_Depth mirrors love SoundData:getBitDepth (pure, nil-safe).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1160)
 
 ### `Audio_Decoder_Channels`
 
 ```odin
-Audio_Decoder_Channels :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+Audio_Decoder_Channels :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Decoder_Channels mirrors love Decoder:getChannelCount, from the
+format retained in the decoder entry. Bad handles give 0, never a guess.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1169)
 
 ### `Audio_Decoder_Sample_Rate`
 
 ```odin
-Audio_Decoder_Sample_Rate :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+Audio_Decoder_Sample_Rate :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Decoder_Sample_Rate mirrors love Decoder:getSampleRate (0 on bad
+handles).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1182)
 
 ### `Audio_Decoder_Bit_Depth`
 
 ```odin
-Audio_Decoder_Bit_Depth :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int {
+Audio_Decoder_Bit_Depth :: proc(ctx: ^Context, decoder: Audio_Decoder) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Audio_Decoder_Bit_Depth mirrors love Decoder:getBitDepth. Decoders always
+produce f32 PCM, so a live decoder is 32-bit; bad handles give 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/audio.odin#L1195)
 
 ## `capabilities`
 
@@ -895,10 +1026,14 @@ Source: `src/thor2d/capabilities.odin`
 ### `Query_Capability`
 
 ```odin
-Query_Capability :: proc(ctx: ^Context, capability: Capability) -> bool {
+Query_Capability :: proc(ctx: ^Context, capability: Capability) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Query_Capability reports whether the active runtime can provide a feature.
+Optional hardware features must be checked before creating a resource; the
+framework never returns a fake handle for an unavailable capability.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/capabilities.odin#L10)
 
 ## `context`
 
@@ -907,202 +1042,214 @@ Source: `src/thor2d/context.odin`
 ### `Create`
 
 ```odin
-Create :: proc(config: Config) -> (Context, Error) {
+Create :: proc(config: Config) -> (Context, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L10)
 
 ### `Destroy`
 
 ```odin
-Destroy :: proc(ctx: ^Context) {
+Destroy :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L101)
 
 ### `Register_Thread`
 
 ```odin
-Register_Thread :: proc(ctx: ^Context, thread: Thread) -> Error {
+Register_Thread :: proc(ctx: ^Context, thread: Thread) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Register_Thread transfers ownership of a worker to the Context. Destroy
+will join all registered workers before releasing the rest of the runtime.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L135)
 
 ### `Filesystem_Access`
 
 ```odin
-Filesystem_Access :: proc(ctx: ^Context) -> ^Filesystem {
+Filesystem_Access :: proc(ctx: ^Context) -> ^Filesystem
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L143)
 
 ### `Run`
 
 ```odin
-Run :: proc(config: Config, game: Game) -> Error {
+Run :: proc(config: Config, game: Game) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L150)
 
 ### `Fixed_Delta_Time`
 
 ```odin
-Fixed_Delta_Time :: proc(ctx: ^Context) -> f32 {
+Fixed_Delta_Time :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L198)
 
 ### `Fixed_Steps_Last_Frame`
 
 ```odin
-Fixed_Steps_Last_Frame :: proc(ctx: ^Context) -> int {
+Fixed_Steps_Last_Frame :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L205)
 
 ### `Is_Running`
 
 ```odin
-Is_Running :: proc(ctx: ^Context) -> bool {
+Is_Running :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L212)
 
 ### `Quit`
 
 ```odin
-Quit :: proc(ctx: ^Context) {
+Quit :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L216)
 
 ### `Begin_Frame`
 
 ```odin
-Begin_Frame :: proc(ctx: ^Context) -> f32 {
+Begin_Frame :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L222)
 
 ### `End_Frame`
 
 ```odin
-End_Frame :: proc(ctx: ^Context) {
+End_Frame :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L238)
 
 ### `Poll_Events`
 
 ```odin
-Poll_Events :: proc(ctx: ^Context, callback: proc(ctx: ^Context, event: Event)) {
+Poll_Events :: proc(ctx: ^Context, callback: proc(ctx: ^Context, event: Event))
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L249)
 
 ### `Run_Headless`
 
 ```odin
-Run_Headless :: proc(config: Config, game: Game, max_frames: int = 0) -> Error {
+Run_Headless :: proc(config: Config, game: Game, max_frames: int = 0) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Run_Headless executes the same fixed/update/draw lifecycle without creating
+a window or touching Raylib. max_frames <= 0 means run until Quit is called.
+v0.9: a Create failure invokes game.On_Error (if set) with a nil ctx, then
+returns the error. On_Low_Memory is never invoked on desktop (no OS
+low-memory signal); it is reserved as mobile-future.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L366)
 
 ### `Push_Event`
 
 ```odin
-Push_Event :: proc(ctx: ^Context, event: Event) {
+Push_Event :: proc(ctx: ^Context, event: Event)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L407)
 
 ### `Poll_Event`
 
 ```odin
-Poll_Event :: proc(ctx: ^Context) -> (Event, bool) {
+Poll_Event :: proc(ctx: ^Context) -> (Event, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L421)
 
 ### `Destroy_Event`
 
 ```odin
-Destroy_Event :: proc(event: ^Event) {
+Destroy_Event :: proc(event: ^Event)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Destroy_Event releases owned strings returned by Poll_Event. Scalar events
+do not need cleanup, but dropped-file and text-edit events do.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L435)
 
 ### `Wait_Event`
 
 ```odin
-Wait_Event :: proc(ctx: ^Context) -> Event {
+Wait_Event :: proc(ctx: ^Context) -> Event
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L444)
 
 ### `Clear_Events`
 
 ```odin
-Clear_Events :: proc(ctx: ^Context) {
+Clear_Events :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L458)
 
 ### `Delta_Time`
 
 ```odin
-Delta_Time :: proc(ctx: ^Context) -> f32 {
+Delta_Time :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L477)
 
 ### `Elapsed_Time`
 
 ```odin
-Elapsed_Time :: proc(ctx: ^Context) -> f64 {
+Elapsed_Time :: proc(ctx: ^Context) -> f64
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L484)
 
 ### `Set_Target_FPS`
 
 ```odin
-Set_Target_FPS :: proc(ctx: ^Context, fps: int) {
+Set_Target_FPS :: proc(ctx: ^Context, fps: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L491)
 
 ### `Window_Size`
 
 ```odin
-Window_Size :: proc(ctx: ^Context) -> (width, height: int) {
+Window_Size :: proc(ctx: ^Context) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L497)
 
 ### `Set_Window_Title`
 
 ```odin
-Set_Window_Title :: proc(ctx: ^Context, title: string) {
+Set_Window_Title :: proc(ctx: ^Context, title: string)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L504)
 
 ### `Set_Window_Size`
 
 ```odin
-Set_Window_Size :: proc(ctx: ^Context, width, height: int) {
+Set_Window_Size :: proc(ctx: ^Context, width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L510)
 
 ### `Toggle_Fullscreen`
 
 ```odin
-Toggle_Fullscreen :: proc(ctx: ^Context) {
+Toggle_Fullscreen :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/context.odin#L516)
 
 ## `data`
 
@@ -1111,282 +1258,301 @@ Source: `src/thor2d/data.odin`
 ### `New_Byte_Buffer`
 
 ```odin
-New_Byte_Buffer :: proc(data: []byte) -> Byte_Buffer {
+New_Byte_Buffer :: proc(data: []byte) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L13)
 
 ### `Destroy_Byte_Buffer`
 
 ```odin
-Destroy_Byte_Buffer :: proc(buffer: ^Byte_Buffer) {
+Destroy_Byte_Buffer :: proc(buffer: ^Byte_Buffer)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L22)
 
 ### `Byte_Buffer_Bytes`
 
 ```odin
-Byte_Buffer_Bytes :: proc(buffer: ^Byte_Buffer) -> []byte {
+Byte_Buffer_Bytes :: proc(buffer: ^Byte_Buffer) -> []byte
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L29)
 
 ### `Byte_Buffer_Copy`
 
 ```odin
-Byte_Buffer_Copy :: proc(buffer: ^Byte_Buffer) -> Byte_Buffer {
+Byte_Buffer_Copy :: proc(buffer: ^Byte_Buffer) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L36)
 
 ### `Byte_Buffer_Slice`
 
 ```odin
-Byte_Buffer_Slice :: proc(buffer: ^Byte_Buffer, start, length: int) -> (Byte_Buffer, Error) {
+Byte_Buffer_Slice :: proc(buffer: ^Byte_Buffer, start, length: int) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L43)
 
 ### `New_Data_View`
 
 ```odin
-New_Data_View :: proc(data: []byte) -> Data_View {
+New_Data_View :: proc(data: []byte) -> Data_View
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L50)
 
 ### `Data_View_Bytes`
 
 ```odin
-Data_View_Bytes :: proc(view: ^Data_View) -> []byte {
+Data_View_Bytes :: proc(view: ^Data_View) -> []byte
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L54)
 
 ### `Byte_Buffer_View`
 
 ```odin
-Byte_Buffer_View :: proc(buffer: ^Byte_Buffer, start, length: int) -> (Data_View, Error) {
+Byte_Buffer_View :: proc(buffer: ^Byte_Buffer, start, length: int) -> (Data_View, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L61)
 
 ### `File_Data_View`
 
 ```odin
-File_Data_View :: proc(data: ^File_Data) -> Data_View {
+File_Data_View :: proc(data: ^File_Data) -> Data_View
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L68)
 
 ### `Pack_U16`
 
 ```odin
-Pack_U16 :: proc(value: u16) -> Byte_Buffer {
+Pack_U16 :: proc(value: u16) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+The binary helpers use little-endian encoding explicitly so project data is
+stable across desktop architectures. They intentionally cover primitive
+values; structured project data continues to use JSON/CBOR.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L78)
 
 ### `Pack_U32`
 
 ```odin
-Pack_U32 :: proc(value: u32) -> Byte_Buffer {
+Pack_U32 :: proc(value: u32) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L85)
 
 ### `Pack_U64`
 
 ```odin
-Pack_U64 :: proc(value: u64) -> Byte_Buffer {
+Pack_U64 :: proc(value: u64) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L93)
 
 ### `Pack_I32`
 
 ```odin
-Pack_I32 :: proc(value: i32) -> Byte_Buffer {
+Pack_I32 :: proc(value: i32) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L101)
 
 ### `Pack_F32`
 
 ```odin
-Pack_F32 :: proc(value: f32) -> Byte_Buffer {
+Pack_F32 :: proc(value: f32) -> Byte_Buffer
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L105)
 
 ### `Unpack_U16`
 
 ```odin
-Unpack_U16 :: proc(data: []byte) -> (u16, Error) {
+Unpack_U16 :: proc(data: []byte) -> (u16, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L109)
 
 ### `Unpack_U32`
 
 ```odin
-Unpack_U32 :: proc(data: []byte) -> (u32, Error) {
+Unpack_U32 :: proc(data: []byte) -> (u32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L116)
 
 ### `Unpack_U64`
 
 ```odin
-Unpack_U64 :: proc(data: []byte) -> (u64, Error) {
+Unpack_U64 :: proc(data: []byte) -> (u64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L127)
 
 ### `Unpack_I32`
 
 ```odin
-Unpack_I32 :: proc(data: []byte) -> (i32, Error) {
+Unpack_I32 :: proc(data: []byte) -> (i32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L138)
 
 ### `Unpack_F32`
 
 ```odin
-Unpack_F32 :: proc(data: []byte) -> (f32, Error) {
+Unpack_F32 :: proc(data: []byte) -> (f32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L143)
 
 ### `File_Data_Bytes`
 
 ```odin
-File_Data_Bytes :: proc(data: ^File_Data) -> []byte {
+File_Data_Bytes :: proc(data: ^File_Data) -> []byte
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L148)
 
 ### `Destroy_File_Data`
 
 ```odin
-Destroy_File_Data :: proc(data: ^File_Data) {
+Destroy_File_Data :: proc(data: ^File_Data)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L155)
 
 ### `Encode_Base64`
 
 ```odin
-Encode_Base64 :: proc(data: []byte) -> (string, Error) {
+Encode_Base64 :: proc(data: []byte) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L164)
 
 ### `Decode_Base64`
 
 ```odin
-Decode_Base64 :: proc(value: string) -> (Byte_Buffer, Error) {
+Decode_Base64 :: proc(value: string) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L172)
 
 ### `Encode_Hex`
 
 ```odin
-Encode_Hex :: proc(data: []byte) -> (string, Error) {
+Encode_Hex :: proc(data: []byte) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L182)
 
 ### `Decode_Hex`
 
 ```odin
-Decode_Hex :: proc(value: string) -> (Byte_Buffer, Error) {
+Decode_Hex :: proc(value: string) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L190)
 
 ### `Hash_Data`
 
 ```odin
-Hash_Data :: proc(algorithm: Hash_Algorithm, data: []byte) -> (Byte_Buffer, Error) {
+Hash_Data :: proc(algorithm: Hash_Algorithm, data: []byte) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L200)
 
 ### `Hash_Hex`
 
 ```odin
-Hash_Hex :: proc(algorithm: Hash_Algorithm, data: []byte) -> (string, Error) {
+Hash_Hex :: proc(algorithm: Hash_Algorithm, data: []byte) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L216)
 
 ### `Encode_JSON`
 
 ```odin
-Encode_JSON :: proc(value: any) -> (Byte_Buffer, Error) {
+Encode_JSON :: proc(value: any) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L225)
 
 ### `Decode_JSON`
 
 ```odin
-Decode_JSON :: proc(data: []byte, value: ^$T) -> Error {
+Decode_JSON :: proc(data: []byte, value: ^$T) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L248)
 
 ### `Encode_CBOR`
 
 ```odin
-Encode_CBOR :: proc(value: any) -> (Byte_Buffer, Error) {
+Encode_CBOR :: proc(value: any) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L255)
 
 ### `Decode_CBOR`
 
 ```odin
-Decode_CBOR :: proc(data: []byte, value: ^$T) -> Error {
+Decode_CBOR :: proc(data: []byte, value: ^$T) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L265)
 
 ### `Create_Compressed_Data`
 
 ```odin
-Create_Compressed_Data :: proc(data: []byte, format: Compression_Format) -> (Compressed_Data, Error) {
+Create_Compressed_Data :: proc(data: []byte, format: Compression_Format) -> (Compressed_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L348)
 
 ### `Decompress_Data`
 
 ```odin
-Decompress_Data :: proc(data: Compressed_Data) -> (Byte_Buffer, Error) {
+Decompress_Data :: proc(data: Compressed_Data) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L362)
 
 ### `Compress_With_Level`
 
 ```odin
-Compress_With_Level :: proc(data: []byte, format: Compression_Format, level: int) -> (Compressed_Data, Error) {
+Compress_With_Level :: proc(data: []byte, format: Compression_Format, level: int) -> (Compressed_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Compress_With_Level compresses with an explicit zlib level (mirrors the
+level knobs archive writers need; LOVE exposes compression through
+love.data.compress at a fixed default, which Create_Compressed_Data keeps).
+level is clamped to 0 (no compression) .. 9 (best) and applies to
+.ZLIB/.GZIP/.DEFLATE via vendor:zlib. .LZ4 ignores the level
+(vendor:compress/lz4 exposes compress_default only) but still compresses.
+Capacities match Create_Compressed_Data, so outputs decode with
+Decompress_Data either way. Headless-safe (pure CPU).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L431)
 
 ### `Encode_Base64_Lines`
 
 ```odin
-Encode_Base64_Lines :: proc(data: []byte, line_length := 76) -> (string, Error) {
+Encode_Base64_Lines :: proc(data: []byte, line_length := 76) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Encode_Base64_Lines encodes like Encode_Base64 but wraps the output at
+line_length characters with \n (MIME-style; mirrors writers that need
+line-limited Base64 for text formats). line_length <= 0 maps to
+.Invalid_Data. The returned string is owned by the caller (delete it).
+Headless-safe (pure CPU).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/data.odin#L451)
 
 ## `ecs`
 
@@ -1395,98 +1561,98 @@ Source: `src/thor2d/ecs.odin`
 ### `New_Registry`
 
 ```odin
-New_Registry :: proc() -> Registry {
+New_Registry :: proc() -> Registry
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L27)
 
 ### `Destroy_Registry`
 
 ```odin
-Destroy_Registry :: proc(registry: ^Registry) {
+Destroy_Registry :: proc(registry: ^Registry)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L31)
 
 ### `Create_Entity`
 
 ```odin
-Create_Entity :: proc(registry: ^Registry) -> Entity {
+Create_Entity :: proc(registry: ^Registry) -> Entity
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L58)
 
 ### `Entity_Alive`
 
 ```odin
-Entity_Alive :: proc(registry: ^Registry, entity: Entity) -> bool {
+Entity_Alive :: proc(registry: ^Registry, entity: Entity) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L73)
 
 ### `Add_Component`
 
 ```odin
-Add_Component :: proc(registry: ^Registry, entity: Entity, value: $T) -> ^T {
+Add_Component :: proc(registry: ^Registry, entity: Entity, value: $T) -> ^T
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L137)
 
 ### `Get_Component`
 
 ```odin
-Get_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid) -> ^T {
+Get_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid) -> ^T
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L155)
 
 ### `Has_Component`
 
 ```odin
-Has_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid) -> bool {
+Has_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L174)
 
 ### `Remove_Component`
 
 ```odin
-Remove_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid) {
+Remove_Component :: proc(registry: ^Registry, entity: Entity, $T: typeid)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L178)
 
 ### `Destroy_Entity`
 
 ```odin
-Destroy_Entity :: proc(registry: ^Registry, entity: Entity) {
+Destroy_Entity :: proc(registry: ^Registry, entity: Entity)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L187)
 
 ### `Query`
 
 ```odin
-Query :: proc(registry: ^Registry, $T: typeid) -> Query_Iterator(T) {
+Query :: proc(registry: ^Registry, $T: typeid) -> Query_Iterator(T)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L205)
 
 ### `Query_Next`
 
 ```odin
-Query_Next :: proc(iterator: ^Query_Iterator($T)) -> (entity: Entity, value: ^T, ok: bool) {
+Query_Next :: proc(iterator: ^Query_Iterator($T)) -> (entity: Entity, value: ^T, ok: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L209)
 
 ### `Transform_2D_Default`
 
 ```odin
-Transform_2D_Default :: proc() -> Transform_2D {
+Transform_2D_Default :: proc() -> Transform_2D
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/ecs.odin#L219)
 
 ## `effects`
 
@@ -1495,530 +1661,573 @@ Source: `src/thor2d/effects.odin`
 ### `Create_Sprite_Batch`
 
 ```odin
-Create_Sprite_Batch :: proc(ctx: ^Context, texture: Texture, capacity: int) -> (Sprite_Batch, Error) {
+Create_Sprite_Batch :: proc(ctx: ^Context, texture: Texture, capacity: int) -> (Sprite_Batch, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L6)
 
 ### `Clear_Sprite_Batch`
 
 ```odin
-Clear_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch) {
+Clear_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L17)
 
 ### `Add_Sprite`
 
 ```odin
-Add_Sprite :: proc(ctx: ^Context, batch: Sprite_Batch, source, destination: Rect, origin: Vec2, rotation: f32, tint := White) {
+Add_Sprite :: proc(ctx: ^Context, batch: Sprite_Batch, source, destination: Rect, origin: Vec2, rotation: f32, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L23)
 
 ### `Draw_Sprite_Batch`
 
 ```odin
-Draw_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch) {
+Draw_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L29)
 
 ### `Unload_Sprite_Batch`
 
 ```odin
-Unload_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch) {
+Unload_Sprite_Batch :: proc(ctx: ^Context, batch: Sprite_Batch)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L35)
 
 ### `Sprite_Batch_Set`
 
 ```odin
-Sprite_Batch_Set :: proc(ctx: ^Context, batch: Sprite_Batch, index: int, source, destination: Rect, origin: Vec2, rotation: f32, tint := White) -> Error {
+Sprite_Batch_Set :: proc(ctx: ^Context, batch: Sprite_Batch, index: int, source, destination: Rect, origin: Vec2, rotation: f32, tint := White) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sprite_Batch_Set mirrors LOVE SpriteBatch:set (plain-sprite variant):
+replaces the sprite at index. Argument order mirrors Add_Sprite.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L51)
 
 ### `Sprite_Batch_Set_Color`
 
 ```odin
-Sprite_Batch_Set_Color :: proc(ctx: ^Context, batch: Sprite_Batch, index: int, color: Color) -> Error {
+Sprite_Batch_Set_Color :: proc(ctx: ^Context, batch: Sprite_Batch, index: int, color: Color) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sprite_Batch_Set_Color recolors one slot (per-sprite color via set).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L65)
 
 ### `Sprite_Batch_Count`
 
 ```odin
-Sprite_Batch_Count :: proc(ctx: ^Context, batch: Sprite_Batch) -> int {
+Sprite_Batch_Count :: proc(ctx: ^Context, batch: Sprite_Batch) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sprite_Batch_Count mirrors LOVE SpriteBatch:getCount. Zero on bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L79)
 
 ### `Sprite_Batch_Set_Draw_Range`
 
 ```odin
-Sprite_Batch_Set_Draw_Range :: proc(ctx: ^Context, batch: Sprite_Batch, start, count: int) -> Error {
+Sprite_Batch_Set_Draw_Range :: proc(ctx: ^Context, batch: Sprite_Batch, start, count: int) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sprite_Batch_Set_Draw_Range mirrors LOVE SpriteBatch:setDrawRange:
+restricts drawing to [start, start + count). count < 0 draws everything
+from start (the default; reset with (0, -1)). Nil ctx, missing batch and
+negative start report errors; out-of-range ends clamp at draw.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L90)
 
 ### `Sprite_Batch_Draw_Range`
 
 ```odin
-Sprite_Batch_Draw_Range :: proc(ctx: ^Context, batch: Sprite_Batch) -> (start, count: int) {
+Sprite_Batch_Draw_Range :: proc(ctx: ^Context, batch: Sprite_Batch) -> (start, count: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Sprite_Batch_Draw_Range returns the stored range (start, count with -1
+meaning "to the end"). (0, 0) on bad handles — count 0 is not settable,
+so it unambiguously signals a missing batch.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L103)
 
 ### `Create_Particles`
 
 ```odin
-Create_Particles :: proc(ctx: ^Context, texture: Texture, config: Particle_Config) -> (Particle_System, Error) {
+Create_Particles :: proc(ctx: ^Context, texture: Texture, config: Particle_Config) -> (Particle_System, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L110)
 
 ### `Emit_Particles`
 
 ```odin
-Emit_Particles :: proc(ctx: ^Context, particles: Particle_System, count: int) {
+Emit_Particles :: proc(ctx: ^Context, particles: Particle_System, count: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L183)
 
 ### `Update_Particles`
 
 ```odin
-Update_Particles :: proc(ctx: ^Context, particles: Particle_System, delta: f32) {
+Update_Particles :: proc(ctx: ^Context, particles: Particle_System, delta: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L189)
 
 ### `Draw_Particles`
 
 ```odin
-Draw_Particles :: proc(ctx: ^Context, particles: Particle_System, position: Vec2, tint := White) {
+Draw_Particles :: proc(ctx: ^Context, particles: Particle_System, position: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L195)
 
 ### `Clear_Particles`
 
 ```odin
-Clear_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Clear_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L202)
 
 ### `Unload_Particles`
 
 ```odin
-Unload_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Unload_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L208)
 
 ### `Set_Particle_Emission_Rate`
 
 ```odin
-Set_Particle_Emission_Rate :: proc(ctx: ^Context, particles: Particle_System, rate: f32) {
+Set_Particle_Emission_Rate :: proc(ctx: ^Context, particles: Particle_System, rate: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L298)
 
 ### `Get_Particle_Emission_Rate`
 
 ```odin
-Get_Particle_Emission_Rate :: proc(ctx: ^Context, particles: Particle_System) -> f32 {
+Get_Particle_Emission_Rate :: proc(ctx: ^Context, particles: Particle_System) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L304)
 
 ### `Set_Particle_Emitter_Lifetime`
 
 ```odin
-Set_Particle_Emitter_Lifetime :: proc(ctx: ^Context, particles: Particle_System, lifetime: f32) {
+Set_Particle_Emitter_Lifetime :: proc(ctx: ^Context, particles: Particle_System, lifetime: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Emitter budget in seconds; 0 means infinite emission (LOVE uses -1 for
+infinite; Thor2D uses 0 so the zero value is the common case). When the
+budget expires the system auto-stops (live particles keep simulating).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L314)
 
 ### `Get_Particle_Emitter_Lifetime`
 
 ```odin
-Get_Particle_Emitter_Lifetime :: proc(ctx: ^Context, particles: Particle_System) -> f32 {
+Get_Particle_Emitter_Lifetime :: proc(ctx: ^Context, particles: Particle_System) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L320)
 
 ### `Set_Particle_Lifetime`
 
 ```odin
-Set_Particle_Lifetime :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Lifetime :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L327)
 
 ### `Get_Particle_Lifetime`
 
 ```odin
-Get_Particle_Lifetime :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Lifetime :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L333)
 
 ### `Set_Particle_Direction`
 
 ```odin
-Set_Particle_Direction :: proc(ctx: ^Context, particles: Particle_System, direction: f32) {
+Set_Particle_Direction :: proc(ctx: ^Context, particles: Particle_System, direction: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L342)
 
 ### `Get_Particle_Direction`
 
 ```odin
-Get_Particle_Direction :: proc(ctx: ^Context, particles: Particle_System) -> f32 {
+Get_Particle_Direction :: proc(ctx: ^Context, particles: Particle_System) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L348)
 
 ### `Set_Particle_Spread`
 
 ```odin
-Set_Particle_Spread :: proc(ctx: ^Context, particles: Particle_System, spread: f32) {
+Set_Particle_Spread :: proc(ctx: ^Context, particles: Particle_System, spread: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L355)
 
 ### `Get_Particle_Spread`
 
 ```odin
-Get_Particle_Spread :: proc(ctx: ^Context, particles: Particle_System) -> f32 {
+Get_Particle_Spread :: proc(ctx: ^Context, particles: Particle_System) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L361)
 
 ### `Set_Particle_Speed`
 
 ```odin
-Set_Particle_Speed :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Speed :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L368)
 
 ### `Get_Particle_Speed`
 
 ```odin
-Get_Particle_Speed :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Speed :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L374)
 
 ### `Set_Particle_Linear_Acceleration`
 
 ```odin
-Set_Particle_Linear_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: Vec2) {
+Set_Particle_Linear_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L381)
 
 ### `Get_Particle_Linear_Acceleration`
 
 ```odin
-Get_Particle_Linear_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: Vec2) {
+Get_Particle_Linear_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L387)
 
 ### `Set_Particle_Radial_Acceleration`
 
 ```odin
-Set_Particle_Radial_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Radial_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L395)
 
 ### `Get_Particle_Radial_Acceleration`
 
 ```odin
-Get_Particle_Radial_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Radial_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L401)
 
 ### `Set_Particle_Tangential_Acceleration`
 
 ```odin
-Set_Particle_Tangential_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Tangential_Acceleration :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L408)
 
 ### `Get_Particle_Tangential_Acceleration`
 
 ```odin
-Get_Particle_Tangential_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Tangential_Acceleration :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L414)
 
 ### `Set_Particle_Damping`
 
 ```odin
-Set_Particle_Damping :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Damping :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L421)
 
 ### `Get_Particle_Damping`
 
 ```odin
-Get_Particle_Damping :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Damping :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L427)
 
 ### `Set_Particle_Gravity`
 
 ```odin
-Set_Particle_Gravity :: proc(ctx: ^Context, particles: Particle_System, gravity: Vec2) {
+Set_Particle_Gravity :: proc(ctx: ^Context, particles: Particle_System, gravity: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L434)
 
 ### `Get_Particle_Gravity`
 
 ```odin
-Get_Particle_Gravity :: proc(ctx: ^Context, particles: Particle_System) -> Vec2 {
+Get_Particle_Gravity :: proc(ctx: ^Context, particles: Particle_System) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L440)
 
 ### `Set_Particle_Spin`
 
 ```odin
-Set_Particle_Spin :: proc(ctx: ^Context, particles: Particle_System, min, max: f32) {
+Set_Particle_Spin :: proc(ctx: ^Context, particles: Particle_System, min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L448)
 
 ### `Get_Particle_Spin`
 
 ```odin
-Get_Particle_Spin :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32) {
+Get_Particle_Spin :: proc(ctx: ^Context, particles: Particle_System) -> (min, max: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L454)
 
 ### `Set_Particle_Sizes`
 
 ```odin
-Set_Particle_Sizes :: proc(ctx: ^Context, particles: Particle_System, sizes: []f32) {
+Set_Particle_Sizes :: proc(ctx: ^Context, particles: Particle_System, sizes: []f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Size track (LOVE setSizes, max 8 stops); the system interpolates evenly
+across stops over each particle's lifetime. Empty input is a no-op.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L465)
 
 ### `Get_Particle_Size_Count`
 
 ```odin
-Get_Particle_Size_Count :: proc(ctx: ^Context, particles: Particle_System) -> int {
+Get_Particle_Size_Count :: proc(ctx: ^Context, particles: Particle_System) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L471)
 
 ### `Set_Particle_Colors`
 
 ```odin
-Set_Particle_Colors :: proc(ctx: ^Context, particles: Particle_System, colors: []Color) {
+Set_Particle_Colors :: proc(ctx: ^Context, particles: Particle_System, colors: []Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Color track (LOVE setColors, max 8 stops, u8 0-255 channels); empty input
+is a no-op.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L480)
 
 ### `Get_Particle_Color_Count`
 
 ```odin
-Get_Particle_Color_Count :: proc(ctx: ^Context, particles: Particle_System) -> int {
+Get_Particle_Color_Count :: proc(ctx: ^Context, particles: Particle_System) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L496)
 
 ### `Set_Particle_Size`
 
 ```odin
-Set_Particle_Size :: proc(ctx: ^Context, particles: Particle_System, size: f32) {
+Set_Particle_Size :: proc(ctx: ^Context, particles: Particle_System, size: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Single size/color convenience: reads/writes the track start value,
+preserving the remaining stops.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L505)
 
 ### `Get_Particle_Size`
 
 ```odin
-Get_Particle_Size :: proc(ctx: ^Context, particles: Particle_System) -> f32 {
+Get_Particle_Size :: proc(ctx: ^Context, particles: Particle_System) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L511)
 
 ### `Set_Particle_Color`
 
 ```odin
-Set_Particle_Color :: proc(ctx: ^Context, particles: Particle_System, color: Color) {
+Set_Particle_Color :: proc(ctx: ^Context, particles: Particle_System, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L518)
 
 ### `Get_Particle_Color`
 
 ```odin
-Get_Particle_Color :: proc(ctx: ^Context, particles: Particle_System) -> Color {
+Get_Particle_Color :: proc(ctx: ^Context, particles: Particle_System) -> Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L524)
 
 ### `Replace_Particle_Texture`
 
 ```odin
-Replace_Particle_Texture :: proc(ctx: ^Context, particles: Particle_System, texture: Texture) -> Error {
+Replace_Particle_Texture :: proc(ctx: ^Context, particles: Particle_System, texture: Texture) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Swaps the particle texture (LOVE setTexture). Texture{} selects the
+textureless circle renderer. A non-zero texture must exist in the active
+backend, so headless replaces with a real texture report .Invalid_Handle
+instead of a fake handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L536)
 
 ### `Start_Particles`
 
 ```odin
-Start_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Start_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+New systems start active (Thor2D CType behavior); call Stop_Particles
+after Create for LOVE's initially-stopped flow.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L551)
 
 ### `Stop_Particles`
 
 ```odin
-Stop_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Stop_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L557)
 
 ### `Pause_Particles`
 
 ```odin
-Pause_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Pause_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L563)
 
 ### `Reset_Particles`
 
 ```odin
-Reset_Particles :: proc(ctx: ^Context, particles: Particle_System) {
+Reset_Particles :: proc(ctx: ^Context, particles: Particle_System)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Clears all live particles and returns the system to the stopped state.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L570)
 
 ### `Is_Particles_Active`
 
 ```odin
-Is_Particles_Active :: proc(ctx: ^Context, particles: Particle_System) -> bool {
+Is_Particles_Active :: proc(ctx: ^Context, particles: Particle_System) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L576)
 
 ### `Is_Particles_Paused`
 
 ```odin
-Is_Particles_Paused :: proc(ctx: ^Context, particles: Particle_System) -> bool {
+Is_Particles_Paused :: proc(ctx: ^Context, particles: Particle_System) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L583)
 
 ### `Is_Particles_Stopped`
 
 ```odin
-Is_Particles_Stopped :: proc(ctx: ^Context, particles: Particle_System) -> bool {
+Is_Particles_Stopped :: proc(ctx: ^Context, particles: Particle_System) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L590)
 
 ### `Is_Particles_Empty`
 
 ```odin
-Is_Particles_Empty :: proc(ctx: ^Context, particles: Particle_System) -> bool {
+Is_Particles_Empty :: proc(ctx: ^Context, particles: Particle_System) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L597)
 
 ### `Get_Particle_Count`
 
 ```odin
-Get_Particle_Count :: proc(ctx: ^Context, particles: Particle_System) -> int {
+Get_Particle_Count :: proc(ctx: ^Context, particles: Particle_System) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L604)
 
 ### `Get_Particle_Max`
 
 ```odin
-Get_Particle_Max :: proc(ctx: ^Context, particles: Particle_System) -> int {
+Get_Particle_Max :: proc(ctx: ^Context, particles: Particle_System) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L611)
 
 ### `Clone_Particles`
 
 ```odin
-Clone_Particles :: proc(ctx: ^Context, particles: Particle_System) -> (Particle_System, Error) {
+Clone_Particles :: proc(ctx: ^Context, particles: Particle_System) -> (Particle_System, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Deep copy of all tuning, tracks, texture and RNG seed. The clone starts
+stopped with zero live particles (LOVE clone semantics); live particles
+are not copied. Invalid handles report .Invalid_Handle, never a fake.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L621)
 
 ### `Load_Texture_Cached`
 
 ```odin
-Load_Texture_Cached :: proc(ctx: ^Context, path: string) -> (Texture, Error) {
+Load_Texture_Cached :: proc(ctx: ^Context, path: string) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L654)
 
 ### `Load_Font_Cached`
 
 ```odin
-Load_Font_Cached :: proc(ctx: ^Context, path: string) -> (Font, Error) {
+Load_Font_Cached :: proc(ctx: ^Context, path: string) -> (Font, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L670)
 
 ### `Load_Sound_Cached`
 
 ```odin
-Load_Sound_Cached :: proc(ctx: ^Context, path: string) -> (Sound, Error) {
+Load_Sound_Cached :: proc(ctx: ^Context, path: string) -> (Sound, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L686)
 
 ### `Texture_Asset_ID`
 
 ```odin
-Texture_Asset_ID :: proc(ctx: ^Context, texture: Texture) -> Asset_Id {
+Texture_Asset_ID :: proc(ctx: ^Context, texture: Texture) -> Asset_Id
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L702)
 
 ### `Font_Asset_ID`
 
 ```odin
-Font_Asset_ID :: proc(ctx: ^Context, font: Font) -> Asset_Id {
+Font_Asset_ID :: proc(ctx: ^Context, font: Font) -> Asset_Id
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L709)
 
 ### `Sound_Asset_ID`
 
 ```odin
-Sound_Asset_ID :: proc(ctx: ^Context, sound: Sound) -> Asset_Id {
+Sound_Asset_ID :: proc(ctx: ^Context, sound: Sound) -> Asset_Id
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/effects.odin#L716)
 
 ## `filesystem`
 
@@ -2027,218 +2236,227 @@ Source: `src/thor2d/filesystem.odin`
 ### `File_Exists`
 
 ```odin
-File_Exists :: proc(path: string) -> bool {
+File_Exists :: proc(path: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L8)
 
 ### `Read_File`
 
 ```odin
-Read_File :: proc(path: string) -> ([]byte, os.Error) {
+Read_File :: proc(path: string) -> ([]byte, os.Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L12)
 
 ### `Write_File`
 
 ```odin
-Write_File :: proc(path: string, data: []byte) -> os.Error {
+Write_File :: proc(path: string, data: []byte) -> os.Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L16)
 
 ### `Read_Text`
 
 ```odin
-Read_Text :: proc(path: string) -> (string, os.Error) {
+Read_Text :: proc(path: string) -> (string, os.Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L20)
 
 ### `Init_Filesystem`
 
 ```odin
-Init_Filesystem :: proc(source_directory, save_directory: string) -> (Filesystem, Error) {
+Init_Filesystem :: proc(source_directory, save_directory: string) -> (Filesystem, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L28)
 
 ### `Destroy_Filesystem`
 
 ```odin
-Destroy_Filesystem :: proc(filesystem: ^Filesystem) {
+Destroy_Filesystem :: proc(filesystem: ^Filesystem)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L50)
 
 ### `Set_Identity`
 
 ```odin
-Set_Identity :: proc(filesystem: ^Filesystem, identity: string) -> Error {
+Set_Identity :: proc(filesystem: ^Filesystem, identity: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L76)
 
 ### `Get_Identity`
 
 ```odin
-Get_Identity :: proc(filesystem: ^Filesystem) -> string {
+Get_Identity :: proc(filesystem: ^Filesystem) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L89)
 
 ### `Get_Source_Directory`
 
 ```odin
-Get_Source_Directory :: proc(filesystem: ^Filesystem) -> string {
+Get_Source_Directory :: proc(filesystem: ^Filesystem) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L96)
 
 ### `Get_Save_Directory`
 
 ```odin
-Get_Save_Directory :: proc(filesystem: ^Filesystem) -> string {
+Get_Save_Directory :: proc(filesystem: ^Filesystem) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L103)
 
 ### `Resolve_Source_Path`
 
 ```odin
-Resolve_Source_Path :: proc(filesystem: ^Filesystem, relative: string) -> (string, Error) {
+Resolve_Source_Path :: proc(filesystem: ^Filesystem, relative: string) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L129)
 
 ### `Resolve_Save_Path`
 
 ```odin
-Resolve_Save_Path :: proc(filesystem: ^Filesystem, relative: string) -> (string, Error) {
+Resolve_Save_Path :: proc(filesystem: ^Filesystem, relative: string) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L136)
 
 ### `Read_Source`
 
 ```odin
-Read_Source :: proc(filesystem: ^Filesystem, relative: string) -> (File_Data, Error) {
+Read_Source :: proc(filesystem: ^Filesystem, relative: string) -> (File_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L143)
 
 ### `Read_Path`
 
 ```odin
-Read_Path :: proc(filesystem: ^Filesystem, relative: string) -> (File_Data, Error) {
+Read_Path :: proc(filesystem: ^Filesystem, relative: string) -> (File_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Read_Path follows Love2D-style precedence: save directory, source directory,
+then mounted package archives.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L172)
 
 ### `Write_Save`
 
 ```odin
-Write_Save :: proc(filesystem: ^Filesystem, relative: string, data: []byte) -> Error {
+Write_Save :: proc(filesystem: ^Filesystem, relative: string, data: []byte) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L192)
 
 ### `Get_File_Info`
 
 ```odin
-Get_File_Info :: proc(filesystem: ^Filesystem, relative: string) -> (Thor2D_File_Info, Error) {
+Get_File_Info :: proc(filesystem: ^Filesystem, relative: string) -> (Thor2D_File_Info, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L210)
 
 ### `List_Directory`
 
 ```odin
-List_Directory :: proc(filesystem: ^Filesystem, relative: string) -> ([dynamic]Directory_Entry, Error) {
+List_Directory :: proc(filesystem: ^Filesystem, relative: string) -> ([dynamic]Directory_Entry, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L253)
 
 ### `Mount_Archive`
 
 ```odin
-Mount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error {
+Mount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mount_Archive mounts a package relative to the source directory.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L338)
 
 ### `Mount_Archive_File`
 
 ```odin
-Mount_Archive_File :: proc(filesystem: ^Filesystem, archive_path: string) -> Error {
+Mount_Archive_File :: proc(filesystem: ^Filesystem, archive_path: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mount_Archive_File is used by packaged runners that keep the archive
+outside the project's source directory. It still stores only the archive
+bytes and never extracts its entries.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L353)
 
 ### `Unmount_Archive`
 
 ```odin
-Unmount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error {
+Unmount_Archive :: proc(filesystem: ^Filesystem, archive_path: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L360)
 
 ### `Open_File`
 
 ```odin
-Open_File :: proc(filesystem: ^Filesystem, relative: string, mode := File_Open_Mode.Read) -> (^File, Error) {
+Open_File :: proc(filesystem: ^Filesystem, relative: string, mode := File_Open_Mode.Read) -> (^File, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L402)
 
 ### `Read_File_Handle`
 
 ```odin
-Read_File_Handle :: proc(file: ^File, destination: []byte) -> (int, Error) {
+Read_File_Handle :: proc(file: ^File, destination: []byte) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L452)
 
 ### `Write_File_Handle`
 
 ```odin
-Write_File_Handle :: proc(file: ^File, data: []byte) -> (int, Error) {
+Write_File_Handle :: proc(file: ^File, data: []byte) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L463)
 
 ### `Seek_File`
 
 ```odin
-Seek_File :: proc(file: ^File, offset: i64, origin := io.Seek_From.Start) -> (i64, Error) {
+Seek_File :: proc(file: ^File, offset: i64, origin := io.Seek_From.Start) -> (i64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L474)
 
 ### `Tell_File`
 
 ```odin
-Tell_File :: proc(file: ^File) -> (i64, Error) {
+Tell_File :: proc(file: ^File) -> (i64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L485)
 
 ### `Close_File`
 
 ```odin
-Close_File :: proc(file: ^File) -> Error {
+Close_File :: proc(file: ^File) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L489)
 
 ### `Destroy_Zip_Archive`
 
 ```odin
-Destroy_Zip_Archive :: proc(archive: ^Filesystem_Archive) {
+Destroy_Zip_Archive :: proc(archive: ^Filesystem_Archive)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem.odin#L647)
 
 ## `filesystem_extra`
 
@@ -2247,226 +2465,281 @@ Source: `src/thor2d/filesystem_extra.odin`
 ### `Create_Directory`
 
 ```odin
-Create_Directory :: proc(filesystem: ^Filesystem, relative: string) -> Error {
+Create_Directory :: proc(filesystem: ^Filesystem, relative: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L9)
 
 ### `Remove_Path`
 
 ```odin
-Remove_Path :: proc(filesystem: ^Filesystem, relative: string) -> Error {
+Remove_Path :: proc(filesystem: ^Filesystem, relative: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L28)
 
 ### `Append_Save`
 
 ```odin
-Append_Save :: proc(filesystem: ^Filesystem, relative: string, data: []byte) -> Error {
+Append_Save :: proc(filesystem: ^Filesystem, relative: string, data: []byte) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L52)
 
 ### `File_Size`
 
 ```odin
-File_Size :: proc(filesystem: ^Filesystem, relative: string) -> (int, Error) {
+File_Size :: proc(filesystem: ^Filesystem, relative: string) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L78)
 
 ### `Is_Directory`
 
 ```odin
-Is_Directory :: proc(filesystem: ^Filesystem, relative: string) -> bool {
+Is_Directory :: proc(filesystem: ^Filesystem, relative: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L89)
 
 ### `Is_File`
 
 ```odin
-Is_File :: proc(filesystem: ^Filesystem, relative: string) -> bool {
+Is_File :: proc(filesystem: ^Filesystem, relative: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L97)
 
 ### `Get_Working_Directory`
 
 ```odin
-Get_Working_Directory :: proc() -> string {
+Get_Working_Directory :: proc() -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L105)
 
 ### `Get_User_Directory`
 
 ```odin
-Get_User_Directory :: proc() -> string {
+Get_User_Directory :: proc() -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L113)
 
 ### `Get_Appdata_Directory`
 
 ```odin
-Get_Appdata_Directory :: proc() -> string {
+Get_Appdata_Directory :: proc() -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L120)
 
 ### `Get_Source_Base_Directory`
 
 ```odin
-Get_Source_Base_Directory :: proc(filesystem: ^Filesystem) -> string {
+Get_Source_Base_Directory :: proc(filesystem: ^Filesystem) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L135)
 
 ### `Get_Real_Directory`
 
 ```odin
-Get_Real_Directory :: proc(filesystem: ^Filesystem, relative: string) -> string {
+Get_Real_Directory :: proc(filesystem: ^Filesystem, relative: string) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L143)
 
 ### `Is_Fused`
 
 ```odin
-Is_Fused :: proc(filesystem: ^Filesystem) -> bool {
+Is_Fused :: proc(filesystem: ^Filesystem) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L171)
 
 ### `File_Lines`
 
 ```odin
-File_Lines :: proc(filesystem: ^Filesystem, relative: string) -> ([]string, Error) {
+File_Lines :: proc(filesystem: ^Filesystem, relative: string) -> ([]string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L175)
 
 ### `File_Is_Open`
 
 ```odin
-File_Is_Open :: proc(file: ^File) -> bool {
+File_Is_Open :: proc(file: ^File) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Is_Open mirrors love File:isOpen. Nil or closed handles report false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L190)
 
 ### `File_Is_EOF`
 
 ```odin
-File_Is_EOF :: proc(file: ^File) -> bool {
+File_Is_EOF :: proc(file: ^File) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Is_EOF mirrors love File:isEOF. Closed handles and I/O errors report
+true (conservative: there is nothing more to read).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L196)
 
 ### `File_Size_Of`
 
 ```odin
-File_Size_Of :: proc(file: ^File) -> (i64, Error) {
+File_Size_Of :: proc(file: ^File) -> (i64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Size_Of mirrors love File:getSize on an open handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L212)
 
 ### `File_Name`
 
 ```odin
-File_Name :: proc(file: ^File) -> string {
+File_Name :: proc(file: ^File) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Name mirrors love File:getFilename: the relative path passed to
+Open_File. The string is owned by the handle; do not delete it. Empty when
+the handle was created without a stored path.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L226)
 
 ### `File_Mode`
 
 ```odin
-File_Mode :: proc(file: ^File) -> File_Open_Mode {
+File_Mode :: proc(file: ^File) -> File_Open_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Mode mirrors love File:getMode: the mode passed to Open_File.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L234)
 
 ### `File_Read_Line`
 
 ```odin
-File_Read_Line :: proc(file: ^File) -> (string, Error) {
+File_Read_Line :: proc(file: ^File) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Read_Line reads one \n-terminated line (mirrors love File:read line
+iteration for a single line). The trailing \n — and a preceding \r — are
+stripped. The returned string is owned by the caller (delete it). EOF
+before any byte maps to .File_Not_Found; a closed handle maps to
+.Invalid_Handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L246)
 
 ### `File_Flush`
 
 ```odin
-File_Flush :: proc(file: ^File) -> Error {
+File_Flush :: proc(file: ^File) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Flush mirrors love File:flush. Writes via Write_File_Handle go
+straight to the OS (os.write is unbuffered), so there is nothing to flush:
+this is an honest no-op returning .None on open handles, .Invalid_Handle
+otherwise.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L286)
 
 ### `File_Set_Buffer_Mode`
 
 ```odin
-File_Set_Buffer_Mode :: proc(file: ^File, mode: File_Buffer_Mode) -> Error {
+File_Set_Buffer_Mode :: proc(file: ^File, mode: File_Buffer_Mode) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Set_Buffer_Mode mirrors love File:setBuffer. The backend is
+unbuffered, so .None is accepted (stored) while .Line/.Full return
+.Unsupported instead of pretending to buffer.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L296)
 
 ### `File_Buffer_Mode_Of`
 
 ```odin
-File_Buffer_Mode_Of :: proc(file: ^File) -> File_Buffer_Mode {
+File_Buffer_Mode_Of :: proc(file: ^File) -> File_Buffer_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Buffer_Mode_Of mirrors love File:getBuffer. Always .None in practice
+(see File_Set_Buffer_Mode); nil handles report .None.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L309)
 
 ### `New_File_Data`
 
 ```odin
-New_File_Data :: proc(path: string, data: []byte) -> (File_Data, Error) {
+New_File_Data :: proc(path: string, data: []byte) -> (File_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+New_File_Data builds an owned File_Data from caller bytes (public wrapper
+over the read-path constructor; mirrors love.filesystem.newFileData data
+half). Path is stored verbatim (no sandbox check: no I/O happens).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L319)
 
 ### `File_Data_Name`
 
 ```odin
-File_Data_Name :: proc(data: ^File_Data) -> string {
+File_Data_Name :: proc(data: ^File_Data) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Data_Name returns the File_Data path verbatim (mirrors
+love FileData:getName-ish identity; the stored relative path).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L325)
 
 ### `File_Data_Extension`
 
 ```odin
-File_Data_Extension :: proc(data: ^File_Data) -> string {
+File_Data_Extension :: proc(data: ^File_Data) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+File_Data_Extension returns the lowercase extension after the last dot of
+the last path segment ("" when none). Pure string helper, no I/O.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L334)
 
 ### `Mount_Archive_Memory`
 
 ```odin
-Mount_Archive_Memory :: proc(filesystem: ^Filesystem, name: string, data: []byte) -> Error {
+Mount_Archive_Memory :: proc(filesystem: ^Filesystem, name: string, data: []byte) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mount_Archive_Memory mounts a ZIP archive from memory (mirrors mounting a
+fused/love archive without touching disk). The parser is the same stored /
+deflate ZIP reader as Mount_Archive, so only those methods load; anything
+else surfaces as .Unsupported at read time. name is stored as the archive
+identity (used in listings, not resolvable by Unmount_Archive, which takes
+source-relative paths — memory archives live until Destroy_Filesystem).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L365)
 
 ### `Are_Symlinks_Enabled`
 
 ```odin
-Are_Symlinks_Enabled :: proc(filesystem: ^Filesystem) -> bool {
+Are_Symlinks_Enabled :: proc(filesystem: ^Filesystem) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Are_Symlinks_Enabled reports the symlink intent flag (default true). The
+backend follows OS symlinks on reads; the sandbox (.. escape rejection)
+stays enforced regardless of this flag.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L380)
 
 ### `Set_Symlinks_Enabled`
 
 ```odin
-Set_Symlinks_Enabled :: proc(filesystem: ^Filesystem, enabled: bool) -> Error {
+Set_Symlinks_Enabled :: proc(filesystem: ^Filesystem, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Symlinks_Enabled stores the symlink intent flag. Advisory only (see
+Are_Symlinks_Enabled); always honored as a stored value.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/filesystem_extra.odin#L389)
 
 ## `graphics`
 
@@ -2475,850 +2748,1055 @@ Source: `src/thor2d/graphics.odin`
 ### `Clear`
 
 ```odin
-Clear :: proc(ctx: ^Context, color: Color) {
+Clear :: proc(ctx: ^Context, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L7)
 
 ### `Draw_Rect`
 
 ```odin
-Draw_Rect :: proc(ctx: ^Context, rect: Rect, color: Color) {
+Draw_Rect :: proc(ctx: ^Context, rect: Rect, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L13)
 
 ### `Draw_Rect_Outline`
 
 ```odin
-Draw_Rect_Outline :: proc(ctx: ^Context, rect: Rect, thickness: f32, color: Color) {
+Draw_Rect_Outline :: proc(ctx: ^Context, rect: Rect, thickness: f32, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L19)
 
 ### `Draw_Circle`
 
 ```odin
-Draw_Circle :: proc(ctx: ^Context, center: Vec2, radius: f32, color: Color) {
+Draw_Circle :: proc(ctx: ^Context, center: Vec2, radius: f32, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L25)
 
 ### `Draw_Line`
 
 ```odin
-Draw_Line :: proc(ctx: ^Context, start, end: Vec2, thickness: f32, color: Color) {
+Draw_Line :: proc(ctx: ^Context, start, end: Vec2, thickness: f32, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L31)
 
 ### `Draw_Text`
 
 ```odin
-Draw_Text :: proc(ctx: ^Context, text: string, position: Vec2, size: int, color: Color) {
+Draw_Text :: proc(ctx: ^Context, text: string, position: Vec2, size: int, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L37)
 
 ### `Measure_Text`
 
 ```odin
-Measure_Text :: proc(ctx: ^Context, text: string, size: int) -> int {
+Measure_Text :: proc(ctx: ^Context, text: string, size: int) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L43)
 
 ### `Load_Font`
 
 ```odin
-Load_Font :: proc(ctx: ^Context, path: string) -> (Font, Error) {
+Load_Font :: proc(ctx: ^Context, path: string) -> (Font, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L50)
 
 ### `Unload_Font`
 
 ```odin
-Unload_Font :: proc(ctx: ^Context, font: Font) {
+Unload_Font :: proc(ctx: ^Context, font: Font)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L66)
 
 ### `Draw_Text_Font`
 
 ```odin
-Draw_Text_Font :: proc(ctx: ^Context, font: Font, text: string, position: Vec2, size: f32, spacing: f32, color: Color) {
+Draw_Text_Font :: proc(ctx: ^Context, font: Font, text: string, position: Vec2, size: f32, spacing: f32, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L72)
 
 ### `Measure_Text_Font`
 
 ```odin
-Measure_Text_Font :: proc(ctx: ^Context, font: Font, text: string, size, spacing: f32) -> Vec2 {
+Measure_Text_Font :: proc(ctx: ^Context, font: Font, text: string, size, spacing: f32) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L78)
 
 ### `Create_Text`
 
 ```odin
-Create_Text :: proc(ctx: ^Context, font: Font, value: string, size: f32, spacing := f32(0)) -> (Text, Error) {
+Create_Text :: proc(ctx: ^Context, font: Font, value: string, size: f32, spacing := f32(0)) -> (Text, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L86)
 
 ### `Set_Text`
 
 ```odin
-Set_Text :: proc(ctx: ^Context, text: Text, value: string) -> Error {
+Set_Text :: proc(ctx: ^Context, text: Text, value: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L97)
 
 ### `Draw_Text_Object`
 
 ```odin
-Draw_Text_Object :: proc(ctx: ^Context, text: Text, position: Vec2, color := White) {
+Draw_Text_Object :: proc(ctx: ^Context, text: Text, position: Vec2, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L107)
 
 ### `Unload_Text`
 
 ```odin
-Unload_Text :: proc(ctx: ^Context, text: Text) {
+Unload_Text :: proc(ctx: ^Context, text: Text)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L113)
 
 ### `Measure_Text_Layout`
 
 ```odin
-Measure_Text_Layout :: proc(ctx: ^Context, text: string, size: f32, max_width := f32(0), spacing := f32(0)) -> Text_Layout {
+Measure_Text_Layout :: proc(ctx: ^Context, text: string, size: f32, max_width := f32(0), spacing := f32(0)) -> Text_Layout
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Measure_Text_Layout computes a multiline text block. Wrapping happens at
+whitespace and explicit line breaks are always honored. Long words are
+retained as one line, matching the behavior of common 2D text APIs.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L129)
 
 ### `Draw_Text_Aligned`
 
 ```odin
-Draw_Text_Aligned :: proc(ctx: ^Context, text: string, position: Vec2, size: f32, align: Text_Align, color: Color) {
+Draw_Text_Aligned :: proc(ctx: ^Context, text: string, position: Vec2, size: f32, align: Text_Align, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Draw_Text_Aligned draws a line with an explicit alignment anchor.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L199)
 
 ### `Load_Texture`
 
 ```odin
-Load_Texture :: proc(ctx: ^Context, path: string) -> (Texture, Error) {
+Load_Texture :: proc(ctx: ^Context, path: string) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L216)
 
 ### `Generate_Texture`
 
 ```odin
-Generate_Texture :: proc(ctx: ^Context, width, height: int, color: Color) -> (Texture, Error) {
+Generate_Texture :: proc(ctx: ^Context, width, height: int, color: Color) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L232)
 
 ### `Unload_Texture`
 
 ```odin
-Unload_Texture :: proc(ctx: ^Context, texture: Texture) {
+Unload_Texture :: proc(ctx: ^Context, texture: Texture)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L243)
 
 ### `Texture_Size`
 
 ```odin
-Texture_Size :: proc(ctx: ^Context, texture: Texture) -> (width, height: int) {
+Texture_Size :: proc(ctx: ^Context, texture: Texture) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L249)
 
 ### `Draw_Texture`
 
 ```odin
-Draw_Texture :: proc(ctx: ^Context, texture: Texture, position: Vec2, tint := White) {
+Draw_Texture :: proc(ctx: ^Context, texture: Texture, position: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L256)
 
 ### `Draw_Texture_Ex`
 
 ```odin
-Draw_Texture_Ex :: proc(ctx: ^Context, texture: Texture, position: Vec2, rotation, scale: f32, tint := White) {
+Draw_Texture_Ex :: proc(ctx: ^Context, texture: Texture, position: Vec2, rotation, scale: f32, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L262)
 
 ### `Draw_Texture_Pro`
 
 ```odin
-Draw_Texture_Pro :: proc(ctx: ^Context, texture: Texture, source, destination: Rect, origin: Vec2, rotation: f32, tint := White) {
+Draw_Texture_Pro :: proc(ctx: ^Context, texture: Texture, source, destination: Rect, origin: Vec2, rotation: f32, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L268)
 
 ### `Set_Texture_Filter`
 
 ```odin
-Set_Texture_Filter :: proc(ctx: ^Context, texture: Texture, filter: Texture_Filter) -> Error {
+Set_Texture_Filter :: proc(ctx: ^Context, texture: Texture, filter: Texture_Filter) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L274)
 
 ### `Set_Texture_Wrap`
 
 ```odin
-Set_Texture_Wrap :: proc(ctx: ^Context, texture: Texture, wrap: Texture_Wrap) -> Error {
+Set_Texture_Wrap :: proc(ctx: ^Context, texture: Texture, wrap: Texture_Wrap) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L284)
 
 ### `Create_Canvas`
 
 ```odin
-Create_Canvas :: proc(ctx: ^Context, width, height: int) -> (Canvas, Error) {
+Create_Canvas :: proc(ctx: ^Context, width, height: int) -> (Canvas, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L294)
 
 ### `Unload_Canvas`
 
 ```odin
-Unload_Canvas :: proc(ctx: ^Context, canvas: Canvas) {
+Unload_Canvas :: proc(ctx: ^Context, canvas: Canvas)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L305)
 
 ### `Set_Canvas`
 
 ```odin
-Set_Canvas :: proc(ctx: ^Context, canvas: Canvas) {
+Set_Canvas :: proc(ctx: ^Context, canvas: Canvas)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L311)
 
 ### `Reset_Canvas`
 
 ```odin
-Reset_Canvas :: proc(ctx: ^Context) {
+Reset_Canvas :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L317)
 
 ### `Draw_Canvas`
 
 ```odin
-Draw_Canvas :: proc(ctx: ^Context, canvas: Canvas, position: Vec2, scale: Vec2, tint := White) {
+Draw_Canvas :: proc(ctx: ^Context, canvas: Canvas, position: Vec2, scale: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L323)
 
 ### `New_Quad`
 
 ```odin
-New_Quad :: proc(texture: Texture, source: Rect) -> Quad {
+New_Quad :: proc(texture: Texture, source: Rect) -> Quad
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L329)
 
 ### `New_Quad_From_Texture`
 
 ```odin
-New_Quad_From_Texture :: proc(ctx: ^Context, texture: Texture, source: Rect) -> Quad {
+New_Quad_From_Texture :: proc(ctx: ^Context, texture: Texture, source: Rect) -> Quad
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L333)
 
 ### `Draw_Texture_Quad`
 
 ```odin
-Draw_Texture_Quad :: proc(ctx: ^Context, texture: Texture, quad: Quad, position: Vec2, rotation, scale: f32, tint := White) {
+Draw_Texture_Quad :: proc(ctx: ^Context, texture: Texture, quad: Quad, position: Vec2, rotation, scale: f32, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L338)
 
 ### `Load_Shader`
 
 ```odin
-Load_Shader :: proc(ctx: ^Context, vertex_path, fragment_path: string) -> (Shader, Error) {
+Load_Shader :: proc(ctx: ^Context, vertex_path, fragment_path: string) -> (Shader, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L345)
 
 ### `Unload_Shader`
 
 ```odin
-Unload_Shader :: proc(ctx: ^Context, shader: Shader) {
+Unload_Shader :: proc(ctx: ^Context, shader: Shader)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L366)
 
 ### `Begin_Shader`
 
 ```odin
-Begin_Shader :: proc(ctx: ^Context, shader: Shader) {
+Begin_Shader :: proc(ctx: ^Context, shader: Shader)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L372)
 
 ### `End_Shader`
 
 ```odin
-End_Shader :: proc(ctx: ^Context) {
+End_Shader :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L378)
 
 ### `Set_Shader_Float`
 
 ```odin
-Set_Shader_Float :: proc(ctx: ^Context, shader: Shader, name: string, value: f32) {
+Set_Shader_Float :: proc(ctx: ^Context, shader: Shader, name: string, value: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L384)
 
 ### `Set_Shader_Vec2`
 
 ```odin
-Set_Shader_Vec2 :: proc(ctx: ^Context, shader: Shader, name: string, value: Vec2) {
+Set_Shader_Vec2 :: proc(ctx: ^Context, shader: Shader, name: string, value: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L390)
 
 ### `Set_Shader_Vec4`
 
 ```odin
-Set_Shader_Vec4 :: proc(ctx: ^Context, shader: Shader, name: string, value: Vec4) {
+Set_Shader_Vec4 :: proc(ctx: ^Context, shader: Shader, name: string, value: Vec4)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L396)
 
 ### `Set_Shader_Texture`
 
 ```odin
-Set_Shader_Texture :: proc(ctx: ^Context, shader: Shader, name: string, texture: Texture) -> Error {
+Set_Shader_Texture :: proc(ctx: ^Context, shader: Shader, name: string, texture: Texture) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L402)
 
 ### `Set_Shader_Color`
 
 ```odin
-Set_Shader_Color :: proc(ctx: ^Context, shader: Shader, name: string, color: Color) {
+Set_Shader_Color :: proc(ctx: ^Context, shader: Shader, name: string, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L412)
 
 ### `Set_Shader_Floats`
 
 ```odin
-Set_Shader_Floats :: proc(ctx: ^Context, shader: Shader, name: string, values: []f32) -> Error {
+Set_Shader_Floats :: proc(ctx: ^Context, shader: Shader, name: string, values: []f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L418)
 
 ### `Set_Shader_Matrix`
 
 ```odin
-Set_Shader_Matrix :: proc(ctx: ^Context, shader: Shader, name: string, value: Matrix_4) -> Error {
+Set_Shader_Matrix :: proc(ctx: ^Context, shader: Shader, name: string, value: Matrix_4) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L428)
 
 ### `Create_Mesh`
 
 ```odin
-Create_Mesh :: proc(ctx: ^Context, vertices: []Mesh_Vertex, indices: []u32 = nil, mode := Mesh_Draw_Mode.Triangles) -> (Mesh, Error) {
+Create_Mesh :: proc(ctx: ^Context, vertices: []Mesh_Vertex, indices: []u32 = nil, mode := Mesh_Draw_Mode.Triangles) -> (Mesh, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L438)
 
 ### `Update_Mesh`
 
 ```odin
-Update_Mesh :: proc(ctx: ^Context, mesh: Mesh, vertices: []Mesh_Vertex, indices: []u32 = nil) -> Error {
+Update_Mesh :: proc(ctx: ^Context, mesh: Mesh, vertices: []Mesh_Vertex, indices: []u32 = nil) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L465)
 
 ### `Draw_Mesh`
 
 ```odin
-Draw_Mesh :: proc(ctx: ^Context, mesh: Mesh, position: Vec2, rotation: f32, scale: Vec2, tint := White) {
+Draw_Mesh :: proc(ctx: ^Context, mesh: Mesh, position: Vec2, rotation: f32, scale: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L491)
 
 ### `Draw_Mesh_Textured`
 
 ```odin
-Draw_Mesh_Textured :: proc(ctx: ^Context, mesh: Mesh, texture: Texture, position: Vec2, rotation: f32, scale: Vec2) {
+Draw_Mesh_Textured :: proc(ctx: ^Context, mesh: Mesh, texture: Texture, position: Vec2, rotation: f32, scale: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L497)
 
 ### `Unload_Mesh`
 
 ```odin
-Unload_Mesh :: proc(ctx: ^Context, mesh: Mesh) {
+Unload_Mesh :: proc(ctx: ^Context, mesh: Mesh)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L503)
 
 ### `Begin_Blend`
 
 ```odin
-Begin_Blend :: proc(ctx: ^Context, mode: Blend_Mode) {
+Begin_Blend :: proc(ctx: ^Context, mode: Blend_Mode)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L509)
 
 ### `End_Blend`
 
 ```odin
-End_Blend :: proc(ctx: ^Context) {
+End_Blend :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L515)
 
 ### `Begin_Scissor`
 
 ```odin
-Begin_Scissor :: proc(ctx: ^Context, rect: Rect) {
+Begin_Scissor :: proc(ctx: ^Context, rect: Rect)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L521)
 
 ### `End_Scissor`
 
 ```odin
-End_Scissor :: proc(ctx: ^Context) {
+End_Scissor :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L527)
 
 ### `Take_Screenshot`
 
 ```odin
-Take_Screenshot :: proc(ctx: ^Context, path: string) -> Error {
+Take_Screenshot :: proc(ctx: ^Context, path: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L533)
 
 ### `Set_Line_Width`
 
 ```odin
-Set_Line_Width :: proc(ctx: ^Context, width: f32) -> Error {
+Set_Line_Width :: proc(ctx: ^Context, width: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L543)
 
 ### `Get_Line_Width`
 
 ```odin
-Get_Line_Width :: proc(ctx: ^Context) -> f32 {
+Get_Line_Width :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L550)
 
 ### `Set_Point_Size`
 
 ```odin
-Set_Point_Size :: proc(ctx: ^Context, size: f32) -> Error {
+Set_Point_Size :: proc(ctx: ^Context, size: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L556)
 
 ### `Get_Point_Size`
 
 ```odin
-Get_Point_Size :: proc(ctx: ^Context) -> f32 {
+Get_Point_Size :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L563)
 
 ### `Get_Renderer_Info`
 
 ```odin
-Get_Renderer_Info :: proc(ctx: ^Context) -> Renderer_Info {
+Get_Renderer_Info :: proc(ctx: ^Context) -> Renderer_Info
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L569)
 
 ### `Create_Canvas_Format`
 
 ```odin
-Create_Canvas_Format :: proc(ctx: ^Context, width, height: int, format: Canvas_Format, msaa: int) -> (Canvas, Error) {
+Create_Canvas_Format :: proc(ctx: ^Context, width, height: int, format: Canvas_Format, msaa: int) -> (Canvas, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 typed canvas creation (mirrors love.graphics.newCanvas with
+format/msaa settings). Only .RGBA8 with msaa == 0 maps to a real raylib
+resource (LoadRenderTexture is RGBA8 + depth); float and depth-stencil
+formats have no vendor backing (see backend.Create_Canvas_Format), and
+per-canvas MSAA does not exist in raylib — window-level MSAA comes from
+Config.MSAA at creation time. Anything unavailable returns .Unsupported,
+never a fake canvas.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L584)
 
 ### `Is_Canvas_Format_Supported`
 
 ```odin
-Is_Canvas_Format_Supported :: proc(ctx: ^Context, format: Canvas_Format) -> bool {
+Is_Canvas_Format_Supported :: proc(ctx: ^Context, format: Canvas_Format) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 per-format canvas support query. Headless (or nil) contexts report
+false for every format; windowed backends report true for .RGBA8 only.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L603)
 
 ### `Font_Ascent`
 
 ```odin
-Font_Ascent :: proc(ctx: ^Context, font: Font, size: f32) -> f32 {
+Font_Ascent :: proc(ctx: ^Context, font: Font, size: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Ascent mirrors LOVE Font:getAscent at the requested raster size.
+Approximation (documented): raylib's Font exposes only baseSize plus the
+glyph table — no TrueType ascent table — so metrics scale proportionally
+with size (ascent = 0.8em).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L641)
 
 ### `Font_Descent`
 
 ```odin
-Font_Descent :: proc(ctx: ^Context, font: Font, size: f32) -> f32 {
+Font_Descent :: proc(ctx: ^Context, font: Font, size: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Descent mirrors LOVE Font:getDescent (descent = 0.2em, so
+ascent + descent == 1em == the default line advance). Same approximation
+as Font_Ascent.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L651)
 
 ### `Font_Baseline`
 
 ```odin
-Font_Baseline :: proc(ctx: ^Context, font: Font, size: f32) -> f32 {
+Font_Baseline :: proc(ctx: ^Context, font: Font, size: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Baseline mirrors LOVE Font:getBaseline: the baseline sits one ascent
+below the line top. Same approximation as Font_Ascent.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L660)
 
 ### `Font_Line_Height`
 
 ```odin
-Font_Line_Height :: proc(ctx: ^Context, font: Font, size: f32) -> f32 {
+Font_Line_Height :: proc(ctx: ^Context, font: Font, size: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Line_Height mirrors LOVE Font:getHeight: the line advance in pixels,
+which is size scaled by the Font_Set_Line_Height multiplier (1.0 default).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L669)
 
 ### `Font_Set_Line_Height`
 
 ```odin
-Font_Set_Line_Height :: proc(ctx: ^Context, font: Font, height: f32) {
+Font_Set_Line_Height :: proc(ctx: ^Context, font: Font, height: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Set_Line_Height mirrors LOVE Font:setLineHeight: stores a per-font
+line advance multiplier (must be positive). Silent no-op on nil ctx,
+invalid handles and headless contexts (no backend owns the entry).
+Honored by Font_Line_Height, Measure_Text_Layout (via the current font)
+and multiline Text draw advance.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L685)
 
 ### `Font_Get_Line_Height`
 
 ```odin
-Font_Get_Line_Height :: proc(ctx: ^Context, font: Font) -> f32 {
+Font_Get_Line_Height :: proc(ctx: ^Context, font: Font) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Get_Line_Height mirrors LOVE Font:getLineHeight: the stored
+multiplier (1.0 default). Zero on nil ctx or unknown handles; 1.0 for the
+default font on headless/nil backends.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L695)
 
 ### `Font_Has_Glyphs`
 
 ```odin
-Font_Has_Glyphs :: proc(ctx: ^Context, font: Font, text: string) -> bool {
+Font_Has_Glyphs :: proc(ctx: ^Context, font: Font, text: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_Has_Glyphs mirrors LOVE Font:hasGlyphs (plain-string variant).
+Best-effort via codepoint coverage (documented approximation): windowed
+backends scan the loaded glyph table for each rune; shaping-only coverage
+(ligatures, fallback composition) is not detected. Headless, only the
+default font answers, assuming ASCII coverage. Empty text is vacuously
+true; invalid UTF-8 reports false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L711)
 
 ### `Font_DPI_Scale`
 
 ```odin
-Font_DPI_Scale :: proc(ctx: ^Context, font: Font) -> f32 {
+Font_DPI_Scale :: proc(ctx: ^Context, font: Font) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Font_DPI_Scale mirrors LOVE Font:getDPIScale: Thor2D rasterizes fonts once
+(base size 32) and scales at draw time, so every font shares the window
+DPI scale — this returns Window_DPI_Scale(ctx).X (1.0 headless). Unknown
+named handles report 0; the font parameter exists for LOVE call-shape parity.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L747)
 
 ### `Text_Add`
 
 ```odin
-Text_Add :: proc(ctx: ^Context, text: Text, value: string) -> Error {
+Text_Add :: proc(ctx: ^Context, text: Text, value: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Text_Add mirrors LOVE Text:add (plain-string variant): appends value to
+the stored string. Transforms and colored runs are out of scope.
+Appending "" is a successful no-op.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L762)
 
 ### `Text_Addf`
 
 ```odin
-Text_Addf :: proc(ctx: ^Context, text: Text, format: string, args: ..any) -> Error {
+Text_Addf :: proc(ctx: ^Context, text: Text, format: string, args: ..any) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Text_Addf appends fmt.tprintf(format, ..args) to the stored string (the
+Odin answer to LOVE's formatted text helpers; Odin has no Lua
+string.format, so core:fmt verbs apply).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L778)
 
 ### `Text_Clear`
 
 ```odin
-Text_Clear :: proc(ctx: ^Context, text: Text) -> Error {
+Text_Clear :: proc(ctx: ^Context, text: Text) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Text_Clear empties the stored string (LOVE Text:clear). There was no prior
+clear path: Set_Text rejects empty input, so this has a dedicated backend
+entry. Draw of a cleared text is a no-op; measure reports zero.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L795)
 
 ### `Text_Font`
 
 ```odin
-Text_Font :: proc(ctx: ^Context, text: Text) -> Font {
+Text_Font :: proc(ctx: ^Context, text: Text) -> Font
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Text_Font mirrors LOVE Text:getFont: the per-text font (Font{} selects the
+default font). Zero value on bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L807)
 
 ### `Text_Set_Font`
 
 ```odin
-Text_Set_Font :: proc(ctx: ^Context, text: Text, font: Font) -> Error {
+Text_Set_Font :: proc(ctx: ^Context, text: Text, font: Font) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Text_Set_Font mirrors LOVE Text:setFont: overrides the font used by
+Draw_Text_Object for this text. Font{} selects the default font; any other
+handle must exist in the backend.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L821)
 
 ### `Quad_Viewport`
 
 ```odin
-Quad_Viewport :: proc(quad: Quad) -> Rect {
+Quad_Viewport :: proc(quad: Quad) -> Rect
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Quad_Viewport mirrors LOVE Quad:getViewport: the source rect. Pure CPU, no ctx.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L832)
 
 ### `Quad_Set_Viewport`
 
 ```odin
-Quad_Set_Viewport :: proc(quad: Quad, viewport: Rect, tex_w := -1, tex_h := -1) -> Quad {
+Quad_Set_Viewport :: proc(quad: Quad, viewport: Rect, tex_w := -1, tex_h := -1) -> Quad
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Quad_Set_Viewport mirrors LOVE Quad:setViewport. Quads are values (see
+New_Quad), so this returns the updated Quad. Non-positive tex_w/tex_h keep
+the stored reference size (LOVE's optional sw/sh must be > 0 when set).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L839)
 
 ### `Quad_Texture_Size`
 
 ```odin
-Quad_Texture_Size :: proc(quad: Quad) -> (width, height: int) {
+Quad_Texture_Size :: proc(quad: Quad) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Quad_Texture_Size mirrors LOVE Quad:getTextureDimensions. Pure CPU, no ctx.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L852)
 
 ### `Canvas_Render_To`
 
 ```odin
-Canvas_Render_To :: proc(ctx: ^Context, canvas: Canvas, draw: proc(ctx: ^Context)) {
+Canvas_Render_To :: proc(ctx: ^Context, canvas: Canvas, draw: proc(ctx: ^Context))
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Canvas_Render_To mirrors LOVE Canvas:renderTo: targets canvas, invokes
+draw(ctx), then resets to the main target. Nil-safe: nil ctx or nil draw
+is a no-op. An invalid canvas leaves the current target in place and still
+invokes draw (matching Set_Canvas, which ignores invalid handles);
+headless backends make the set/reset steps no-ops while draw runs.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L861)
 
 ### `Canvas_To_Image`
 
 ```odin
-Canvas_To_Image :: proc(ctx: ^Context, canvas: Canvas) -> (Image_Data, Error) {
+Canvas_To_Image :: proc(ctx: ^Context, canvas: Canvas) -> (Image_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Canvas_To_Image mirrors LOVE Canvas:newImageData (full-canvas capture;
+slice/mipmap/area args are out of scope). Reads the canvas back into
+CPU-owned RGBA8 Image_Data via LoadImageFromTexture. Headless (or nil ctx)
+reports .Capability_Unavailable like Capture_Screenshot; unknown handles
+report .Invalid_Handle. Caller owns the pixels: Destroy_Image_Data.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L875)
 
 ### `Canvas_MSAA`
 
 ```odin
-Canvas_MSAA :: proc(ctx: ^Context, canvas: Canvas) -> int {
+Canvas_MSAA :: proc(ctx: ^Context, canvas: Canvas) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Canvas_MSAA mirrors LOVE Canvas:getMSAA: the stored sample count. Always 0
+(LoadRenderTexture canvases have no per-canvas MSAA; window-level MSAA
+comes from Config.MSAA at creation time). Zero on bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L892)
 
 ### `Shader_Has_Uniform`
 
 ```odin
-Shader_Has_Uniform :: proc(ctx: ^Context, shader: Shader, name: string) -> bool {
+Shader_Has_Uniform :: proc(ctx: ^Context, shader: Shader, name: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Shader_Has_Uniform mirrors LOVE Shader:hasUniform: whether name is an
+active uniform. False for nil ctx, empty names and unknown handles; driver
+optimized-out uniforms also report false, matching LOVE.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L902)
 
 ### `Shader_Warnings`
 
 ```odin
-Shader_Warnings :: proc(ctx: ^Context, shader: Shader) -> string {
+Shader_Warnings :: proc(ctx: ^Context, shader: Shader) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Shader_Warnings mirrors LOVE Shader:getWarnings. Documented stub: raylib
+exposes no compile-log query (diagnostics go to stdout at load), the
+backend retains no log, so this always returns "" — including for invalid
+handles. A non-empty string would be a fake.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L913)
 
 ### `Mesh_Vertex_At`
 
 ```odin
-Mesh_Vertex_At :: proc(ctx: ^Context, mesh: Mesh, index: int) -> (Mesh_Vertex, Error) {
+Mesh_Vertex_At :: proc(ctx: ^Context, mesh: Mesh, index: int) -> (Mesh_Vertex, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Vertex_At mirrors LOVE Mesh:getVertex: reads one vertex from the CPU
+copy every mesh keeps. Out-of-range indices report .Invalid_Data; unknown
+meshes (and nil/missing backends) report .Invalid_Handle, never fake data.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L958)
 
 ### `Mesh_Vertex_Count`
 
 ```odin
-Mesh_Vertex_Count :: proc(ctx: ^Context, mesh: Mesh) -> int {
+Mesh_Vertex_Count :: proc(ctx: ^Context, mesh: Mesh) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Vertex_Count mirrors LOVE Mesh:getVertexCount. Zero on bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L978)
 
 ### `Mesh_Set_Vertex`
 
 ```odin
-Mesh_Set_Vertex :: proc(ctx: ^Context, mesh: Mesh, index: int, vertex: Mesh_Vertex) -> Error {
+Mesh_Set_Vertex :: proc(ctx: ^Context, mesh: Mesh, index: int, vertex: Mesh_Vertex) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Set_Vertex mirrors LOVE Mesh:setVertex (single-vertex variant):
+patches one vertex in the CPU copy and re-uploads the GPU buffers (the
+same unload/upload cycle Update_Mesh uses), so both copies stay in sync.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L988)
 
 ### `Mesh_Draw_Mode_Of`
 
 ```odin
-Mesh_Draw_Mode_Of :: proc(ctx: ^Context, mesh: Mesh) -> (Mesh_Draw_Mode, Error) {
+Mesh_Draw_Mode_Of :: proc(ctx: ^Context, mesh: Mesh) -> (Mesh_Draw_Mode, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Draw_Mode_Of mirrors LOVE Mesh:getDrawMode: the mode stored at
+creation (or by Mesh_Set_Draw_Mode). Unknown meshes report .Invalid_Handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1006)
 
 ### `Mesh_Set_Draw_Mode`
 
 ```odin
-Mesh_Set_Draw_Mode :: proc(ctx: ^Context, mesh: Mesh, mode: Mesh_Draw_Mode) -> Error {
+Mesh_Set_Draw_Mode :: proc(ctx: ^Context, mesh: Mesh, mode: Mesh_Draw_Mode) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Set_Draw_Mode mirrors LOVE Mesh:setDrawMode: switches the stored mode
+and rebuilds the GPU object (unload + upload). Non-triangle modes have no
+GPU upload path (upload accepts triangles only), so they draw via the CPU
+fallback — the same rule Create_Mesh applies. The switch itself always
+succeeds; only GPU residency varies.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1022)
 
 ### `Mesh_Texture_Of`
 
 ```odin
-Mesh_Texture_Of :: proc(ctx: ^Context, mesh: Mesh) -> (Texture, Error) {
+Mesh_Texture_Of :: proc(ctx: ^Context, mesh: Mesh) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Texture_Of mirrors LOVE Mesh:getTexture: the bound texture
+(Texture{} when none is bound). Unknown meshes report .Invalid_Handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1034)
 
 ### `Set_Mesh_Texture`
 
 ```odin
-Set_Mesh_Texture :: proc(ctx: ^Context, mesh: Mesh, texture: Texture) -> Error {
+Set_Mesh_Texture :: proc(ctx: ^Context, mesh: Mesh, texture: Texture) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Mesh_Texture mirrors LOVE Mesh:setTexture: binds a texture so Draw_Mesh
+shades from it (matching LOVE draw(mesh) with a texture set).
+Texture{} clears the binding. A non-zero texture must name a live texture;
+a stale binding (texture unloaded after binding) draws untextured.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1049)
 
 ### `Mesh_Set_Draw_Range`
 
 ```odin
-Mesh_Set_Draw_Range :: proc(ctx: ^Context, mesh: Mesh, start, count: int) -> Error {
+Mesh_Set_Draw_Range :: proc(ctx: ^Context, mesh: Mesh, start, count: int) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Set_Draw_Range mirrors LOVE Mesh:setDrawRange: restricts drawing to
+indices [start, start + count). Count < 0 draws to the end (the default;
+reset with (0, -1)). Mirrors the SpriteBatch range validation: negative
+starts and count == 0 report .Invalid_Data. The end clamps at draw.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1066)
 
 ### `Mesh_Draw_Range`
 
 ```odin
-Mesh_Draw_Range :: proc(ctx: ^Context, mesh: Mesh) -> (start, count: int) {
+Mesh_Draw_Range :: proc(ctx: ^Context, mesh: Mesh) -> (start, count: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Mesh_Draw_Range mirrors LOVE Mesh:getDrawRange (subset form): the stored
+range (0-based start, count with -1 meaning "to the end"). (0, 0) on bad
+handles — count 0 is not settable, so it unambiguously signals a missing
+mesh (same convention as Sprite_Batch_Draw_Range).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1080)
 
 ### `Texture_Is_Readable`
 
 ```odin
-Texture_Is_Readable :: proc(ctx: ^Context, texture: Texture) -> bool {
+Texture_Is_Readable :: proc(ctx: ^Context, texture: Texture) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Texture_Is_Readable mirrors LOVE Texture:isReadable: whether the texture
+can be drawn and sent to a shader. Always true for live textures — raylib
+textures are all readable, and LOVE's unreadable case (depth/stencil
+canvases) cannot be created here (Create_Canvas_Format rejects non-RGBA8).
+False for nil contexts, missing backends and unknown handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1096)
 
 ### `Texture_Mipmap_Count`
 
 ```odin
-Texture_Mipmap_Count :: proc(ctx: ^Context, texture: Texture) -> int {
+Texture_Mipmap_Count :: proc(ctx: ^Context, texture: Texture) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Texture_Mipmap_Count mirrors LOVE Texture:getMipmapCount. Honest value,
+not a constant: it reads the stored GL mipmap count. The backend never
+generates mipmaps (no GenTextureMipmaps call), so this is 1 for every live
+texture and 0 for unknown handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1107)
 
 ### `Texture_Pixel_Size`
 
 ```odin
-Texture_Pixel_Size :: proc(ctx: ^Context, texture: Texture) -> (width, height: int) {
+Texture_Pixel_Size :: proc(ctx: ^Context, texture: Texture) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Texture_Pixel_Size mirrors LOVE Texture:getPixelDimensions. Desktop builds
+run at DPI scale 1, so density-independent units and pixels coincide: this
+equals Texture_Size. (0, 0) on bad handles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1117)
 
 ### `Load_Texture_Array`
 
 ```odin
-Load_Texture_Array :: proc(ctx: ^Context, paths: []string) -> (Texture_Array, Error) {
+Load_Texture_Array :: proc(ctx: ^Context, paths: []string) -> (Texture_Array, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Load_Texture_Array loads one Texture per path into an owned Texture_Array
+(LOVE newArrayImage subset). Raylib exposes no 2D array/volume texture API
+(LoadTextureCubemap is a 3D skybox samplerCube path with no 2D layer draw),
+so this is an honest CPU-side emulation — a layer list drawn one layer at
+a time — not a GPU array. On any failure the layers loaded so far are
+unloaded and the per-file error (e.g. .File_Not_Found) propagates.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1127)
 
 ### `Unload_Texture_Array`
 
 ```odin
-Unload_Texture_Array :: proc(ctx: ^Context, array: ^Texture_Array) {
+Unload_Texture_Array :: proc(ctx: ^Context, array: ^Texture_Array)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Unload_Texture_Array unloads every layer and frees the layer list. Single
+owner: load once, unload once. Nil-safe.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1151)
 
 ### `Texture_Array_Layer_Count`
 
 ```odin
-Texture_Array_Layer_Count :: proc(array: Texture_Array) -> int {
+Texture_Array_Layer_Count :: proc(array: Texture_Array) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Texture_Array_Layer_Count mirrors LOVE Texture:getLayerCount. Pure
+structural query over the value (no ctx, like Quad_Viewport).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1164)
 
 ### `Texture_Array_Layer`
 
 ```odin
-Texture_Array_Layer :: proc(array: Texture_Array, layer: int) -> (Texture, Error) {
+Texture_Array_Layer :: proc(array: Texture_Array, layer: int) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Texture_Array_Layer returns one layer for direct use (draw, filter, shader
+send). Out-of-range layers report .Invalid_Data, never a fake texture.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1170)
 
 ### `Draw_Texture_Array_Layer`
 
 ```odin
-Draw_Texture_Array_Layer :: proc(ctx: ^Context, array: Texture_Array, layer: int, position: Vec2, tint := White) {
+Draw_Texture_Array_Layer :: proc(ctx: ^Context, array: Texture_Array, layer: int, position: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Draw_Texture_Array_Layer draws one array layer (the 2D answer to LOVE
+shader-side array sampling). Out-of-range layers and missing backends are
+silent no-ops, matching Draw_Texture.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1180)
 
 ### `Discard_Canvas`
 
 ```odin
-Discard_Canvas :: proc(ctx: ^Context, canvas: Canvas) -> Error {
+Discard_Canvas :: proc(ctx: ^Context, canvas: Canvas) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Discard_Canvas mirrors LOVE Canvas:discard (perf hint: the contents are no
+longer needed). Real no-op with docs: the backend draws immediately with
+no deferred tile memory, so there is nothing to discard — this validates
+the handle and returns .None. Unknown canvases report .Invalid_Handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1195)
 
 ### `Validate_Shader`
 
 ```odin
-Validate_Shader :: proc(ctx: ^Context, shader: Shader) -> (valid: bool, message: string) {
+Validate_Shader :: proc(ctx: ^Context, shader: Shader) -> (valid: bool, message: string)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Validate_Shader mirrors LOVE graphics.validateShader: whether the shader
+is a live, compiled program. Real check, not a stub: the backend compiles
+at load (Load_Shader fails on bad GLSL, so no log retention is needed —
+hence Shader_Warnings stays ""), and Unload removes the registry entry, so
+registry presence means a live GPU program. The message is "" when valid.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1213)
 
 ### `Is_Gamma_Correct`
 
 ```odin
-Is_Gamma_Correct :: proc(ctx: ^Context) -> bool {
+Is_Gamma_Correct :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Is_Gamma_Correct mirrors LOVE graphics.isGammaCorrect. Always false,
+documented: there is no sRGB framebuffer pipeline — colors pass through
+unmodified. (There are no manual SRGB<->linear helpers either; LOVE ports
+doing their own conversion keep working on raw channel values.)
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1227)
 
 ### `Get_Active_Canvas`
 
 ```odin
-Get_Active_Canvas :: proc(ctx: ^Context) -> (canvas: Canvas, active: bool) {
+Get_Active_Canvas :: proc(ctx: ^Context) -> (canvas: Canvas, active: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Active_Canvas mirrors LOVE graphics.getCanvas: the canvas Set_Canvas
+targeted, or (Canvas{}, false) when rendering to screen. False on nil
+contexts and headless backends.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1235)
 
 ### `Get_Active_Shader`
 
 ```odin
-Get_Active_Shader :: proc(ctx: ^Context) -> (shader: Shader, active: bool) {
+Get_Active_Shader :: proc(ctx: ^Context) -> (shader: Shader, active: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Active_Shader mirrors LOVE graphics.getShader: the Begin_Shader
+target, or (Shader{}, false) when no shader is active.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1248)
 
 ### `Get_Transform_Stack_Depth`
 
 ```odin
-Get_Transform_Stack_Depth :: proc(ctx: ^Context) -> int {
+Get_Transform_Stack_Depth :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Transform_Stack_Depth returns the Push_Transform nesting depth (the
+backend transform stack length). Zero on nil/headless contexts, where
+pushes are no-ops.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics.odin#L1262)
 
 ## `graphics_state`
 
@@ -3327,410 +3805,429 @@ Source: `src/thor2d/graphics_state.odin`
 ### `Set_Color`
 
 ```odin
-Set_Color :: proc(ctx: ^Context, color: Color) {
+Set_Color :: proc(ctx: ^Context, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L12)
 
 ### `Get_Color`
 
 ```odin
-Get_Color :: proc(ctx: ^Context) -> Color {
+Get_Color :: proc(ctx: ^Context) -> Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L18)
 
 ### `Set_Background_Color`
 
 ```odin
-Set_Background_Color :: proc(ctx: ^Context, color: Color) {
+Set_Background_Color :: proc(ctx: ^Context, color: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L25)
 
 ### `Get_Background_Color`
 
 ```odin
-Get_Background_Color :: proc(ctx: ^Context) -> Color {
+Get_Background_Color :: proc(ctx: ^Context) -> Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L31)
 
 ### `Clear_Screen`
 
 ```odin
-Clear_Screen :: proc(ctx: ^Context) {
+Clear_Screen :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Clear_Screen clears to the current background color (love.graphics.clear
+with no args). The existing Clear(ctx, color) remains the explicit variant.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L40)
 
 ### `Set_Font`
 
 ```odin
-Set_Font :: proc(ctx: ^Context, font: Font) {
+Set_Font :: proc(ctx: ^Context, font: Font)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L49)
 
 ### `Get_Font`
 
 ```odin
-Get_Font :: proc(ctx: ^Context) -> Font {
+Get_Font :: proc(ctx: ^Context) -> Font
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L55)
 
 ### `Reset_Graphics_State`
 
 ```odin
-Reset_Graphics_State :: proc(ctx: ^Context) {
+Reset_Graphics_State :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L62)
 
 ### `Get_Dimensions`
 
 ```odin
-Get_Dimensions :: proc(ctx: ^Context) -> (width, height: int) {
+Get_Dimensions :: proc(ctx: ^Context) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L89)
 
 ### `Get_Width`
 
 ```odin
-Get_Width :: proc(ctx: ^Context) -> int {
+Get_Width :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L93)
 
 ### `Get_Height`
 
 ```odin
-Get_Height :: proc(ctx: ^Context) -> int {
+Get_Height :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L98)
 
 ### `From_Pixels`
 
 ```odin
-From_Pixels :: proc(ctx: ^Context, value: Vec2) -> Vec2 {
+From_Pixels :: proc(ctx: ^Context, value: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Desktop builds run at scale 1 unless the OS reports otherwise.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L104)
 
 ### `To_Pixels`
 
 ```odin
-To_Pixels :: proc(ctx: ^Context, value: Vec2) -> Vec2 {
+To_Pixels :: proc(ctx: ^Context, value: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L115)
 
 ### `Set_Default_Filter`
 
 ```odin
-Set_Default_Filter :: proc(ctx: ^Context, min, mag: Texture_Filter) {
+Set_Default_Filter :: proc(ctx: ^Context, min, mag: Texture_Filter)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L125)
 
 ### `Get_Default_Filter`
 
 ```odin
-Get_Default_Filter :: proc(ctx: ^Context) -> (min, mag: Texture_Filter) {
+Get_Default_Filter :: proc(ctx: ^Context) -> (min, mag: Texture_Filter)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L132)
 
 ### `Set_Line_Join`
 
 ```odin
-Set_Line_Join :: proc(ctx: ^Context, join: Line_Join) {
+Set_Line_Join :: proc(ctx: ^Context, join: Line_Join)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L139)
 
 ### `Get_Line_Join`
 
 ```odin
-Get_Line_Join :: proc(ctx: ^Context) -> Line_Join {
+Get_Line_Join :: proc(ctx: ^Context) -> Line_Join
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L145)
 
 ### `Set_Line_Style`
 
 ```odin
-Set_Line_Style :: proc(ctx: ^Context, style: Line_Style) {
+Set_Line_Style :: proc(ctx: ^Context, style: Line_Style)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L152)
 
 ### `Get_Line_Style`
 
 ```odin
-Get_Line_Style :: proc(ctx: ^Context) -> Line_Style {
+Get_Line_Style :: proc(ctx: ^Context) -> Line_Style
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L158)
 
 ### `Set_Blend_Mode`
 
 ```odin
-Set_Blend_Mode :: proc(ctx: ^Context, mode: Blend_Mode) {
+Set_Blend_Mode :: proc(ctx: ^Context, mode: Blend_Mode)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L167)
 
 ### `Get_Blend_Mode`
 
 ```odin
-Get_Blend_Mode :: proc(ctx: ^Context) -> Blend_Mode {
+Get_Blend_Mode :: proc(ctx: ^Context) -> Blend_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L178)
 
 ### `Reset_Blend_Mode`
 
 ```odin
-Reset_Blend_Mode :: proc(ctx: ^Context) {
+Reset_Blend_Mode :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L185)
 
 ### `Get_Scissor`
 
 ```odin
-Get_Scissor :: proc(ctx: ^Context) -> (rect: Rect, enabled: bool) {
+Get_Scissor :: proc(ctx: ^Context) -> (rect: Rect, enabled: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L191)
 
 ### `Intersect_Scissor`
 
 ```odin
-Intersect_Scissor :: proc(ctx: ^Context, rect: Rect) -> Rect {
+Intersect_Scissor :: proc(ctx: ^Context, rect: Rect) -> Rect
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L198)
 
 ### `Set_Scissor`
 
 ```odin
-Set_Scissor :: proc(ctx: ^Context, rect: Rect) {
+Set_Scissor :: proc(ctx: ^Context, rect: Rect)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Tracked scissor setter so Get_Scissor stays truthful. Prefer this over raw
+Begin_Scissor for LOVE ports.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L225)
 
 ### `Reset_Scissor`
 
 ```odin
-Reset_Scissor :: proc(ctx: ^Context) {
+Reset_Scissor :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L236)
 
 ### `Set_Color_Mask`
 
 ```odin
-Set_Color_Mask :: proc(ctx: ^Context, mask: Color_Mask) -> Error {
+Set_Color_Mask :: proc(ctx: ^Context, mask: Color_Mask) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L249)
 
 ### `Get_Color_Mask`
 
 ```odin
-Get_Color_Mask :: proc(ctx: ^Context) -> Color_Mask {
+Get_Color_Mask :: proc(ctx: ^Context) -> Color_Mask
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L261)
 
 ### `Set_Stencil_Test`
 
 ```odin
-Set_Stencil_Test :: proc(ctx: ^Context, enabled: bool) -> Error {
+Set_Stencil_Test :: proc(ctx: ^Context, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L268)
 
 ### `Clear_Stencil`
 
 ```odin
-Clear_Stencil :: proc(ctx: ^Context) -> Error {
+Clear_Stencil :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L278)
 
 ### `Set_Depth_Mode`
 
 ```odin
-Set_Depth_Mode :: proc(ctx: ^Context, enabled: bool) -> Error {
+Set_Depth_Mode :: proc(ctx: ^Context, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L286)
 
 ### `Set_Cull_Mode`
 
 ```odin
-Set_Cull_Mode :: proc(ctx: ^Context, mode: Cull_Mode) -> Error {
+Set_Cull_Mode :: proc(ctx: ^Context, mode: Cull_Mode) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L296)
 
 ### `Get_Cull_Mode`
 
 ```odin
-Get_Cull_Mode :: proc(ctx: ^Context) -> Cull_Mode {
+Get_Cull_Mode :: proc(ctx: ^Context) -> Cull_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L307)
 
 ### `Set_Wireframe`
 
 ```odin
-Set_Wireframe :: proc(ctx: ^Context, enabled: bool) -> Error {
+Set_Wireframe :: proc(ctx: ^Context, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L314)
 
 ### `Is_Wireframe`
 
 ```odin
-Is_Wireframe :: proc(ctx: ^Context) -> bool {
+Is_Wireframe :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L325)
 
 ### `Get_Graphics_Stats`
 
 ```odin
-Get_Graphics_Stats :: proc(ctx: ^Context) -> Graphics_Stats {
+Get_Graphics_Stats :: proc(ctx: ^Context) -> Graphics_Stats
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L331)
 
 ### `Get_System_Limits`
 
 ```odin
-Get_System_Limits :: proc(ctx: ^Context) -> System_Limits {
+Get_System_Limits :: proc(ctx: ^Context) -> System_Limits
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L344)
 
 ### `Is_Graphics_Supported`
 
 ```odin
-Is_Graphics_Supported :: proc(ctx: ^Context, feature: string) -> bool {
+Is_Graphics_Supported :: proc(ctx: ^Context, feature: string) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L354)
 
 ### `Flush_Batch`
 
 ```odin
-Flush_Batch :: proc(ctx: ^Context) {
+Flush_Batch :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L371)
 
 ### `Present_Screen`
 
 ```odin
-Present_Screen :: proc(ctx: ^Context) {
+Present_Screen :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L377)
 
 ### `Replace_Transform`
 
 ```odin
-Replace_Transform :: proc(ctx: ^Context, transform: Transform_2D) {
+Replace_Transform :: proc(ctx: ^Context, transform: Transform_2D)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L384)
 
 ### `Transform_Point_Graphics`
 
 ```odin
-Transform_Point_Graphics :: proc(ctx: ^Context, point: Vec2) -> Vec2 {
+Transform_Point_Graphics :: proc(ctx: ^Context, point: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L394)
 
 ### `Inverse_Transform_Point`
 
 ```odin
-Inverse_Transform_Point :: proc(ctx: ^Context, point: Vec2) -> Vec2 {
+Inverse_Transform_Point :: proc(ctx: ^Context, point: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L401)
 
 ### `Draw_Arc`
 
 ```odin
-Draw_Arc :: proc(ctx: ^Context, center: Vec2, radius: f32, angle_start, angle_end: f32, mode: Draw_Mode, arc_type: Arc_Type = .Pie, segments := 24, color := White) {
+Draw_Arc :: proc(ctx: ^Context, center: Vec2, radius: f32, angle_start, angle_end: f32, mode: Draw_Mode, arc_type: Arc_Type = .Pie, segments := 24, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L427)
 
 ### `Draw_Ellipse`
 
 ```odin
-Draw_Ellipse :: proc(ctx: ^Context, center: Vec2, radius_x, radius_y: f32, mode: Draw_Mode, segments := 32, color := White) {
+Draw_Ellipse :: proc(ctx: ^Context, center: Vec2, radius_x, radius_y: f32, mode: Draw_Mode, segments := 32, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L467)
 
 ### `Draw_Polygon`
 
 ```odin
-Draw_Polygon :: proc(ctx: ^Context, points: []Vec2, mode: Draw_Mode, color := White) {
+Draw_Polygon :: proc(ctx: ^Context, points: []Vec2, mode: Draw_Mode, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L501)
 
 ### `Draw_Points`
 
 ```odin
-Draw_Points :: proc(ctx: ^Context, points: []Vec2, color := White) {
+Draw_Points :: proc(ctx: ^Context, points: []Vec2, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L519)
 
 ### `Print`
 
 ```odin
-Print :: proc(ctx: ^Context, text: string, position: Vec2, color := White) {
+Print :: proc(ctx: ^Context, text: string, position: Vec2, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Print uses the current font when set, otherwise the default debug font.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L529)
 
 ### `Printf`
 
 ```odin
-Printf :: proc(ctx: ^Context, text: string, rect: Rect, align: Text_Align, color := White) {
+Printf :: proc(ctx: ^Context, text: string, rect: Rect, align: Text_Align, color := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L540)
 
 ### `Draw_Texture_Transform`
 
 ```odin
-Draw_Texture_Transform :: proc(ctx: ^Context, texture: Texture, position: Vec2, rotation: f32, scale, origin, shear: Vec2, tint := White) {
+Draw_Texture_Transform :: proc(ctx: ^Context, texture: Texture, position: Vec2, rotation: f32, scale, origin, shear: Vec2, tint := White)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Full LOVE-style textured draw with origin/shear. Implemented over
+Draw_Texture_Pro via the existing quad path.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L549)
 
 ### `Draw_Mesh_Instanced`
 
 ```odin
-Draw_Mesh_Instanced :: proc(ctx: ^Context, mesh: Mesh, count: int, position: Vec2, rotation: f32, scale: Vec2, tint := White) -> Error {
+Draw_Mesh_Instanced :: proc(ctx: ^Context, mesh: Mesh, count: int, position: Vec2, rotation: f32, scale: Vec2, tint := White) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 instanced draw: GPU path when the mesh has resident GPU vertex
+buffers (backend.Draw_Mesh_Instanced issues all copies from the VBOs and
+returns true, mapped to .None), otherwise the original CPU fallback loop
+over Draw_Mesh with .Unsupported. Headless (no backend) runs the no-op
+loop and reports .Unsupported, matching v0.8 behavior.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/graphics_state.odin#L566)
 
 ## `image`
 
@@ -3739,130 +4236,169 @@ Source: `src/thor2d/image.odin`
 ### `New_Image_Data`
 
 ```odin
-New_Image_Data :: proc(width, height: int, fill := Color{0, 0, 0, 0}) -> (Image_Data, Error) {
+New_Image_Data :: proc(width, height: int, fill := Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L7)
 
 ### `Image_Data_From_Bytes`
 
 ```odin
-Image_Data_From_Bytes :: proc(width, height: int, pixels: []u8) -> (Image_Data, Error) {
+Image_Data_From_Bytes :: proc(width, height: int, pixels: []u8) -> (Image_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L21)
 
 ### `Image_Data_From_Buffer`
 
 ```odin
-Image_Data_From_Buffer :: proc(width, height: int, buffer: ^Byte_Buffer) -> (Image_Data, Error) {
+Image_Data_From_Buffer :: proc(width, height: int, buffer: ^Byte_Buffer) -> (Image_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L31)
 
 ### `Destroy_Image_Data`
 
 ```odin
-Destroy_Image_Data :: proc(data: ^Image_Data) {
+Destroy_Image_Data :: proc(data: ^Image_Data)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L38)
 
 ### `Image_Data_Bytes`
 
 ```odin
-Image_Data_Bytes :: proc(data: ^Image_Data) -> []u8 {
+Image_Data_Bytes :: proc(data: ^Image_Data) -> []u8
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L45)
 
 ### `Get_Image_Pixel`
 
 ```odin
-Get_Image_Pixel :: proc(data: ^Image_Data, x, y: int) -> (Color, Error) {
+Get_Image_Pixel :: proc(data: ^Image_Data, x, y: int) -> (Color, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L52)
 
 ### `Set_Image_Pixel`
 
 ```odin
-Set_Image_Pixel :: proc(data: ^Image_Data, x, y: int, color: Color) -> Error {
+Set_Image_Pixel :: proc(data: ^Image_Data, x, y: int, color: Color) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L60)
 
 ### `Create_Texture_From_Image_Data`
 
 ```odin
-Create_Texture_From_Image_Data :: proc(ctx: ^Context, data: ^Image_Data) -> (Texture, Error) {
+Create_Texture_From_Image_Data :: proc(ctx: ^Context, data: ^Image_Data) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L72)
 
 ### `Export_Image_PNG`
 
 ```odin
-Export_Image_PNG :: proc(data: ^Image_Data, path: string) -> Error {
+Export_Image_PNG :: proc(data: ^Image_Data, path: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L83)
 
 ### `Capture_Screenshot`
 
 ```odin
-Capture_Screenshot :: proc(ctx: ^Context) -> (Image_Data, Error) {
+Capture_Screenshot :: proc(ctx: ^Context) -> (Image_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Capture_Screenshot reads the current framebuffer into CPU-owned Image_Data.
+It is only available while a real graphics backend is active.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L92)
 
 ### `Convert_Image_Data`
 
 ```odin
-Convert_Image_Data :: proc(data: ^Image_Data, format: Image_Data_Format) -> (Image_Data, Error) {
+Convert_Image_Data :: proc(data: ^Image_Data, format: Image_Data_Format) -> (Image_Data, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L103)
 
 ### `Paste_Image`
 
 ```odin
-Paste_Image :: proc(dst, src: ^Image_Data, x, y: int) -> Error {
+Paste_Image :: proc(dst, src: ^Image_Data, x, y: int) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Paste_Image copies every pixel of src onto dst with its top-left corner at
+(x, y), mirroring love.image ImageData:paste. Source pixels falling outside
+dst are clipped; a fully out-of-bounds paste is a successful no-op.
+RGBA8-only. Pure CPU, headless-safe, and safe to call from worker threads
+(it never touches Context or the GPU). An aliased self-paste (dst == src)
+copies via a snapshot so overlapping regions paste correctly.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L119)
 
 ### `Map_Pixel`
 
 ```odin
-Map_Pixel :: proc(data: ^Image_Data, fn: proc(c: Color) -> Color) -> Error {
+Map_Pixel :: proc(data: ^Image_Data, fn: proc(c: Color) -> Color) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Map_Pixel applies fn to every pixel of data in place, mirroring
+love.image ImageData:mapPixel. RGBA8-only. Pure CPU, headless-safe, and
+safe to call from worker threads (it never touches Context or the GPU).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L164)
 
 ### `Encode_Image_PNG`
 
 ```odin
-Encode_Image_PNG :: proc(data: ^Image_Data) -> (Byte_Buffer, Error) {
+Encode_Image_PNG :: proc(data: ^Image_Data) -> (Byte_Buffer, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Encode_Image_PNG encodes RGBA8 Image_Data to a PNG file in memory,
+mirroring love.image ImageData:encode("png"). It is a minimal pure-CPU
+encoder (8-bit RGBA, filter 0, zlib IDAT via vendor:zlib): no window, no
+GPU, no backend, and no temp-file round-trip, so it is headless-safe and
+safe to call from worker threads. Decoding stays on the file/backend side;
+the output is standard PNG readable by any decoder.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L206)
 
 ### `Is_Compressed_Image`
 
 ```odin
-Is_Compressed_Image :: proc(data: []u8) -> bool {
+Is_Compressed_Image :: proc(data: []u8) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 GPU-compressed image detection (mirrors love.image.isCompressed).
+
+LOVE's isCompressed means GPU-compressed texture formats (DXT/S3TC, ETC,
+ASTC, PVR, KTX containers) — NOT file compression like PNG/JPEG. PNG
+signatures and JPEG SOI markers therefore return false by design. Pure CPU
+magic-byte sniff, headless-safe and safe to call from worker threads.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L249)
 
 ### `Load_Compressed_Texture`
 
 ```odin
-Load_Compressed_Texture :: proc(ctx: ^Context, path: string) -> (Texture, Error) {
+Load_Compressed_Texture :: proc(ctx: ^Context, path: string) -> (Texture, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+v0.9 compressed texture loading (mirrors love.graphics.newImage over
+love.image.newCompressedData).
+
+Only GPU-compressed containers (see Is_Compressed_Image) are accepted;
+anything else — including valid PNG/JPEG files — is rejected with
+.Invalid_Data, never silently decompressed. Loading is extension-driven via
+backend.Load_Texture_From_Memory (raylib LoadImageFromMemory advertises DXT,
+ETC and ASTC GPU formats): a recognized container the backend cannot realize
+reports .Unsupported instead of a fake texture. Headless (no backend)
+reports .Backend_Initialization_Failed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/image.odin#L290)
 
 ## `imagefont`
 
@@ -3871,34 +4407,52 @@ Source: `src/thor2d/imagefont.odin`
 ### `Load_Image_Font`
 
 ```odin
-Load_Image_Font :: proc(ctx: ^Context, image: Image_Data, glyphs: string) -> (Image_Font, Error) {
+Load_Image_Font :: proc(ctx: ^Context, image: Image_Data, glyphs: string) -> (Image_Font, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Load_Image_Font registers image as an image font for glyphs, LOVE
+newImageFont style. image is copied into a GPU texture when a backend is
+present; the Image_Data itself stays caller-owned. Returns .Invalid_Data
+for empty/non-ASCII glyphs, non-positive cells, or image.width not divisible
+by len(glyphs).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/imagefont.odin#L33)
 
 ### `Unload_Image_Font`
 
 ```odin
-Unload_Image_Font :: proc(ctx: ^Context, font: ^Image_Font) {
+Unload_Image_Font :: proc(ctx: ^Context, font: ^Image_Font)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Unload_Image_Font releases the font texture (when present) and the owned
+glyph clone, then zeroes the struct. Safe on zero/invalid fonts and nil ctx.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/imagefont.odin#L72)
 
 ### `Draw_Text_Image_Font`
 
 ```odin
-Draw_Text_Image_Font :: proc(ctx: ^Context, font: Image_Font, text: string, position: Vec2, scale: f32, tint: Color) {
+Draw_Text_Image_Font :: proc(ctx: ^Context, font: Image_Font, text: string, position: Vec2, scale: f32, tint: Color)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Draw_Text_Image_Font draws text with an image font at position (top-left of
+the first cell), uniformly scaled by scale and tinted. No-op when ctx or the
+backend is nil, the font has no texture (e.g. headless), scale <= 0, or text
+is empty.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/imagefont.odin#L89)
 
 ### `Measure_Text_Image_Font`
 
 ```odin
-Measure_Text_Image_Font :: proc(ctx: ^Context, font: Image_Font, text: string, scale: f32) -> Vec2 {
+Measure_Text_Image_Font :: proc(ctx: ^Context, font: Image_Font, text: string, scale: f32) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Measure_Text_Image_Font measures text in pixels at uniform scale without
+touching the GPU, so it works headless and on fonts loaded without a
+backend. Returns {} for invalid fonts, scale <= 0, empty text, or nil ctx.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/imagefont.odin#L119)
 
 ## `input`
 
@@ -3907,218 +4461,218 @@ Source: `src/thor2d/input.odin`
 ### `Key_Down`
 
 ```odin
-Key_Down :: proc(ctx: ^Context, key: Key) -> bool {
+Key_Down :: proc(ctx: ^Context, key: Key) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L6)
 
 ### `Key_Pressed`
 
 ```odin
-Key_Pressed :: proc(ctx: ^Context, key: Key) -> bool {
+Key_Pressed :: proc(ctx: ^Context, key: Key) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L10)
 
 ### `Key_Pressed_Repeat`
 
 ```odin
-Key_Pressed_Repeat :: proc(ctx: ^Context, key: Key) -> bool {
+Key_Pressed_Repeat :: proc(ctx: ^Context, key: Key) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L14)
 
 ### `Key_Released`
 
 ```odin
-Key_Released :: proc(ctx: ^Context, key: Key) -> bool {
+Key_Released :: proc(ctx: ^Context, key: Key) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L18)
 
 ### `Mouse_Button_Down`
 
 ```odin
-Mouse_Button_Down :: proc(ctx: ^Context, button: Mouse_Button) -> bool {
+Mouse_Button_Down :: proc(ctx: ^Context, button: Mouse_Button) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L22)
 
 ### `Mouse_Button_Pressed`
 
 ```odin
-Mouse_Button_Pressed :: proc(ctx: ^Context, button: Mouse_Button) -> bool {
+Mouse_Button_Pressed :: proc(ctx: ^Context, button: Mouse_Button) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L26)
 
 ### `Mouse_Button_Released`
 
 ```odin
-Mouse_Button_Released :: proc(ctx: ^Context, button: Mouse_Button) -> bool {
+Mouse_Button_Released :: proc(ctx: ^Context, button: Mouse_Button) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L30)
 
 ### `Mouse_Position`
 
 ```odin
-Mouse_Position :: proc(ctx: ^Context) -> Vec2 {
+Mouse_Position :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L34)
 
 ### `Mouse_Wheel`
 
 ```odin
-Mouse_Wheel :: proc(ctx: ^Context) -> f32 {
+Mouse_Wheel :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L42)
 
 ### `Mouse_Delta`
 
 ```odin
-Mouse_Delta :: proc(ctx: ^Context) -> Vec2 {
+Mouse_Delta :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L49)
 
 ### `Set_Mouse_Relative`
 
 ```odin
-Set_Mouse_Relative :: proc(ctx: ^Context, relative: bool) -> Error {
+Set_Mouse_Relative :: proc(ctx: ^Context, relative: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L57)
 
 ### `Gamepad_Available`
 
 ```odin
-Gamepad_Available :: proc(ctx: ^Context, index: int) -> bool {
+Gamepad_Available :: proc(ctx: ^Context, index: int) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L66)
 
 ### `Gamepad_Axis`
 
 ```odin
-Gamepad_Axis :: proc(ctx: ^Context, index, axis: int) -> f32 {
+Gamepad_Axis :: proc(ctx: ^Context, index, axis: int) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L70)
 
 ### `Gamepad_Name`
 
 ```odin
-Gamepad_Name :: proc(ctx: ^Context, index: int) -> string {
+Gamepad_Name :: proc(ctx: ^Context, index: int) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L77)
 
 ### `Gamepad_Button_Down`
 
 ```odin
-Gamepad_Button_Down :: proc(ctx: ^Context, index, button: int) -> bool {
+Gamepad_Button_Down :: proc(ctx: ^Context, index, button: int) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L84)
 
 ### `Gamepad_Button_Pressed`
 
 ```odin
-Gamepad_Button_Pressed :: proc(ctx: ^Context, index, button: int) -> bool {
+Gamepad_Button_Pressed :: proc(ctx: ^Context, index, button: int) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L88)
 
 ### `Touch_Count`
 
 ```odin
-Touch_Count :: proc(ctx: ^Context) -> int {
+Touch_Count :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L92)
 
 ### `Touch_Position`
 
 ```odin
-Touch_Position :: proc(ctx: ^Context, index: int) -> Vec2 {
+Touch_Position :: proc(ctx: ^Context, index: int) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L99)
 
 ### `New_Action_Map`
 
 ```odin
-New_Action_Map :: proc(dead_zone := f32(0.15)) -> Action_Map {
+New_Action_Map :: proc(dead_zone := f32(0.15)) -> Action_Map
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L107)
 
 ### `Destroy_Action_Map`
 
 ```odin
-Destroy_Action_Map :: proc(action_map: ^Action_Map) {
+Destroy_Action_Map :: proc(action_map: ^Action_Map)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L111)
 
 ### `Bind_Action`
 
 ```odin
-Bind_Action :: proc(action_map: ^Action_Map, name: string, binding: Action_Binding) -> Error {
+Bind_Action :: proc(action_map: ^Action_Map, name: string, binding: Action_Binding) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L123)
 
 ### `Bind_Action_Key`
 
 ```odin
-Bind_Action_Key :: proc(action_map: ^Action_Map, name: string, key: Key, scale := f32(1)) -> Error {
+Bind_Action_Key :: proc(action_map: ^Action_Map, name: string, key: Key, scale := f32(1)) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L155)
 
 ### `Bind_Action_Mouse`
 
 ```odin
-Bind_Action_Mouse :: proc(action_map: ^Action_Map, name: string, button: Mouse_Button, scale := f32(1)) -> Error {
+Bind_Action_Mouse :: proc(action_map: ^Action_Map, name: string, button: Mouse_Button, scale := f32(1)) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L159)
 
 ### `Bind_Action_Gamepad_Button`
 
 ```odin
-Bind_Action_Gamepad_Button :: proc(action_map: ^Action_Map, name: string, button: int, scale := f32(1)) -> Error {
+Bind_Action_Gamepad_Button :: proc(action_map: ^Action_Map, name: string, button: int, scale := f32(1)) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L163)
 
 ### `Bind_Action_Gamepad_Axis`
 
 ```odin
-Bind_Action_Gamepad_Axis :: proc(action_map: ^Action_Map, name: string, axis: int, sign := f32(1), scale := f32(1)) -> Error {
+Bind_Action_Gamepad_Axis :: proc(action_map: ^Action_Map, name: string, axis: int, sign := f32(1), scale := f32(1)) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L167)
 
 ### `Action_Value`
 
 ```odin
-Action_Value :: proc(ctx: ^Context, action_map: ^Action_Map, name: string, gamepad := 0) -> f32 {
+Action_Value :: proc(ctx: ^Context, action_map: ^Action_Map, name: string, gamepad := 0) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L171)
 
 ### `Action_Pressed`
 
 ```odin
-Action_Pressed :: proc(ctx: ^Context, action_map: ^Action_Map, name: string, gamepad := 0) -> bool {
+Action_Pressed :: proc(ctx: ^Context, action_map: ^Action_Map, name: string, gamepad := 0) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input.odin#L209)
 
 ## `input_extra`
 
@@ -4127,226 +4681,269 @@ Source: `src/thor2d/input_extra.odin`
 ### `Set_Key_Repeat`
 
 ```odin
-Set_Key_Repeat :: proc(ctx: ^Context, enabled: bool) {
+Set_Key_Repeat :: proc(ctx: ^Context, enabled: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L9)
 
 ### `Has_Key_Repeat`
 
 ```odin
-Has_Key_Repeat :: proc(ctx: ^Context) -> bool {
+Has_Key_Repeat :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L15)
 
 ### `Set_Text_Input`
 
 ```odin
-Set_Text_Input :: proc(ctx: ^Context, enabled: bool) {
+Set_Text_Input :: proc(ctx: ^Context, enabled: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L19)
 
 ### `Has_Text_Input`
 
 ```odin
-Has_Text_Input :: proc(ctx: ^Context) -> bool {
+Has_Text_Input :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L25)
 
 ### `Has_Screen_Keyboard`
 
 ```odin
-Has_Screen_Keyboard :: proc(ctx: ^Context) -> bool {
+Has_Screen_Keyboard :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L29)
 
 ### `Get_Key_From_Scancode`
 
 ```odin
-Get_Key_From_Scancode :: proc(scancode: int) -> (Key, Error) {
+Get_Key_From_Scancode :: proc(scancode: int) -> (Key, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L34)
 
 ### `Get_Scancode_From_Key`
 
 ```odin
-Get_Scancode_From_Key :: proc(key: Key) -> (int, Error) {
+Get_Scancode_From_Key :: proc(key: Key) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L43)
 
 ### `Is_Scancode_Down`
 
 ```odin
-Is_Scancode_Down :: proc(ctx: ^Context, scancode: int) -> bool {
+Is_Scancode_Down :: proc(ctx: ^Context, scancode: int) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L47)
 
 ### `Set_Mouse_Position`
 
 ```odin
-Set_Mouse_Position :: proc(ctx: ^Context, position: Vec2) {
+Set_Mouse_Position :: proc(ctx: ^Context, position: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L58)
 
 ### `Is_Mouse_Grabbed`
 
 ```odin
-Is_Mouse_Grabbed :: proc(ctx: ^Context) -> bool {
+Is_Mouse_Grabbed :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L69)
 
 ### `Get_Relative_Mode`
 
 ```odin
-Get_Relative_Mode :: proc(ctx: ^Context) -> bool {
+Get_Relative_Mode :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L73)
 
 ### `Is_Cursor_Supported`
 
 ```odin
-Is_Cursor_Supported :: proc(ctx: ^Context) -> bool {
+Is_Cursor_Supported :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L77)
 
 ### `Set_System_Cursor`
 
 ```odin
-Set_System_Cursor :: proc(ctx: ^Context, cursor: Cursor_Type) -> Error {
+Set_System_Cursor :: proc(ctx: ^Context, cursor: Cursor_Type) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L81)
 
 ### `Reset_Cursor`
 
 ```odin
-Reset_Cursor :: proc(ctx: ^Context) -> Error {
+Reset_Cursor :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L89)
 
 ### `Get_Joystick_Count`
 
 ```odin
-Get_Joystick_Count :: proc(ctx: ^Context) -> int {
+Get_Joystick_Count :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L93)
 
 ### `Get_Gamepad_Mapping`
 
 ```odin
-Get_Gamepad_Mapping :: proc(ctx: ^Context, index: int) -> (string, Error) {
+Get_Gamepad_Mapping :: proc(ctx: ^Context, index: int) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L106)
 
 ### `Set_Gamepad_Mapping`
 
 ```odin
-Set_Gamepad_Mapping :: proc(ctx: ^Context, mapping: string) -> Error {
+Set_Gamepad_Mapping :: proc(ctx: ^Context, mapping: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L115)
 
 ### `Get_Touch_Ids`
 
 ```odin
-Get_Touch_Ids :: proc(ctx: ^Context) -> []int {
+Get_Touch_Ids :: proc(ctx: ^Context) -> []int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L123)
 
 ### `Get_Touch_Pressure`
 
 ```odin
-Get_Touch_Pressure :: proc(ctx: ^Context, index: int) -> f32 {
+Get_Touch_Pressure :: proc(ctx: ^Context, index: int) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L140)
 
 ### `Get_Joysticks`
 
 ```odin
-Get_Joysticks :: proc(ctx: ^Context) -> []int {
+Get_Joysticks :: proc(ctx: ^Context) -> []int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Joysticks returns connected gamepad indices in 0..<8 (mirrors
+love.joystick.getJoysticks, documented as integer indices instead of
+LOVE lightuserdata objects). Temp-allocator slice; empty (nil) headless.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L156)
 
 ### `Get_Gamepad_GUID`
 
 ```odin
-Get_Gamepad_GUID :: proc(ctx: ^Context, index: int) -> (string, Error) {
+Get_Gamepad_GUID :: proc(ctx: ^Context, index: int) -> (string, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Gamepad_GUID mirrors love.joystick.getGUID. Raylib exposes no GUID
+API, so Thor2D returns the documented synthetic string
+"thor2d-gamepad-<index>" with .None. The string lives on the temp
+allocator; clone it to retain. Index outside 0..<8 is .Invalid_Handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L173)
 
 ### `Get_Gamepad_Axis_Count`
 
 ```odin
-Get_Gamepad_Axis_Count :: proc(ctx: ^Context, index: int) -> int {
+Get_Gamepad_Axis_Count :: proc(ctx: ^Context, index: int) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Gamepad_Axis_Count mirrors love.joystick axis counts. The raylib
+GamepadAxis enum defines 6 axes (LEFT_X/Y, RIGHT_X/Y, LEFT/RIGHT_TRIGGER),
+so an available gamepad reports 6, otherwise 0. Headless returns 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L186)
 
 ### `Get_Gamepad_Button_Count`
 
 ```odin
-Get_Gamepad_Button_Count :: proc(ctx: ^Context, index: int) -> int {
+Get_Gamepad_Button_Count :: proc(ctx: ^Context, index: int) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Gamepad_Button_Count mirrors love.joystick button counts. The backend
+polls 18 raylib GamepadButton values (see Poll_Events), so an available
+gamepad reports 18, otherwise 0. Headless returns 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L199)
 
 ### `Get_Gamepad_Hat`
 
 ```odin
-Get_Gamepad_Hat :: proc(ctx: ^Context, index, hat: int) -> (int, Error) {
+Get_Gamepad_Hat :: proc(ctx: ^Context, index, hat: int) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Gamepad_Hat mirrors love.joystick hat queries. The raylib backend has
+no hat API, so this always returns (0, .Unsupported) — never a fake hat
+value. ctx == nil maps to .Invalid_Config.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L212)
 
 ### `Set_Gamepad_Vibration`
 
 ```odin
-Set_Gamepad_Vibration :: proc(ctx: ^Context, index: int, left, right: f32) -> Error {
+Set_Gamepad_Vibration :: proc(ctx: ^Context, index: int, left, right: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Gamepad_Vibration mirrors love.joystick setVibration (motors 0..1,
+clamped). Wired to raylib SetGamepadVibration with a fixed 1.0s duration;
+call repeatedly for longer rumble and Stop_Gamepad_Vibration to cancel.
+Unavailable gamepad maps to .Invalid_Handle (never faked); headless or
+nil backend maps to .Backend_Initialization_Failed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L226)
 
 ### `Stop_Gamepad_Vibration`
 
 ```odin
-Stop_Gamepad_Vibration :: proc(ctx: ^Context, index: int) -> Error {
+Stop_Gamepad_Vibration :: proc(ctx: ^Context, index: int) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Stop_Gamepad_Vibration cancels rumble started by Set_Gamepad_Vibration
+(zero motors, zero duration). Same error mapping as Set_Gamepad_Vibration.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L249)
 
 ### `Load_Cursor_From_Image`
 
 ```odin
-Load_Cursor_From_Image :: proc(ctx: ^Context, image: Image_Data, hot_x, hot_y: int) -> (Cursor, Error) {
+Load_Cursor_From_Image :: proc(ctx: ^Context, image: Image_Data, hot_x, hot_y: int) -> (Cursor, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Load_Cursor_From_Image mirrors love.mouse.newCursor(imageData, hotx, hoty).
+Raylib has no custom-OS-cursor API, so Thor2D uploads the RGBA8 image as a
+Texture, hides the OS cursor, and returns Cursor{texture handle} under a
+draw-it-yourself contract: the game draws the cursor each frame with
+Draw_Texture at Mouse_Position minus (hot_x, hot_y) and calls
+Set_Cursor_Visible(ctx, true) + Unload_Cursor when done. Hotspot must lie
+inside the image; headless (no backend) returns .Backend_Initialization_Failed,
+never a fake handle.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L274)
 
 ### `Unload_Cursor`
 
 ```odin
-Unload_Cursor :: proc(ctx: ^Context, cursor: Cursor) {
+Unload_Cursor :: proc(ctx: ^Context, cursor: Cursor)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Unload_Cursor frees a cursor created by Load_Cursor_From_Image (the handle
+is the underlying texture handle). Headless-safe no-op. Does not restore
+OS-cursor visibility; call Set_Cursor_Visible(ctx, true) explicitly.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/input_extra.odin#L299)
 
 ## `love_gaps`
 
@@ -4355,114 +4952,117 @@ Source: `src/thor2d/love_gaps.odin`
 ### `Get_Master_Volume`
 
 ```odin
-Get_Master_Volume :: proc(ctx: ^Context) -> f32 {
+Get_Master_Volume :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L10)
 
 ### `Get_Audio_Position`
 
 ```odin
-Get_Audio_Position :: proc(ctx: ^Context) -> Vec2 {
+Get_Audio_Position :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L17)
 
 ### `Get_Audio_Velocity`
 
 ```odin
-Get_Audio_Velocity :: proc(ctx: ^Context) -> Vec2 {
+Get_Audio_Velocity :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L25)
 
 ### `Get_Audio_Distance_Model`
 
 ```odin
-Get_Audio_Distance_Model :: proc(ctx: ^Context) -> Audio_Distance_Model {
+Get_Audio_Distance_Model :: proc(ctx: ^Context) -> Audio_Distance_Model
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L33)
 
 ### `Is_Audio_Effects_Supported`
 
 ```odin
-Is_Audio_Effects_Supported :: proc(ctx: ^Context) -> bool {
+Is_Audio_Effects_Supported :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L48)
 
 ### `Get_Random_Seed`
 
 ```odin
-Get_Random_Seed :: proc(generator: ^Random_Generator) -> u64 {
+Get_Random_Seed :: proc(generator: ^Random_Generator) -> u64
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L54)
 
 ### `Set_Random_State`
 
 ```odin
-Set_Random_State :: proc(generator: ^Random_Generator, state: u64) {
+Set_Random_State :: proc(generator: ^Random_Generator, state: u64)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L61)
 
 ### `Random_Normal`
 
 ```odin
-Random_Normal :: proc(generator: ^Random_Generator, mean := f32(0), std := f32(1)) -> f32 {
+Random_Normal :: proc(generator: ^Random_Generator, mean := f32(0), std := f32(1)) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L67)
 
 ### `Packed_Size_U16`
 
 ```odin
-Packed_Size_U16 :: proc() -> int { return 2 }
+Packed_Size_U16 :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L81)
 
 ### `Packed_Size_U32`
 
 ```odin
-Packed_Size_U32 :: proc() -> int { return 4 }
+Packed_Size_U32 :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L82)
 
 ### `Packed_Size_U64`
 
 ```odin
-Packed_Size_U64 :: proc() -> int { return 8 }
+Packed_Size_U64 :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L83)
 
 ### `Packed_Size_I32`
 
 ```odin
-Packed_Size_I32 :: proc() -> int { return 4 }
+Packed_Size_I32 :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L84)
 
 ### `Packed_Size_F32`
 
 ```odin
-Packed_Size_F32 :: proc() -> int { return 4 }
+Packed_Size_F32 :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L85)
 
 ### `Get_Packed_Size`
 
 ```odin
-Get_Packed_Size :: proc(type_name: string) -> (int, Error) {
+Get_Packed_Size :: proc(type_name: string) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Packed_Size documents the fixed-width LE pack format as the intentional
+v0.8 subset (no Lua 5.3 format strings).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/love_gaps.odin#L89)
 
 ## `math`
 
@@ -4471,298 +5071,362 @@ Source: `src/thor2d/math.odin`
 ### `Vec2_Add`
 
 ```odin
-Vec2_Add :: proc(a, b: Vec2) -> Vec2 {
+Vec2_Add :: proc(a, b: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L5)
 
 ### `Vec2_Sub`
 
 ```odin
-Vec2_Sub :: proc(a, b: Vec2) -> Vec2 {
+Vec2_Sub :: proc(a, b: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L9)
 
 ### `Vec2_Scale`
 
 ```odin
-Vec2_Scale :: proc(value: Vec2, scalar: f32) -> Vec2 {
+Vec2_Scale :: proc(value: Vec2, scalar: f32) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L13)
 
 ### `Vec2_Length_Squared`
 
 ```odin
-Vec2_Length_Squared :: proc(value: Vec2) -> f32 {
+Vec2_Length_Squared :: proc(value: Vec2) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L17)
 
 ### `Clamp`
 
 ```odin
-Clamp :: proc(value, minimum, maximum: f32) -> f32 {
+Clamp :: proc(value, minimum, maximum: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L21)
 
 ### `Abs_F32`
 
 ```odin
-Abs_F32 :: proc(value: f32) -> f32 {
+Abs_F32 :: proc(value: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L31)
 
 ### `Sin`
 
 ```odin
-Sin :: proc(value: f32) -> f32 {
+Sin :: proc(value: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L35)
 
 ### `New_Bezier_Curve`
 
 ```odin
-New_Bezier_Curve :: proc(control_points: []Vec2) -> (Bezier_Curve, Error) {
+New_Bezier_Curve :: proc(control_points: []Vec2) -> (Bezier_Curve, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L39)
 
 ### `Destroy_Bezier_Curve`
 
 ```odin
-Destroy_Bezier_Curve :: proc(curve: ^Bezier_Curve) {
+Destroy_Bezier_Curve :: proc(curve: ^Bezier_Curve)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L48)
 
 ### `Bezier_Point`
 
 ```odin
-Bezier_Point :: proc(curve: ^Bezier_Curve, amount: f32) -> Vec2 {
+Bezier_Point :: proc(curve: ^Bezier_Curve, amount: f32) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L55)
 
 ### `Bezier_Tangent`
 
 ```odin
-Bezier_Tangent :: proc(curve: ^Bezier_Curve, amount: f32) -> Vec2 {
+Bezier_Tangent :: proc(curve: ^Bezier_Curve, amount: f32) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L77)
 
 ### `Polygon_Cross`
 
 ```odin
-Polygon_Cross :: proc(a, b, c: Vec2) -> f32 {
+Polygon_Cross :: proc(a, b, c: Vec2) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L91)
 
 ### `Polygon_Area`
 
 ```odin
-Polygon_Area :: proc(points: []Vec2) -> f32 {
+Polygon_Area :: proc(points: []Vec2) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L95)
 
 ### `Is_Convex_Polygon`
 
 ```odin
-Is_Convex_Polygon :: proc(points: []Vec2) -> bool {
+Is_Convex_Polygon :: proc(points: []Vec2) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L107)
 
 ### `Triangulate_Polygon`
 
 ```odin
-Triangulate_Polygon :: proc(points: []Vec2) -> ([dynamic]u32, Error) {
+Triangulate_Polygon :: proc(points: []Vec2) -> ([dynamic]u32, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Triangulate_Polygon uses ear clipping and returns triples of source indices.
+It accepts simple, non-self-intersecting polygons and preserves winding in
+the generated triangles.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L138)
 
 ### `Identity_Transform`
 
 ```odin
-Identity_Transform :: proc() -> Transform_2D {
+Identity_Transform :: proc() -> Transform_2D
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L218)
 
 ### `Transform_Translate`
 
 ```odin
-Transform_Translate :: proc(transform: ^Transform_2D, offset: Vec2) {
+Transform_Translate :: proc(transform: ^Transform_2D, offset: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L222)
 
 ### `Transform_Rotate`
 
 ```odin
-Transform_Rotate :: proc(transform: ^Transform_2D, angle: f32) {
+Transform_Rotate :: proc(transform: ^Transform_2D, angle: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L232)
 
 ### `Transform_Scale`
 
 ```odin
-Transform_Scale :: proc(transform: ^Transform_2D, factor: Vec2) {
+Transform_Scale :: proc(transform: ^Transform_2D, factor: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L239)
 
 ### `Transform_Point`
 
 ```odin
-Transform_Point :: proc(transform: Transform_2D, point: Vec2) -> Vec2 {
+Transform_Point :: proc(transform: Transform_2D, point: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L247)
 
 ### `Camera_Point_To_Screen`
 
 ```odin
-Camera_Point_To_Screen :: proc(camera: Camera_2D, world: Vec2) -> Vec2 {
+Camera_Point_To_Screen :: proc(camera: Camera_2D, world: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L265)
 
 ### `Transform_Point_Inverse`
 
 ```odin
-Transform_Point_Inverse :: proc(transform: Transform_2D, point: Vec2) -> Vec2 {
+Transform_Point_Inverse :: proc(transform: Transform_2D, point: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L278)
 
 ### `Camera_Screen_To_Point`
 
 ```odin
-Camera_Screen_To_Point :: proc(camera: Camera_2D, screen: Vec2) -> Vec2 {
+Camera_Screen_To_Point :: proc(camera: Camera_2D, screen: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L311)
 
 ### `Clone_Transform`
 
 ```odin
-Clone_Transform :: proc(t: Transform_2D) -> Transform_2D {
+Clone_Transform :: proc(t: Transform_2D) -> Transform_2D
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Clone_Transform copies a transform, mirroring love Transform:clone.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L378)
 
 ### `Transform_Set_Transformation`
 
 ```odin
-Transform_Set_Transformation :: proc(t: ^Transform_2D, x, y, angle, sx, sy, ox, oy, kx, ky: f32) -> Error {
+Transform_Set_Transformation :: proc(t: ^Transform_2D, x, y, angle, sx, sy, ox, oy, kx, ky: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Set_Transformation sets position, rotation (degrees), scale, and
+pivot in one call, mirroring love Transform:setTransformation
+(x, y, angle, sx, sy, ox, oy, kx, ky). The pivot is baked exactly into
+Position. Shear (kx, ky) is not representable in Transform_2D: the
+representable fields are still set, but .Unsupported is returned so LOVE
+ports fail loudly instead of rendering wrong. See the file header note.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L388)
 
 ### `Transform_Combine`
 
 ```odin
-Transform_Combine :: proc(a, b: Transform_2D) -> Transform_2D {
+Transform_Combine :: proc(a, b: Transform_2D) -> Transform_2D
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Combine returns a * b as matrices, so Transform_Point(c, p)
+equals Transform_Point(a, Transform_Point(b, p)) for shear-free inputs
+(exact for uniform scales; closest-TRS projection otherwise). When either
+input carries a raw-matrix override, the product is exact (matrix multiply)
+and the result carries the override — sheared combinations round-trip.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L414)
 
 ### `Transform_Apply`
 
 ```odin
-Transform_Apply :: proc(other: ^Transform_2D, t: Transform_2D) {
+Transform_Apply :: proc(other: ^Transform_2D, t: Transform_2D)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Apply post-multiplies other by t (other = other * t), mirroring
+love Transform:apply: points flow through t first, then the old other.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L431)
 
 ### `Transform_Inverse`
 
 ```odin
-Transform_Inverse :: proc(t: Transform_2D) -> Transform_2D {
+Transform_Inverse :: proc(t: Transform_2D) -> Transform_2D
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Inverse returns the matrix inverse as TRS, mirroring love
+Transform:inverse (which also returns a new transform). It round-trips with
+Transform_Point/Transform_Point_Inverse for shear-free inputs. Singular
+inputs (zero X or Y scale) have no inverse and are returned unchanged.
+Raw-matrix overrides invert exactly in the 2D affine subset (singular
+matrices return unchanged, same contract).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L444)
 
 ### `Transform_Get_Matrix`
 
 ```odin
-Transform_Get_Matrix :: proc(t: Transform_2D) -> Matrix_4 {
+Transform_Get_Matrix :: proc(t: Transform_2D) -> Matrix_4
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Get_Matrix mirrors love Transform:getMatrix. Override carriers
+return the stored matrix verbatim; TRS transforms convert exactly
+(translation always exact; the 2D affine occupies rows 0-1, row 2 is
+identity, row 3 is [0,0,0,1]).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L512)
 
 ### `Transform_Set_Matrix`
 
 ```odin
-Transform_Set_Matrix :: proc(t: ^Transform_2D, m: Matrix_4) -> Error {
+Transform_Set_Matrix :: proc(t: ^Transform_2D, m: Matrix_4) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Set_Matrix mirrors love Transform:setMatrix: stores m verbatim
+(shear/perspective welcome — this is the exact path TRS cannot express).
+Nil handles map to .Invalid_Data.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L530)
 
 ### `Transform_Clear_Matrix`
 
 ```odin
-Transform_Clear_Matrix :: proc(t: ^Transform_2D) {
+Transform_Clear_Matrix :: proc(t: ^Transform_2D)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Clear_Matrix drops a raw-matrix override and returns to TRS
+behavior (TRS fields are untouched). Nil-safe no-op.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L541)
 
 ### `Transform_Has_Matrix`
 
 ```odin
-Transform_Has_Matrix :: proc(t: Transform_2D) -> bool {
+Transform_Has_Matrix :: proc(t: Transform_2D) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Transform_Has_Matrix reports whether a raw-matrix override is active.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L548)
 
 ### `Bezier_Render`
 
 ```odin
-Bezier_Render :: proc(curve: ^Bezier_Curve, segments: int) -> ([dynamic]Vec2, Error) {
+Bezier_Render :: proc(curve: ^Bezier_Curve, segments: int) -> ([dynamic]Vec2, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Bezier_Render samples `segments` uniform intervals (segments+1 points,
+endpoints inclusive), mirroring love BezierCurve:render. segments <= 0,
+nil curves, and curves with fewer than 2 points map to .Invalid_Data.
+The caller owns the returned array (delete it).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L558)
 
 ### `Bezier_Segment`
 
 ```odin
-Bezier_Segment :: proc(curve: ^Bezier_Curve, t0, t1: f32) -> (Bezier_Curve, Error) {
+Bezier_Segment :: proc(curve: ^Bezier_Curve, t0, t1: f32) -> (Bezier_Curve, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Bezier_Segment extracts the sub-curve over [t0, t1] (mirrors love
+BezierCurve:getSegment), returning it as a new owned Bezier_Curve of the
+same degree. Inputs are clamped to [0, 1]; t1 <= t0, nil curves, and
+curves with fewer than 2 points map to .Invalid_Data.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L602)
 
 ### `Bezier_Control_Points`
 
 ```odin
-Bezier_Control_Points :: proc(curve: ^Bezier_Curve) -> []Vec2 {
+Bezier_Control_Points :: proc(curve: ^Bezier_Curve) -> []Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Bezier_Control_Points returns a live view of the control polygon (mirrors
+love BezierCurve:getControlPoint reads). Nil curves yield nil. Mutating the
+view edits the curve; use Bezier_Set_Control_Points to replace.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L626)
 
 ### `Bezier_Set_Control_Points`
 
 ```odin
-Bezier_Set_Control_Points :: proc(curve: ^Bezier_Curve, points: []Vec2) -> Error {
+Bezier_Set_Control_Points :: proc(curve: ^Bezier_Curve, points: []Vec2) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Bezier_Set_Control_Points replaces the whole control polygon (mirrors love
+BezierCurve:setControlPoint applied to every point). Fewer than 2 points
+maps to .Invalid_Config (same floor as New_Bezier_Curve); nil curves map
+to .Invalid_Data.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L637)
 
 ### `Bezier_Degree`
 
 ```odin
-Bezier_Degree :: proc(curve: ^Bezier_Curve) -> int {
+Bezier_Degree :: proc(curve: ^Bezier_Curve) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Bezier_Degree returns len(control points)-1 (0 for nil/degenerate curves).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/math.odin#L652)
 
 ## `net`
 
@@ -4771,106 +5435,150 @@ Source: `src/thor2d/net.odin`
 ### `Net_Resolve`
 
 ```odin
-Net_Resolve :: proc(host: string, port: int) -> (Net_Address, Error) {
+Net_Resolve :: proc(host: string, port: int) -> (Net_Address, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Net_Resolve validates `host`+`port` for later dial/send use. IP literals
+resolve without DNS; hostnames resolve via the OS resolver (may block).
+The returned `Host` aliases the input string: no allocation, nothing to
+free. Invalid host/port maps to `.Invalid_Data`.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L63)
 
 ### `TCP_Listen`
 
 ```odin
-TCP_Listen :: proc(address: Net_Address) -> (TCP_Listener, Error) {
+TCP_Listen :: proc(address: Net_Address) -> (TCP_Listener, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Listen binds and listens on `address` (port 0 = OS-assigned
+ephemeral). The socket is non-blocking before return. Failures
+(in use, permission, bad address) map to explicit errors, never a
+fake listener.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L88)
 
 ### `TCP_Accept`
 
 ```odin
-TCP_Accept :: proc(l: ^TCP_Listener) -> (TCP_Stream, Error) {
+TCP_Accept :: proc(l: ^TCP_Listener) -> (TCP_Stream, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Accept takes one pending peer, or `(TCP_Stream{}, .Not_Ready)` when
+the queue is empty. The accepted stream is non-blocking before return.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L106)
 
 ### `TCP_Connect`
 
 ```odin
-TCP_Connect :: proc(address: Net_Address) -> (TCP_Stream, Error) {
+TCP_Connect :: proc(address: Net_Address) -> (TCP_Stream, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Connect dials `address` (port 1..65535) and returns a non-blocking
+stream. The dial itself blocks briefly and DNS may be slow: prefer IP
+literals and call from `Load`, not per-frame. Refused/unreachable maps
+to `.Resource_Load_Failed`, never a fake stream.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L128)
 
 ### `TCP_Send`
 
 ```odin
-TCP_Send :: proc(stream: ^TCP_Stream, data: []byte) -> (int, Error) {
+TCP_Send :: proc(stream: ^TCP_Stream, data: []byte) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Send writes `data` (empty = `(0, .None)` no-op). A full buffer maps
+to `(n, .Not_Ready)` with `n` bytes accepted so far; resend the rest
+later. Dead peers map to `.Resource_Load_Failed`.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L150)
 
 ### `TCP_Receive`
 
 ```odin
-TCP_Receive :: proc(stream: ^TCP_Stream, data: []byte) -> (int, Error) {
+TCP_Receive :: proc(stream: ^TCP_Stream, data: []byte) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Receive fills `data`, returning bytes read. `(0, .Not_Ready)` = no
+data yet; `(0, .None)` = peer closed gracefully.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L169)
 
 ### `TCP_Close_Listener`
 
 ```odin
-TCP_Close_Listener :: proc(l: ^TCP_Listener) {
+TCP_Close_Listener :: proc(l: ^TCP_Listener)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Close_Listener shuts a listener down. Nil-safe and idempotent.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L187)
 
 ### `TCP_Close_Stream`
 
 ```odin
-TCP_Close_Stream :: proc(s: ^TCP_Stream) {
+TCP_Close_Stream :: proc(s: ^TCP_Stream)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Close_Stream shuts one connection down. Nil-safe and idempotent.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L199)
 
 ### `TCP_Close`
 
 ```odin
-TCP_Close :: proc {
+TCP_Close :: proc
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+TCP_Close closes a listener or a stream (proc group over
+TCP_Close_Listener / TCP_Close_Stream).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L212)
 
 ### `UDP_Open`
 
 ```odin
-UDP_Open :: proc(port: int) -> (UDP_Socket, Error) {
+UDP_Open :: proc(port: int) -> (UDP_Socket, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+UDP_Open binds a non-blocking UDP socket on `port` (0 = ephemeral,
+OS-assigned) on all interfaces, so loopback peers can reach it.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L219)
 
 ### `UDP_Send_To`
 
 ```odin
-UDP_Send_To :: proc(socket: ^UDP_Socket, data: []byte, address: Net_Address) -> (int, Error) {
+UDP_Send_To :: proc(socket: ^UDP_Socket, data: []byte, address: Net_Address) -> (int, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+UDP_Send_To sends one datagram to `address` (empty data = `(0, .None)`
+no-op). A full send buffer maps to `(0, .Not_Ready)`; retry later.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L237)
 
 ### `UDP_Receive_From`
 
 ```odin
-UDP_Receive_From :: proc(socket: ^UDP_Socket, data: []byte) -> (int, Net_Address, Error) {
+UDP_Receive_From :: proc(socket: ^UDP_Socket, data: []byte) -> (int, Net_Address, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+UDP_Receive_From fills `data` with one datagram, returning bytes read
+plus the sender. `(0, Net_Address{}, .Not_Ready)` = nothing waiting.
+The returned `from.Host` is caller-owned: free with `delete()`.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L264)
 
 ### `UDP_Close`
 
 ```odin
-UDP_Close :: proc(socket: ^UDP_Socket) {
+UDP_Close :: proc(socket: ^UDP_Socket)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+UDP_Close shuts a UDP socket down. Nil-safe and idempotent.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/net.odin#L282)
 
 ## `physics`
 
@@ -4879,26 +5587,26 @@ Source: `src/thor2d/physics.odin`
 ### `Rects_Overlap`
 
 ```odin
-Rects_Overlap :: proc(a, b: Rect) -> bool {
+Rects_Overlap :: proc(a, b: Rect) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics.odin#L3)
 
 ### `Point_In_Rect`
 
 ```odin
-Point_In_Rect :: proc(point: Vec2, rect: Rect) -> bool {
+Point_In_Rect :: proc(point: Vec2, rect: Rect) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics.odin#L7)
 
 ### `Circle_Overlap`
 
 ```odin
-Circle_Overlap :: proc(a_center: Vec2, a_radius: f32, b_center: Vec2, b_radius: f32) -> bool {
+Circle_Overlap :: proc(a_center: Vec2, a_radius: f32, b_center: Vec2, b_radius: f32) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics.odin#L11)
 
 ## `physics_box2d`
 
@@ -4907,458 +5615,502 @@ Source: `src/thor2d/physics_box2d.odin`
 ### `Default_Physics_Body_Def`
 
 ```odin
-Default_Physics_Body_Def :: proc() -> Physics_Body_Def {
+Default_Physics_Body_Def :: proc() -> Physics_Body_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L26)
 
 ### `Default_Physics_Shape_Def`
 
 ```odin
-Default_Physics_Shape_Def :: proc() -> Physics_Shape_Def {
+Default_Physics_Shape_Def :: proc() -> Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L42)
 
 ### `Default_Physics_World_Def`
 
 ```odin
-Default_Physics_World_Def :: proc() -> Physics_World_Def {
+Default_Physics_World_Def :: proc() -> Physics_World_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L51)
 
 ### `Create_Physics_World`
 
 ```odin
-Create_Physics_World :: proc(ctx: ^Context, def := Physics_World_Def{Gravity = Vec2{0, 980}, Sub_Steps = 4}) -> (Physics_World, Error) {
+Create_Physics_World :: proc(ctx: ^Context, def := Physics_World_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L174)
 
 ### `Destroy_Physics_World`
 
 ```odin
-Destroy_Physics_World :: proc(ctx: ^Context, world: Physics_World) {
+Destroy_Physics_World :: proc(ctx: ^Context, world: Physics_World)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L201)
 
 ### `Destroy_All_Physics`
 
 ```odin
-Destroy_All_Physics :: proc(ctx: ^Context) {
+Destroy_All_Physics :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L235)
 
 ### `Set_Physics_Gravity`
 
 ```odin
-Set_Physics_Gravity :: proc(ctx: ^Context, world: Physics_World, gravity: Vec2) {
+Set_Physics_Gravity :: proc(ctx: ^Context, world: Physics_World, gravity: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L252)
 
 ### `Physics_Body_Type_Native`
 
 ```odin
-Physics_Body_Type_Native :: proc(kind: Physics_Body_Type) -> b2.BodyType {
+Physics_Body_Type_Native :: proc(kind: Physics_Body_Type) -> b2.BodyType
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L261)
 
 ### `Create_Physics_Body`
 
 ```odin
-Create_Physics_Body :: proc(ctx: ^Context, world: Physics_World, def := Physics_Body_Def{Type = .Dynamic, Gravity_Scale = 1, Enable_Sleep = true}) -> (Physics_Body, Error) {
+Create_Physics_Body :: proc(ctx: ^Context, world: Physics_World, def := Physics_Body_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L273)
 
 ### `Destroy_Physics_Body`
 
 ```odin
-Destroy_Physics_Body :: proc(ctx: ^Context, body: Physics_Body) {
+Destroy_Physics_Body :: proc(ctx: ^Context, body: Physics_Body)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L301)
 
 ### `Create_Box_Shape`
 
 ```odin
-Create_Box_Shape :: proc(ctx: ^Context, body: Physics_Body, width, height: f32, def := Physics_Shape_Def{Density = 1, Friction = 0.5, Contact_Events = true, Sensor_Events = true}) -> (Physics_Shape, Error) {
+Create_Box_Shape :: proc(ctx: ^Context, body: Physics_Body, width, height: f32, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L327)
 
 ### `Create_Circle_Shape`
 
 ```odin
-Create_Circle_Shape :: proc(ctx: ^Context, body: Physics_Body, radius: f32, def := Physics_Shape_Def{Density = 1, Friction = 0.5, Contact_Events = true, Sensor_Events = true}) -> (Physics_Shape, Error) {
+Create_Circle_Shape :: proc(ctx: ^Context, body: Physics_Body, radius: f32, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L344)
 
 ### `Create_Segment_Shape`
 
 ```odin
-Create_Segment_Shape :: proc(ctx: ^Context, body: Physics_Body, a, b: Vec2, def := Physics_Shape_Def{Density = 1, Friction = 0.5, Contact_Events = true, Sensor_Events = true}) -> (Physics_Shape, Error) {
+Create_Segment_Shape :: proc(ctx: ^Context, body: Physics_Body, a, b: Vec2, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L361)
 
 ### `Create_Capsule_Shape`
 
 ```odin
-Create_Capsule_Shape :: proc(ctx: ^Context, body: Physics_Body, half_length, radius: f32, def := Physics_Shape_Def{Density = 1, Friction = 0.5, Contact_Events = true, Sensor_Events = true}) -> (Physics_Shape, Error) {
+Create_Capsule_Shape :: proc(ctx: ^Context, body: Physics_Body, half_length, radius: f32, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L378)
 
 ### `Create_Polygon_Shape`
 
 ```odin
-Create_Polygon_Shape :: proc(ctx: ^Context, body: Physics_Body, points: []Vec2, radius: f32 = 0, def := Physics_Shape_Def{Density = 1, Friction = 0.5, Contact_Events = true, Sensor_Events = true}) -> (Physics_Shape, Error) {
+Create_Polygon_Shape :: proc(ctx: ^Context, body: Physics_Body, points: []Vec2, radius: f32 = 0, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L395)
 
 ### `Create_Chain_Shape`
 
 ```odin
-Create_Chain_Shape :: proc(ctx: ^Context, body: Physics_Body, points: []Vec2, loop := false, def := Physics_Shape_Def{Friction = 0.5, Restitution = 0.0}) -> (Physics_Shape, Error) {
+Create_Chain_Shape :: proc(ctx: ^Context, body: Physics_Body, points: []Vec2, loop := false, def := Physics_Shape_Def
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Create_Chain_Shape creates a native Box2D chain. Box2D expands a chain into
+segment shapes internally; Thor2D keeps those ids private and exposes one
+stable handle to the game.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L420)
 
 ### `Create_Physics_Joint`
 
 ```odin
-Create_Physics_Joint :: proc(ctx: ^Context, world: Physics_World, def: Physics_Joint_Def) -> (Physics_Joint, Error) {
+Create_Physics_Joint :: proc(ctx: ^Context, world: Physics_World, def: Physics_Joint_Def) -> (Physics_Joint, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L458)
 
 ### `Destroy_Physics_Joint`
 
 ```odin
-Destroy_Physics_Joint :: proc(ctx: ^Context, joint: Physics_Joint) {
+Destroy_Physics_Joint :: proc(ctx: ^Context, joint: Physics_Joint)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L497)
 
 ### `Physics_Raycast_Closest`
 
 ```odin
-Physics_Raycast_Closest :: proc(ctx: ^Context, world: Physics_World, origin, translation: Vec2) -> Physics_Raycast_Hit {
+Physics_Raycast_Closest :: proc(ctx: ^Context, world: Physics_World, origin, translation: Vec2) -> Physics_Raycast_Hit
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L510)
 
 ### `Physics_Overlap_AABB`
 
 ```odin
-Physics_Overlap_AABB :: proc(ctx: ^Context, world: Physics_World, bounds: Rect, filter := Physics_Query_Filter{}) -> [dynamic]Physics_Query_Result {
+Physics_Overlap_AABB :: proc(ctx: ^Context, world: Physics_World, bounds: Rect, filter := Physics_Query_Filter
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Overlap_AABB returns all public shapes potentially overlapping the
+rectangle. The returned dynamic array belongs to the caller and uses the
+current Odin allocator.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L594)
 
 ### `Physics_Raycast_All`
 
 ```odin
-Physics_Raycast_All :: proc(ctx: ^Context, world: Physics_World, origin, translation: Vec2, filter := Physics_Query_Filter{}) -> [dynamic]Physics_Query_Result {
+Physics_Raycast_All :: proc(ctx: ^Context, world: Physics_World, origin, translation: Vec2, filter := Physics_Query_Filter
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Raycast_All preserves every hit in callback order. Use
+Physics_Raycast_Closest when only the nearest hit is needed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L614)
 
 ### `Physics_Shape_Cast_Circle`
 
 ```odin
-Physics_Shape_Cast_Circle :: proc(ctx: ^Context, world: Physics_World, origin: Vec2, radius: f32, translation: Vec2, filter := Physics_Query_Filter{}) -> [dynamic]Physics_Query_Result {
+Physics_Shape_Cast_Circle :: proc(ctx: ^Context, world: Physics_World, origin: Vec2, radius: f32, translation: Vec2, filter := Physics_Query_Filter
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Cast_Circle sweeps a circle through the world and returns
+every hit collected by Box2D. The callback is bounded to keep native query
+code allocation-free; callers can split a long sweep when they need more
+than 256 results.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L635)
 
 ### `Physics_Shape_Contains_Point`
 
 ```odin
-Physics_Shape_Contains_Point :: proc(ctx: ^Context, shape: Physics_Shape, point: Vec2) -> bool {
+Physics_Shape_Contains_Point :: proc(ctx: ^Context, shape: Physics_Shape, point: Vec2) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L656)
 
 ### `Physics_Chain_Segment_Count`
 
 ```odin
-Physics_Chain_Segment_Count :: proc(ctx: ^Context, shape: Physics_Shape) -> int {
+Physics_Chain_Segment_Count :: proc(ctx: ^Context, shape: Physics_Shape) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L664)
 
 ### `Physics_Shape_Bounds`
 
 ```odin
-Physics_Shape_Bounds :: proc(ctx: ^Context, shape: Physics_Shape) -> Rect {
+Physics_Shape_Bounds :: proc(ctx: ^Context, shape: Physics_Shape) -> Rect
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L675)
 
 ### `Draw_Physics_Debug`
 
 ```odin
-Draw_Physics_Debug :: proc(ctx: ^Context, world: Physics_World, color := Color{80, 220, 120, 180}) {
+Draw_Physics_Debug :: proc(ctx: ^Context, world: Physics_World, color := Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Draw_Physics_Debug draws stable public AABBs. It intentionally avoids
+exposing Box2D's DebugDraw callbacks while still providing an immediately
+useful visualizer for all native shapes, including chain segments.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L706)
 
 ### `Destroy_Physics_Shape`
 
 ```odin
-Destroy_Physics_Shape :: proc(ctx: ^Context, shape: Physics_Shape) {
+Destroy_Physics_Shape :: proc(ctx: ^Context, shape: Physics_Shape)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L721)
 
 ### `Physics_Body_Position`
 
 ```odin
-Physics_Body_Position :: proc(ctx: ^Context, body: Physics_Body) -> Vec2 {
+Physics_Body_Position :: proc(ctx: ^Context, body: Physics_Body) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L742)
 
 ### `Physics_Body_Rotation`
 
 ```odin
-Physics_Body_Rotation :: proc(ctx: ^Context, body: Physics_Body) -> f32 {
+Physics_Body_Rotation :: proc(ctx: ^Context, body: Physics_Body) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L753)
 
 ### `Physics_Body_Set_Transform`
 
 ```odin
-Physics_Body_Set_Transform :: proc(ctx: ^Context, body: Physics_Body, position: Vec2, rotation: f32) {
+Physics_Body_Set_Transform :: proc(ctx: ^Context, body: Physics_Body, position: Vec2, rotation: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L763)
 
 ### `Physics_Body_Set_Linear_Velocity`
 
 ```odin
-Physics_Body_Set_Linear_Velocity :: proc(ctx: ^Context, body: Physics_Body, velocity: Vec2) {
+Physics_Body_Set_Linear_Velocity :: proc(ctx: ^Context, body: Physics_Body, velocity: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L772)
 
 ### `Physics_Body_Linear_Velocity`
 
 ```odin
-Physics_Body_Linear_Velocity :: proc(ctx: ^Context, body: Physics_Body) -> Vec2 {
+Physics_Body_Linear_Velocity :: proc(ctx: ^Context, body: Physics_Body) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L781)
 
 ### `Physics_Body_Angular_Velocity`
 
 ```odin
-Physics_Body_Angular_Velocity :: proc(ctx: ^Context, body: Physics_Body) -> f32 {
+Physics_Body_Angular_Velocity :: proc(ctx: ^Context, body: Physics_Body) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L792)
 
 ### `Physics_Body_Apply_Force`
 
 ```odin
-Physics_Body_Apply_Force :: proc(ctx: ^Context, body: Physics_Body, force, point: Vec2, wake := true) {
+Physics_Body_Apply_Force :: proc(ctx: ^Context, body: Physics_Body, force, point: Vec2, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L802)
 
 ### `Physics_Body_Apply_Impulse`
 
 ```odin
-Physics_Body_Apply_Impulse :: proc(ctx: ^Context, body: Physics_Body, impulse, point: Vec2, wake := true) {
+Physics_Body_Apply_Impulse :: proc(ctx: ^Context, body: Physics_Body, impulse, point: Vec2, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L811)
 
 ### `Physics_Body_Apply_Force_Center`
 
 ```odin
-Physics_Body_Apply_Force_Center :: proc(ctx: ^Context, body: Physics_Body, force: Vec2, wake := true) {
+Physics_Body_Apply_Force_Center :: proc(ctx: ^Context, body: Physics_Body, force: Vec2, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L820)
 
 ### `Physics_Body_Apply_Torque`
 
 ```odin
-Physics_Body_Apply_Torque :: proc(ctx: ^Context, body: Physics_Body, torque: f32, wake := true) {
+Physics_Body_Apply_Torque :: proc(ctx: ^Context, body: Physics_Body, torque: f32, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L829)
 
 ### `Physics_Body_Apply_Impulse_Center`
 
 ```odin
-Physics_Body_Apply_Impulse_Center :: proc(ctx: ^Context, body: Physics_Body, impulse: Vec2, wake := true) {
+Physics_Body_Apply_Impulse_Center :: proc(ctx: ^Context, body: Physics_Body, impulse: Vec2, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L838)
 
 ### `Physics_Body_Apply_Angular_Impulse`
 
 ```odin
-Physics_Body_Apply_Angular_Impulse :: proc(ctx: ^Context, body: Physics_Body, impulse: f32, wake := true) {
+Physics_Body_Apply_Angular_Impulse :: proc(ctx: ^Context, body: Physics_Body, impulse: f32, wake := true)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L847)
 
 ### `Physics_Body_Set_Awake`
 
 ```odin
-Physics_Body_Set_Awake :: proc(ctx: ^Context, body: Physics_Body, awake: bool) {
+Physics_Body_Set_Awake :: proc(ctx: ^Context, body: Physics_Body, awake: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L856)
 
 ### `Physics_Body_Is_Awake`
 
 ```odin
-Physics_Body_Is_Awake :: proc(ctx: ^Context, body: Physics_Body) -> bool {
+Physics_Body_Is_Awake :: proc(ctx: ^Context, body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L865)
 
 ### `Physics_Body_Set_User_Tag`
 
 ```odin
-Physics_Body_Set_User_Tag :: proc(ctx: ^Context, body: Physics_Body, tag: u64) -> Error {
+Physics_Body_Set_User_Tag :: proc(ctx: ^Context, body: Physics_Body, tag: u64) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L875)
 
 ### `Physics_Body_User_Tag`
 
 ```odin
-Physics_Body_User_Tag :: proc(ctx: ^Context, body: Physics_Body) -> u64 {
+Physics_Body_User_Tag :: proc(ctx: ^Context, body: Physics_Body) -> u64
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L886)
 
 ### `Physics_Shape_Set_User_Tag`
 
 ```odin
-Physics_Shape_Set_User_Tag :: proc(ctx: ^Context, shape: Physics_Shape, tag: u64) -> Error {
+Physics_Shape_Set_User_Tag :: proc(ctx: ^Context, shape: Physics_Shape, tag: u64) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L896)
 
 ### `Physics_Shape_User_Tag`
 
 ```odin
-Physics_Shape_User_Tag :: proc(ctx: ^Context, shape: Physics_Shape) -> u64 {
+Physics_Shape_User_Tag :: proc(ctx: ^Context, shape: Physics_Shape) -> u64
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L907)
 
 ### `Step_Physics`
 
 ```odin
-Step_Physics :: proc(ctx: ^Context, world: Physics_World, delta := f32(1.0/60.0)) {
+Step_Physics :: proc(ctx: ^Context, world: Physics_World, delta := f32(1.0/60.0))
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L952)
 
 ### `Step_All_Physics`
 
 ```odin
-Step_All_Physics :: proc(ctx: ^Context, delta: f32) {
+Step_All_Physics :: proc(ctx: ^Context, delta: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1003)
 
 ### `Poll_Physics_Event`
 
 ```odin
-Poll_Physics_Event :: proc(ctx: ^Context, world: Physics_World) -> (Physics_Event, bool) {
+Poll_Physics_Event :: proc(ctx: ^Context, world: Physics_World) -> (Physics_Event, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1029)
 
 ### `Sync_Physics_Entity`
 
 ```odin
-Sync_Physics_Entity :: proc(ctx: ^Context, entity: Entity) {
+Sync_Physics_Entity :: proc(ctx: ^Context, entity: Entity)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1045)
 
 ### `Physics_Shape_Set_Friction`
 
 ```odin
-Physics_Shape_Set_Friction :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+Physics_Shape_Set_Friction :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Set_Friction mirrors love Fixture:setFriction.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1074)
 
 ### `Physics_Shape_Set_Restitution`
 
 ```odin
-Physics_Shape_Set_Restitution :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+Physics_Shape_Set_Restitution :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Set_Restitution mirrors love Fixture:setRestitution.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1096)
 
 ### `Physics_Shape_Set_Density`
 
 ```odin
-Physics_Shape_Set_Density :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error {
+Physics_Shape_Set_Density :: proc(ctx: ^Context, shape: Physics_Shape, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Set_Density mirrors love Fixture:setDensity and updates the
+parent body mass, like Box2D does when shapes are created with a density.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1119)
 
 ### `Physics_Shape_Set_Sensor`
 
 ```odin
-Physics_Shape_Set_Sensor :: proc(ctx: ^Context, shape: Physics_Shape, sensor: bool) -> Error {
+Physics_Shape_Set_Sensor :: proc(ctx: ^Context, shape: Physics_Shape, sensor: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Set_Sensor mirrors love Fixture:setSensor. Box2D 3.x cannot
+change a shape from sensor to solid (or back) after creation, so this is a
+no-op success when the shape already has the requested state and
+.Unsupported otherwise; set Physics_Shape_Def.Sensor at creation instead.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1147)
 
 ### `Physics_Shape_Friction`
 
 ```odin
-Physics_Shape_Friction :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+Physics_Shape_Friction :: proc(ctx: ^Context, shape: Physics_Shape) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Friction mirrors love Fixture:getFriction. Chains report
+their first segment; unknown handles read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1162)
 
 ### `Physics_Shape_Restitution`
 
 ```odin
-Physics_Shape_Restitution :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+Physics_Shape_Restitution :: proc(ctx: ^Context, shape: Physics_Shape) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Restitution mirrors love Fixture:getRestitution. Chains report
+their first segment; unknown handles read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1181)
 
 ### `Physics_Shape_Density`
 
 ```odin
-Physics_Shape_Density :: proc(ctx: ^Context, shape: Physics_Shape) -> f32 {
+Physics_Shape_Density :: proc(ctx: ^Context, shape: Physics_Shape) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Density mirrors love Fixture:getDensity. Chains report their
+first segment; unknown handles read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1200)
 
 ### `Physics_Shape_Is_Sensor`
 
 ```odin
-Physics_Shape_Is_Sensor :: proc(ctx: ^Context, shape: Physics_Shape) -> bool {
+Physics_Shape_Is_Sensor :: proc(ctx: ^Context, shape: Physics_Shape) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Is_Sensor mirrors love Fixture:isSensor. Chains report their
+first segment; unknown handles read as false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_box2d.odin#L1219)
 
 ## `physics_extra`
 
@@ -5367,370 +6119,548 @@ Source: `src/thor2d/physics_extra.odin`
 ### `Set_Meter`
 
 ```odin
-Set_Meter :: proc(ctx: ^Context, scale: f32) -> Error {
+Set_Meter :: proc(ctx: ^Context, scale: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L10)
 
 ### `Get_Meter`
 
 ```odin
-Get_Meter :: proc(ctx: ^Context) -> f32 {
+Get_Meter :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L18)
 
 ### `Get_Physics_Distance`
 
 ```odin
-Get_Physics_Distance :: proc(ctx: ^Context, a, b: Physics_Shape) -> (point_a, point_b: Vec2, distance: f32, err: Error) {
+Get_Physics_Distance :: proc(ctx: ^Context, a, b: Physics_Shape) -> (point_a, point_b: Vec2, distance: f32, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Physics_Distance approximates love.physics.getDistance using shape AABBs.
+LOVE returns exact closest points between fixtures; Box2D 3.x exposes no
+public distance query in this backend, so v0.8 documents the AABB
+approximation explicitly.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L35)
 
 ### `Set_Physics_Callbacks`
 
 ```odin
-Set_Physics_Callbacks :: proc(ctx: ^Context, world: Physics_World, begin, end, pre_solve, post_solve: Physics_Contact_Callback) -> Error {
+Set_Physics_Callbacks :: proc(ctx: ^Context, world: Physics_World, begin, end, pre_solve, post_solve: Physics_Contact_Callback) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Physics_Callbacks mirrors love.physics World:setCallbacks. Each slot is
+stored per world; a nil slot means unregistered. Event mapping (Box2D 3.x
+buffers begin/end/hit events per step):
+begin      <- Contact_Begin (two fixtures started touching)
+end        <- Contact_End (two fixtures separated)
+pre_solve  <- Contact_Begin (LOVE also fires preSolve on the begin step;
+Thor2D runs post-step, so — like LOVE ports must accept here —
+the contact can no longer be disabled from this callback)
+post_solve <- Contact_Hit (impulse-speed report for the step)
+Sensor overlaps (Sensor_Begin/Sensor_End) stay poll-only via
+Poll_Physics_Event: Physics_Contact_Data carries no sensor flag, so routing
+them here would hand callbacks indistinguishable data. Callbacks fire before
+the caller polls, and the queue is left intact — callbacks AND polling work
+together on the same step.
+
+Hit-event note: Box2D reports Contact_Hit only for shapes with hit events
+enabled (off by default in this backend). Registering a non-nil post_solve
+turns hit reporting on for the world's shapes (and Step_Physics keeps it on
+for shapes created later, while post_solve stays registered); unregistering
+post_solve with nil turns it back off. Hit reports then also appear in the
+poll queue — same collected events, both sinks.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L112)
 
 ### `Physics_Body_Set_Angular_Velocity`
 
 ```odin
-Physics_Body_Set_Angular_Velocity :: proc(ctx: ^Context, body: Physics_Body, velocity: f32) {
+Physics_Body_Set_Angular_Velocity :: proc(ctx: ^Context, body: Physics_Body, velocity: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Set_Angular_Velocity mirrors love Body:setAngularVelocity
+(the getter Physics_Body_Angular_Velocity already exists).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L221)
 
 ### `Physics_Body_Mass_Data`
 
 ```odin
-Physics_Body_Mass_Data :: proc(ctx: ^Context, body: Physics_Body) -> (mass, inertia: f32, err: Error) {
+Physics_Body_Mass_Data :: proc(ctx: ^Context, body: Physics_Body) -> (mass, inertia: f32, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Mass_Data mirrors love Body:getMass/getInertia. Returns the
+Box2D body mass and rotational inertia about the local origin.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L232)
 
 ### `Physics_Body_Reset_Mass`
 
 ```odin
-Physics_Body_Reset_Mass :: proc(ctx: ^Context, body: Physics_Body) -> Error {
+Physics_Body_Reset_Mass :: proc(ctx: ^Context, body: Physics_Body) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Reset_Mass mirrors love Body:resetMassData: recompute the body
+mass from its current shapes (normally only needed after overriding mass or
+mutating shapes behind the material setters).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L246)
 
 ### `Physics_Body_Set_Active`
 
 ```odin
-Physics_Body_Set_Active :: proc(ctx: ^Context, body: Physics_Body, active: bool) {
+Physics_Body_Set_Active :: proc(ctx: ^Context, body: Physics_Body, active: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Set_Active mirrors love Body:setActive. An inactive body is
+skipped by the simulation until reactivated.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L260)
 
 ### `Physics_Body_Is_Active`
 
 ```odin
-Physics_Body_Is_Active :: proc(ctx: ^Context, body: Physics_Body) -> bool {
+Physics_Body_Is_Active :: proc(ctx: ^Context, body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Is_Active mirrors love Body:isActive. Unknown handles read as
+false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L275)
 
 ### `Physics_Body_Set_Bullet`
 
 ```odin
-Physics_Body_Set_Bullet :: proc(ctx: ^Context, body: Physics_Body, bullet: bool) {
+Physics_Body_Set_Bullet :: proc(ctx: ^Context, body: Physics_Body, bullet: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Set_Bullet mirrors love Body:setBullet (continuous collision
+detection for fast bodies).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L287)
 
 ### `Physics_Body_Is_Bullet`
 
 ```odin
-Physics_Body_Is_Bullet :: proc(ctx: ^Context, body: Physics_Body) -> bool {
+Physics_Body_Is_Bullet :: proc(ctx: ^Context, body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Is_Bullet mirrors love Body:isBullet. Unknown handles read as
+false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L298)
 
 ### `Physics_Body_Set_Fixed_Rotation`
 
 ```odin
-Physics_Body_Set_Fixed_Rotation :: proc(ctx: ^Context, body: Physics_Body, fixed: bool) {
+Physics_Body_Set_Fixed_Rotation :: proc(ctx: ^Context, body: Physics_Body, fixed: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Set_Fixed_Rotation mirrors love Body:setFixedRotation.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L309)
 
 ### `Physics_Body_Is_Fixed_Rotation`
 
 ```odin
-Physics_Body_Is_Fixed_Rotation :: proc(ctx: ^Context, body: Physics_Body) -> bool {
+Physics_Body_Is_Fixed_Rotation :: proc(ctx: ^Context, body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Is_Fixed_Rotation mirrors love Body:isFixedRotation. Unknown
+handles read as false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L320)
 
 ### `Physics_Body_Set_Sleep_Allowed`
 
 ```odin
-Physics_Body_Set_Sleep_Allowed :: proc(ctx: ^Context, body: Physics_Body, allowed: bool) {
+Physics_Body_Set_Sleep_Allowed :: proc(ctx: ^Context, body: Physics_Body, allowed: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Set_Sleep_Allowed mirrors love Body:setSleepingAllowed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L331)
 
 ### `Physics_Body_Is_Sleep_Allowed`
 
 ```odin
-Physics_Body_Is_Sleep_Allowed :: proc(ctx: ^Context, body: Physics_Body) -> bool {
+Physics_Body_Is_Sleep_Allowed :: proc(ctx: ^Context, body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Is_Sleep_Allowed mirrors love Body:isSleepingAllowed. Unknown
+handles read as false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L342)
 
 ### `Physics_Body_World_Point`
 
 ```odin
-Physics_Body_World_Point :: proc(ctx: ^Context, body: Physics_Body, local: Vec2) -> (world: Vec2, err: Error) {
+Physics_Body_World_Point :: proc(ctx: ^Context, body: Physics_Body, local: Vec2) -> (world: Vec2, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_World_Point mirrors love Body:getWorldPoint. Pure CPU math on
+the current body transform (no native call): world = position + R(angle) *
+local. Angles are radians.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L365)
 
 ### `Physics_Body_Local_Point`
 
 ```odin
-Physics_Body_Local_Point :: proc(ctx: ^Context, body: Physics_Body, world: Vec2) -> (local: Vec2, err: Error) {
+Physics_Body_Local_Point :: proc(ctx: ^Context, body: Physics_Body, world: Vec2) -> (local: Vec2, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Local_Point mirrors love Body:getLocalPoint: the inverse of
+Physics_Body_World_Point, computed CPU-side.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L377)
 
 ### `Physics_Body_World_Vector`
 
 ```odin
-Physics_Body_World_Vector :: proc(ctx: ^Context, body: Physics_Body, local: Vec2) -> (world: Vec2, err: Error) {
+Physics_Body_World_Vector :: proc(ctx: ^Context, body: Physics_Body, local: Vec2) -> (world: Vec2, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_World_Vector mirrors love Body:getWorldVector: like
+Physics_Body_World_Point but without the translation (directions only).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L391)
 
 ### `Physics_Body_Local_Vector`
 
 ```odin
-Physics_Body_Local_Vector :: proc(ctx: ^Context, body: Physics_Body, world: Vec2) -> (local: Vec2, err: Error) {
+Physics_Body_Local_Vector :: proc(ctx: ^Context, body: Physics_Body, world: Vec2) -> (local: Vec2, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Local_Vector mirrors love Body:getLocalVector: the inverse of
+Physics_Body_World_Vector, computed CPU-side.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L403)
 
 ### `Physics_Body_Contacts`
 
 ```odin
-Physics_Body_Contacts :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Contact_Data {
+Physics_Body_Contacts :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Contact_Data
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Contacts returns the step's collected contact reports touching
+this body (Contact_Begin/End/Hit only; sensor overlaps are poll-only).
+Built from the same event cache that feeds Poll_Physics_Event and the world
+callbacks, so it reflects the most recent Step_Physics for the body's
+world. The returned array belongs to the caller (delete it, even when
+empty); unknown bodies yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L419)
 
 ### `Physics_Body_Shapes`
 
 ```odin
-Physics_Body_Shapes :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Shape {
+Physics_Body_Shapes :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Shape
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Shapes enumerates every fixture handle attached to a body,
+including fixtures added to an already-simulated (live) body. The returned
+array belongs to the caller; unknown bodies yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L447)
 
 ### `Physics_Body_Joints`
 
 ```odin
-Physics_Body_Joints :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Joint {
+Physics_Body_Joints :: proc(ctx: ^Context, body: Physics_Body) -> [dynamic]Physics_Joint
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Body_Joints enumerates every joint attached to a body. The returned
+array belongs to the caller; unknown bodies yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L465)
 
 ### `Physics_Shape_Set_Filter`
 
 ```odin
-Physics_Shape_Set_Filter :: proc(ctx: ^Context, shape: Physics_Shape, category, mask: u64, group: i32) -> Error {
+Physics_Shape_Set_Filter :: proc(ctx: ^Context, shape: Physics_Shape, category, mask: u64, group: i32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Set_Filter mirrors love Fixture:setFilter: category/mask are
+u64 bit sets, group is the Box2D group index (negative = never collide,
+positive = always collide, zero = use the mask). Applies to every segment
+of chain shapes, like the other shape material setters.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L490)
 
 ### `Physics_Shape_Filter`
 
 ```odin
-Physics_Shape_Filter :: proc(ctx: ^Context, shape: Physics_Shape) -> (category, mask: u64, group: i32, err: Error) {
+Physics_Shape_Filter :: proc(ctx: ^Context, shape: Physics_Shape) -> (category, mask: u64, group: i32, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Shape_Filter mirrors love Fixture:getFilter. Chain shapes report
+their first segment.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L514)
 
 ### `Physics_World_Bodies`
 
 ```odin
-Physics_World_Bodies :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Body {
+Physics_World_Bodies :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Body
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Bodies enumerates every body in a world. The returned array
+belongs to the caller; unknown worlds yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L535)
 
 ### `Physics_World_Joints`
 
 ```odin
-Physics_World_Joints :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Joint {
+Physics_World_Joints :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Joint
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Joints enumerates every joint in a world. The returned array
+belongs to the caller; unknown worlds yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L553)
 
 ### `Physics_World_Contacts`
 
 ```odin
-Physics_World_Contacts :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Contact_Data {
+Physics_World_Contacts :: proc(ctx: ^Context, world: Physics_World) -> [dynamic]Physics_Contact_Data
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Contacts returns the step's collected contact reports for a
+world (Contact_Begin/End/Hit only; sensor overlaps are poll-only). This is
+the same event cache that feeds Poll_Physics_Event, the world callbacks,
+and Physics_Body_Contacts — NOT a live manifold query. The returned array
+belongs to the caller; unknown worlds yield an empty array.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L574)
 
 ### `Physics_World_Body_Count`
 
 ```odin
-Physics_World_Body_Count :: proc(ctx: ^Context, world: Physics_World) -> int {
+Physics_World_Body_Count :: proc(ctx: ^Context, world: Physics_World) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Body_Count mirrors love World:getBodyCount. Unknown worlds
+read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L594)
 
 ### `Physics_World_Joint_Count`
 
 ```odin
-Physics_World_Joint_Count :: proc(ctx: ^Context, world: Physics_World) -> int {
+Physics_World_Joint_Count :: proc(ctx: ^Context, world: Physics_World) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Joint_Count mirrors love World:getJointCount. Unknown worlds
+read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L612)
 
 ### `Physics_World_Contact_Count`
 
 ```odin
-Physics_World_Contact_Count :: proc(ctx: ^Context, world: Physics_World) -> int {
+Physics_World_Contact_Count :: proc(ctx: ^Context, world: Physics_World) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_World_Contact_Count mirrors love World:getContactCount over the
+step's collected contact cache (see Physics_World_Contacts). Unknown worlds
+read as 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L631)
 
 ### `Physics_Contact_Set_Enabled`
 
 ```odin
-Physics_Contact_Set_Enabled :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, enabled: bool) -> Error {
+Physics_Contact_Set_Enabled :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Contact_Set_Enabled mirrors love Contact:setEnabled. It always
+returns .Unsupported on valid contacts: Box2D 3.x contacts are transient
+manifold snapshots with no enable/disable API in this backend, and Thor2D
+callbacks run post-step (outside the solve), so nothing here could affect
+the current step anyway. Faking it by toggling the sensor bit on the
+fixtures was rejected: that would change fixture identity, not the contact.
+Disable collision up front with fixture filters (Physics_Shape_Set_Filter)
+or destroy the fixture instead.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L672)
 
 ### `Physics_Contact_Set_Friction`
 
 ```odin
-Physics_Contact_Set_Friction :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, value: f32) -> Error {
+Physics_Contact_Set_Friction :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Contact_Set_Friction mirrors love Contact:setFriction. It always
+returns .Unsupported on valid contacts: the backend exposes per-shape
+materials only (Physics_Shape_Set_Friction), with no per-contact override
+channel. See Physics_Contact_Set_Enabled for the rationale.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L684)
 
 ### `Physics_Contact_Set_Restitution`
 
 ```odin
-Physics_Contact_Set_Restitution :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, value: f32) -> Error {
+Physics_Contact_Set_Restitution :: proc(ctx: ^Context, world: Physics_World, contact: Physics_Contact_Data, value: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Contact_Set_Restitution mirrors love Contact:setRestitution. It
+always returns .Unsupported on valid contacts: the backend exposes
+per-shape materials only (Physics_Shape_Set_Restitution), with no
+per-contact override channel. See Physics_Contact_Set_Enabled for the
+rationale.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L697)
 
 ### `Physics_Joint_Type`
 
 ```odin
-Physics_Joint_Type :: proc(ctx: ^Context, joint: Physics_Joint) -> (kind: Physics_Joint_Kind, err: Error) {
+Physics_Joint_Type :: proc(ctx: ^Context, joint: Physics_Joint) -> (kind: Physics_Joint_Kind, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Type returns which LOVE joint kind a handle was created as.
+A filter joint (unreachable through the public API — Thor2D never creates
+one) reports .Unsupported rather than a fake kind.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L720)
 
 ### `Physics_Joint_Bodies`
 
 ```odin
-Physics_Joint_Bodies :: proc(ctx: ^Context, joint: Physics_Joint) -> (a, b: Physics_Body, err: Error) {
+Physics_Joint_Bodies :: proc(ctx: ^Context, joint: Physics_Joint) -> (a, b: Physics_Body, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Bodies returns the two bodies a joint connects, in creation
+(A, B) order.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L748)
 
 ### `Physics_Joint_Anchors`
 
 ```odin
-Physics_Joint_Anchors :: proc(ctx: ^Context, joint: Physics_Joint) -> (a, b: Vec2, err: Error) {
+Physics_Joint_Anchors :: proc(ctx: ^Context, joint: Physics_Joint) -> (a, b: Vec2, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Anchors mirrors love Joint:getAnchors: both anchor points in
+world coordinates, derived from the native local anchors and the bodies'
+current transforms. Angles are radians.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L769)
 
 ### `Physics_Joint_Revolute_Set_Limits`
 
 ```odin
-Physics_Joint_Revolute_Set_Limits :: proc(ctx: ^Context, joint: Physics_Joint, lower, upper: f32) -> Error {
+Physics_Joint_Revolute_Set_Limits :: proc(ctx: ^Context, joint: Physics_Joint, lower, upper: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Revolute_Set_Limits mirrors love RevoluteJoint:setLimits and
+enables the limit. Angles are radians.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L806)
 
 ### `Physics_Joint_Revolute_Limits`
 
 ```odin
-Physics_Joint_Revolute_Limits :: proc(ctx: ^Context, joint: Physics_Joint) -> (lower, upper: f32, enabled: bool, err: Error) {
+Physics_Joint_Revolute_Limits :: proc(ctx: ^Context, joint: Physics_Joint) -> (lower, upper: f32, enabled: bool, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Revolute_Limits mirrors love RevoluteJoint:getLimits plus the
+enabled flag. Angles are radians.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L818)
 
 ### `Physics_Joint_Revolute_Set_Motor`
 
 ```odin
-Physics_Joint_Revolute_Set_Motor :: proc(ctx: ^Context, joint: Physics_Joint, speed, max_torque: f32, enable: bool) -> Error {
+Physics_Joint_Revolute_Set_Motor :: proc(ctx: ^Context, joint: Physics_Joint, speed, max_torque: f32, enable: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Revolute_Set_Motor mirrors love RevoluteJoint:setMotorSpeed /
+setMaxMotorTorque plus the enable flag. `speed` is rad/s.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L828)
 
 ### `Physics_Joint_Revolute_Motor`
 
 ```odin
-Physics_Joint_Revolute_Motor :: proc(ctx: ^Context, joint: Physics_Joint) -> (speed, max_torque: f32, enabled: bool, err: Error) {
+Physics_Joint_Revolute_Motor :: proc(ctx: ^Context, joint: Physics_Joint) -> (speed, max_torque: f32, enabled: bool, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Revolute_Motor mirrors love RevoluteJoint:getMotorSpeed plus
+the configured max torque and the enabled flag.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L841)
 
 ### `Physics_Joint_Revolute_Angle`
 
 ```odin
-Physics_Joint_Revolute_Angle :: proc(ctx: ^Context, joint: Physics_Joint) -> (angle: f32, err: Error) {
+Physics_Joint_Revolute_Angle :: proc(ctx: ^Context, joint: Physics_Joint) -> (angle: f32, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Revolute_Angle mirrors love RevoluteJoint:getJointAngle.
+The angle is radians.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L851)
 
 ### `Physics_Joint_Prismatic_Set_Limits`
 
 ```odin
-Physics_Joint_Prismatic_Set_Limits :: proc(ctx: ^Context, joint: Physics_Joint, lower, upper: f32) -> Error {
+Physics_Joint_Prismatic_Set_Limits :: proc(ctx: ^Context, joint: Physics_Joint, lower, upper: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Prismatic_Set_Limits mirrors love PrismaticJoint:setLimits
+and enables the limit. Limits are meters-along-axis in pixels.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L861)
 
 ### `Physics_Joint_Prismatic_Limits`
 
 ```odin
-Physics_Joint_Prismatic_Limits :: proc(ctx: ^Context, joint: Physics_Joint) -> (lower, upper: f32, enabled: bool, err: Error) {
+Physics_Joint_Prismatic_Limits :: proc(ctx: ^Context, joint: Physics_Joint) -> (lower, upper: f32, enabled: bool, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Prismatic_Limits mirrors love PrismaticJoint:getLimits plus
+the enabled flag.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L873)
 
 ### `Physics_Joint_Prismatic_Set_Motor`
 
 ```odin
-Physics_Joint_Prismatic_Set_Motor :: proc(ctx: ^Context, joint: Physics_Joint, speed, max_force: f32, enable: bool) -> Error {
+Physics_Joint_Prismatic_Set_Motor :: proc(ctx: ^Context, joint: Physics_Joint, speed, max_force: f32, enable: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Prismatic_Set_Motor mirrors love PrismaticJoint:setMotorSpeed
+/ setMaxMotorForce plus the enable flag. `speed` is pixels/s along the
+axis.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L884)
 
 ### `Physics_Joint_Prismatic_Motor`
 
 ```odin
-Physics_Joint_Prismatic_Motor :: proc(ctx: ^Context, joint: Physics_Joint) -> (speed, max_force: f32, enabled: bool, err: Error) {
+Physics_Joint_Prismatic_Motor :: proc(ctx: ^Context, joint: Physics_Joint) -> (speed, max_force: f32, enabled: bool, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Prismatic_Motor mirrors love PrismaticJoint:getMotorSpeed
+plus the configured max force and the enabled flag.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L897)
 
 ### `Physics_Joint_Prismatic_Translation`
 
 ```odin
-Physics_Joint_Prismatic_Translation :: proc(ctx: ^Context, joint: Physics_Joint) -> (translation: f32, err: Error) {
+Physics_Joint_Prismatic_Translation :: proc(ctx: ^Context, joint: Physics_Joint) -> (translation: f32, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Physics_Joint_Prismatic_Translation mirrors love
+PrismaticJoint:getJointTranslation: the current slide position in pixels.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/physics_extra.odin#L907)
 
 ## `project`
 
@@ -5739,58 +6669,58 @@ Source: `src/thor2d/project.odin`
 ### `New_Project`
 
 ```odin
-New_Project :: proc(name, project_id: string) -> Project {
+New_Project :: proc(name, project_id: string) -> Project
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L7)
 
 ### `Destroy_Project`
 
 ```odin
-Destroy_Project :: proc(project: ^Project) {
+Destroy_Project :: proc(project: ^Project)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L14)
 
 ### `Asset_Id_From_Path`
 
 ```odin
-Asset_Id_From_Path :: proc(path: string) -> Asset_Id {
+Asset_Id_From_Path :: proc(path: string) -> Asset_Id
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L42)
 
 ### `Add_Project_Asset`
 
 ```odin
-Add_Project_Asset :: proc(project: ^Project, path, kind: string) -> (Asset_Id, Error) {
+Add_Project_Asset :: proc(project: ^Project, path, kind: string) -> (Asset_Id, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L56)
 
 ### `Validate_Project`
 
 ```odin
-Validate_Project :: proc(project: ^Project) -> Error {
+Validate_Project :: proc(project: ^Project) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L73)
 
 ### `Save_Project`
 
 ```odin
-Save_Project :: proc(filesystem: ^Filesystem, relative_path: string, project: ^Project) -> Error {
+Save_Project :: proc(filesystem: ^Filesystem, relative_path: string, project: ^Project) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L91)
 
 ### `Load_Project`
 
 ```odin
-Load_Project :: proc(filesystem: ^Filesystem, relative_path: string) -> (Project, Error) {
+Load_Project :: proc(filesystem: ^Filesystem, relative_path: string) -> (Project, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/project.odin#L103)
 
 ## `random`
 
@@ -5799,106 +6729,112 @@ Source: `src/thor2d/random.odin`
 ### `Random_Int`
 
 ```odin
-Random_Int :: proc(ctx: ^Context, minimum, maximum: int) -> int {
+Random_Int :: proc(ctx: ^Context, minimum, maximum: int) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L6)
 
 ### `New_Random_Generator`
 
 ```odin
-New_Random_Generator :: proc(seed: u64) -> Random_Generator {
+New_Random_Generator :: proc(seed: u64) -> Random_Generator
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L13)
 
 ### `Seed_Random_Generator`
 
 ```odin
-Seed_Random_Generator :: proc(generator: ^Random_Generator, seed: u64) {
+Seed_Random_Generator :: proc(generator: ^Random_Generator, seed: u64)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L21)
 
 ### `Random_Next_U64`
 
 ```odin
-Random_Next_U64 :: proc(generator: ^Random_Generator) -> u64 {
+Random_Next_U64 :: proc(generator: ^Random_Generator) -> u64
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L27)
 
 ### `Random_Float`
 
 ```odin
-Random_Float :: proc(generator: ^Random_Generator, minimum, maximum: f32) -> f32 {
+Random_Float :: proc(generator: ^Random_Generator, minimum, maximum: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L39)
 
 ### `Random_Int_Range`
 
 ```odin
-Random_Int_Range :: proc(generator: ^Random_Generator, minimum, maximum: int) -> int {
+Random_Int_Range :: proc(generator: ^Random_Generator, minimum, maximum: int) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L47)
 
 ### `Random_Noise_2D`
 
 ```odin
-Random_Noise_2D :: proc(x, y: f32, seed: u64) -> f32 {
+Random_Noise_2D :: proc(x, y: f32, seed: u64) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L55)
 
 ### `Random_Noise_1D`
 
 ```odin
-Random_Noise_1D :: proc(x: f32, seed: u64) -> f32 {
+Random_Noise_1D :: proc(x: f32, seed: u64) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Random_Noise_1D is the 1D lattice hash (mirrors love.math.noise(x)).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L81)
 
 ### `Random_Noise_3D`
 
 ```odin
-Random_Noise_3D :: proc(x, y, z: f32, seed: u64) -> f32 {
+Random_Noise_3D :: proc(x, y, z: f32, seed: u64) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Random_Noise_3D is the 3D lattice hash (mirrors love.math.noise(x, y, z)).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L88)
 
 ### `Random_Noise_4D`
 
 ```odin
-Random_Noise_4D :: proc(x, y, z, w: f32, seed: u64) -> f32 {
+Random_Noise_4D :: proc(x, y, z, w: f32, seed: u64) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Random_Noise_4D is the 4D lattice hash (mirrors love.math.noise(x, y, z, w)).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L97)
 
 ### `Lerp`
 
 ```odin
-Lerp :: proc(a, b, amount: f32) -> f32 {
+Lerp :: proc(a, b, amount: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L106)
 
 ### `SRGB_To_Linear`
 
 ```odin
-SRGB_To_Linear :: proc(value: f32) -> f32 {
+SRGB_To_Linear :: proc(value: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L110)
 
 ### `Linear_To_SRGB`
 
 ```odin
-Linear_To_SRGB :: proc(value: f32) -> f32 {
+Linear_To_SRGB :: proc(value: f32) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/random.odin#L117)
 
 ## `system`
 
@@ -5907,210 +6843,222 @@ Source: `src/thor2d/system.odin`
 ### `FPS`
 
 ```odin
-FPS :: proc(ctx: ^Context) -> int {
+FPS :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L7)
 
 ### `Frame_Time_Average`
 
 ```odin
-Frame_Time_Average :: proc(ctx: ^Context) -> f32 {
+Frame_Time_Average :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L14)
 
 ### `Get_Runtime_Metrics`
 
 ```odin
-Get_Runtime_Metrics :: proc(ctx: ^Context) -> Runtime_Metrics {
+Get_Runtime_Metrics :: proc(ctx: ^Context) -> Runtime_Metrics
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L21)
 
 ### `Fixed_Step_Backlog`
 
 ```odin
-Fixed_Step_Backlog :: proc(ctx: ^Context) -> f32 {
+Fixed_Step_Backlog :: proc(ctx: ^Context) -> f32
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L35)
 
 ### `Sleep`
 
 ```odin
-Sleep :: proc(seconds: f64) {
+Sleep :: proc(seconds: f64)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L42)
 
 ### `Clipboard_Text`
 
 ```odin
-Clipboard_Text :: proc(ctx: ^Context) -> string {
+Clipboard_Text :: proc(ctx: ^Context) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L48)
 
 ### `Set_Clipboard_Text`
 
 ```odin
-Set_Clipboard_Text :: proc(ctx: ^Context, value: string) {
+Set_Clipboard_Text :: proc(ctx: ^Context, value: string)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L55)
 
 ### `Open_URL`
 
 ```odin
-Open_URL :: proc(ctx: ^Context, value: string) -> Error {
+Open_URL :: proc(ctx: ^Context, value: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L61)
 
 ### `Processor_Count`
 
 ```odin
-Processor_Count :: proc() -> int {
+Processor_Count :: proc() -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L71)
 
 ### `Process_Arguments`
 
 ```odin
-Process_Arguments :: proc() -> []string {
+Process_Arguments :: proc() -> []string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L75)
 
 ### `Locale`
 
 ```odin
-Locale :: proc() -> string {
+Locale :: proc() -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L79)
 
 ### `Operating_System`
 
 ```odin
-Operating_System :: proc() -> string {
+Operating_System :: proc() -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L89)
 
 ### `Window_Position`
 
 ```odin
-Window_Position :: proc(ctx: ^Context) -> Vec2 {
+Window_Position :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L101)
 
 ### `Set_Window_Position`
 
 ```odin
-Set_Window_Position :: proc(ctx: ^Context, position: Vec2) {
+Set_Window_Position :: proc(ctx: ^Context, position: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L109)
 
 ### `Window_DPI_Scale`
 
 ```odin
-Window_DPI_Scale :: proc(ctx: ^Context) -> Vec2 {
+Window_DPI_Scale :: proc(ctx: ^Context) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L115)
 
 ### `Window_Is_Fullscreen`
 
 ```odin
-Window_Is_Fullscreen :: proc(ctx: ^Context) -> bool {
+Window_Is_Fullscreen :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L123)
 
 ### `Window_Is_Minimized`
 
 ```odin
-Window_Is_Minimized :: proc(ctx: ^Context) -> bool {
+Window_Is_Minimized :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L127)
 
 ### `Desktop_Size`
 
 ```odin
-Desktop_Size :: proc(ctx: ^Context) -> (width, height: int) {
+Desktop_Size :: proc(ctx: ^Context) -> (width, height: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L131)
 
 ### `Current_Display_Mode`
 
 ```odin
-Current_Display_Mode :: proc(ctx: ^Context) -> Display_Mode {
+Current_Display_Mode :: proc(ctx: ^Context) -> Display_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L138)
 
 ### `Set_Fullscreen`
 
 ```odin
-Set_Fullscreen :: proc(ctx: ^Context, fullscreen: bool) -> Error {
+Set_Fullscreen :: proc(ctx: ^Context, fullscreen: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L146)
 
 ### `Set_Cursor_Visible`
 
 ```odin
-Set_Cursor_Visible :: proc(ctx: ^Context, visible: bool) -> Error {
+Set_Cursor_Visible :: proc(ctx: ^Context, visible: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L156)
 
 ### `Is_Cursor_Visible`
 
 ```odin
-Is_Cursor_Visible :: proc(ctx: ^Context) -> bool {
+Is_Cursor_Visible :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L165)
 
 ### `Set_Mouse_Grab`
 
 ```odin
-Set_Mouse_Grab :: proc(ctx: ^Context, grab: bool) {
+Set_Mouse_Grab :: proc(ctx: ^Context, grab: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L172)
 
 ### `Thor2D_Version`
 
 ```odin
-Thor2D_Version :: proc() -> (major, minor, patch: int) {
+Thor2D_Version :: proc() -> (major, minor, patch: int)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Thor2D_Version mirrors love.getVersion (without codename). Returns the
+THOR2D_VERSION_* constants. No ctx needed; pure compile-time version.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L184)
 
 ### `Is_Version_Compatible`
 
 ```odin
-Is_Version_Compatible :: proc(major, minor: int) -> bool {
+Is_Version_Compatible :: proc(major, minor: int) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Is_Version_Compatible mirrors love.isVersionCompatible for the major.minor
+subset. Same major and requested minor <= current minor is compatible.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L190)
 
 ### `Vibrate`
 
 ```odin
-Vibrate :: proc(seconds: f32) -> Error {
+Vibrate :: proc(seconds: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Vibrate is a mobile-future stub (mirrors love.system.vibrate).
+Desktop has no vibration hardware, so any positive duration returns
+.Unsupported instead of a fake buzz. Non-positive durations are rejected
+with .Invalid_Data before the backend is touched. A future mobile backend
+will vibrate for `seconds` and return .None. See guides/Mobile.md.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/system.odin#L202)
 
 ## `threads`
 
@@ -6119,218 +7067,238 @@ Source: `src/thor2d/threads.odin`
 ### `New_Channel`
 
 ```odin
-New_Channel :: proc($T: typeid, capacity: int) -> (Channel(T), Error) {
+New_Channel :: proc($T: typeid, capacity: int) -> (Channel(T), Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L14)
 
 ### `Destroy_Channel`
 
 ```odin
-Destroy_Channel :: proc(channel: ^Channel($T)) {
+Destroy_Channel :: proc(channel: ^Channel($T))
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L25)
 
 ### `Close_Channel`
 
 ```odin
-Close_Channel :: proc(channel: ^Channel($T)) {
+Close_Channel :: proc(channel: ^Channel($T))
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L33)
 
 ### `Send`
 
 ```odin
-Send :: proc(channel: ^Channel($T), value: T) -> bool {
+Send :: proc(channel: ^Channel($T), value: T) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L37)
 
 ### `Try_Send`
 
 ```odin
-Try_Send :: proc(channel: ^Channel($T), value: T) -> bool {
+Try_Send :: proc(channel: ^Channel($T), value: T) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L41)
 
 ### `Receive`
 
 ```odin
-Receive :: proc(channel: ^Channel($T)) -> (T, bool) {
+Receive :: proc(channel: ^Channel($T)) -> (T, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L45)
 
 ### `Try_Receive`
 
 ```odin
-Try_Receive :: proc(channel: ^Channel($T)) -> (T, bool) {
+Try_Receive :: proc(channel: ^Channel($T)) -> (T, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L52)
 
 ### `Send_Timeout`
 
 ```odin
-Send_Timeout :: proc(channel: ^Channel($T), value: T, timeout: time.Duration) -> bool {
+Send_Timeout :: proc(channel: ^Channel($T), value: T, timeout: time.Duration) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L59)
 
 ### `Receive_Timeout`
 
 ```odin
-Receive_Timeout :: proc(channel: ^Channel($T), timeout: time.Duration) -> (T, bool) {
+Receive_Timeout :: proc(channel: ^Channel($T), timeout: time.Duration) -> (T, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L76)
 
 ### `Push`
 
 ```odin
-Push :: proc(channel: ^Channel($T), value: T) -> bool {
+Push :: proc(channel: ^Channel($T), value: T) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L93)
 
 ### `Pop`
 
 ```odin
-Pop :: proc(channel: ^Channel($T)) -> (T, bool) {
+Pop :: proc(channel: ^Channel($T)) -> (T, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L97)
 
 ### `Demand`
 
 ```odin
-Demand :: proc(channel: ^Channel($T)) -> (T, bool) {
+Demand :: proc(channel: ^Channel($T)) -> (T, bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L101)
 
 ### `Supply`
 
 ```odin
-Supply :: proc(channel: ^Channel($T), value: T) -> bool {
+Supply :: proc(channel: ^Channel($T), value: T) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L105)
 
 ### `Channel_Get_Count`
 
 ```odin
-Channel_Get_Count :: proc(channel: ^Channel($T)) -> int {
+Channel_Get_Count :: proc(channel: ^Channel($T)) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Channel_Get_Count returns the number of buffered values (mirrors love
+Channel:getCount). Wraps core:sync/chan len; nil channels report 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L114)
 
 ### `Channel_Has_Data`
 
 ```odin
-Channel_Has_Data :: proc(channel: ^Channel($T)) -> bool {
+Channel_Has_Data :: proc(channel: ^Channel($T)) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Channel_Has_Data reports whether a value can be received without blocking
+(love "hasRead" spelling). Wraps can_recv; nil channels report false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L123)
 
 ### `Channel_Clear`
 
 ```odin
-Channel_Clear :: proc(channel: ^Channel($T)) -> int {
+Channel_Clear :: proc(channel: ^Channel($T)) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Channel_Clear drains all buffered values (mirrors love Channel:clear) and
+returns how many were dropped. Best-effort under concurrent senders: it
+drains until try_recv fails once. Nil channels drop 0.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L133)
 
 ### `Channel_Peek`
 
 ```odin
-Channel_Peek :: proc(channel: ^Channel($T)) -> (T, Error) {
+Channel_Peek :: proc(channel: ^Channel($T)) -> (T, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Channel_Peek would mirror love Channel:peek (read without popping), but
+core:sync/chan exposes no peek primitive — any "peek" would have to pop
+and re-queue, which reorders under concurrency and is therefore a fake.
+This always returns (zero, .Unsupported) on live channels (nil channels
+map to .Invalid_Handle). Use Try_Receive + Send to emulate explicitly.
+See Thread.md.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L154)
 
 ### `Start_Thread`
 
 ```odin
-Start_Thread :: proc(procedure: odin_thread.Thread_Proc, name := "thor2d-worker") -> (Thread, Error) {
+Start_Thread :: proc(procedure: odin_thread.Thread_Proc, name := "thor2d-worker") -> (Thread, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L215)
 
 ### `Start_Managed_Thread`
 
 ```odin
-Start_Managed_Thread :: proc(procedure: Managed_Thread_Proc, name := "thor2d-worker") -> (Thread, Error) {
+Start_Managed_Thread :: proc(procedure: Managed_Thread_Proc, name := "thor2d-worker") -> (Thread, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Start_Managed_Thread provides a cooperative cancellation token. The worker
+must check Thread_Cancelled(control) at safe points and return normally.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L229)
 
 ### `Request_Thread_Cancel`
 
 ```odin
-Request_Thread_Cancel :: proc(thread: ^Thread) {
+Request_Thread_Cancel :: proc(thread: ^Thread)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L252)
 
 ### `Thread_Cancelled`
 
 ```odin
-Thread_Cancelled :: proc(control: ^Thread_Control) -> bool {
+Thread_Cancelled :: proc(control: ^Thread_Control) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L258)
 
 ### `Thread_State_Of`
 
 ```odin
-Thread_State_Of :: proc(thread: ^Thread) -> Thread_State {
+Thread_State_Of :: proc(thread: ^Thread) -> Thread_State
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L262)
 
 ### `Thread_Error_Of`
 
 ```odin
-Thread_Error_Of :: proc(thread: ^Thread) -> Thread_Error {
+Thread_Error_Of :: proc(thread: ^Thread) -> Thread_Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L278)
 
 ### `Join_Thread`
 
 ```odin
-Join_Thread :: proc(thread: ^Thread) {
+Join_Thread :: proc(thread: ^Thread)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L285)
 
 ### `Join_Thread_Timeout`
 
 ```odin
-Join_Thread_Timeout :: proc(thread: ^Thread, timeout: time.Duration) -> bool {
+Join_Thread_Timeout :: proc(thread: ^Thread, timeout: time.Duration) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L299)
 
 ### `Thread_Done`
 
 ```odin
-Thread_Done :: proc(thread: ^Thread) -> bool {
+Thread_Done :: proc(thread: ^Thread) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L319)
 
 ### `Stop_Thread`
 
 ```odin
-Stop_Thread :: proc(thread: ^Thread) {
+Stop_Thread :: proc(thread: ^Thread)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/threads.odin#L323)
 
 ## `transforms`
 
@@ -6339,82 +7307,82 @@ Source: `src/thor2d/transforms.odin`
 ### `Begin_Camera`
 
 ```odin
-Begin_Camera :: proc(ctx: ^Context, camera: Camera_2D) {
+Begin_Camera :: proc(ctx: ^Context, camera: Camera_2D)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L5)
 
 ### `End_Camera`
 
 ```odin
-End_Camera :: proc(ctx: ^Context) {
+End_Camera :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L11)
 
 ### `Push_Transform`
 
 ```odin
-Push_Transform :: proc(ctx: ^Context) {
+Push_Transform :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L17)
 
 ### `Pop_Transform`
 
 ```odin
-Pop_Transform :: proc(ctx: ^Context) {
+Pop_Transform :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L23)
 
 ### `Translate`
 
 ```odin
-Translate :: proc(ctx: ^Context, offset: Vec2) {
+Translate :: proc(ctx: ^Context, offset: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L34)
 
 ### `Rotate`
 
 ```odin
-Rotate :: proc(ctx: ^Context, angle: f32) {
+Rotate :: proc(ctx: ^Context, angle: f32)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L40)
 
 ### `Scale`
 
 ```odin
-Scale :: proc(ctx: ^Context, factor: Vec2) {
+Scale :: proc(ctx: ^Context, factor: Vec2)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L46)
 
 ### `Reset_Transform`
 
 ```odin
-Reset_Transform :: proc(ctx: ^Context) {
+Reset_Transform :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L52)
 
 ### `World_To_Screen`
 
 ```odin
-World_To_Screen :: proc(ctx: ^Context, camera: Camera_2D, world: Vec2) -> Vec2 {
+World_To_Screen :: proc(ctx: ^Context, camera: Camera_2D, world: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L59)
 
 ### `Screen_To_World`
 
 ```odin
-Screen_To_World :: proc(ctx: ^Context, camera: Camera_2D, screen: Vec2) -> Vec2 {
+Screen_To_World :: proc(ctx: ^Context, camera: Camera_2D, screen: Vec2) -> Vec2
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/transforms.odin#L67)
 
 ## `types`
 
@@ -6423,242 +7391,242 @@ Source: `src/thor2d/types.odin`
 ### `RGB`
 
 ```odin
-RGB :: proc(r, g, b: u8) -> Color {
+RGB :: proc(r, g, b: u8) -> Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L21)
 
 ### `RGBA`
 
 ```odin
-RGBA :: proc(r, g, b, a: u8) -> Color {
+RGBA :: proc(r, g, b, a: u8) -> Color
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L25)
 
 ### `Default_Color_Mask`
 
 ```odin
-Default_Color_Mask :: proc() -> Color_Mask {
+Default_Color_Mask :: proc() -> Color_Mask
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L269)
 
 ### `Default_Particle_Config`
 
 ```odin
-Default_Particle_Config :: proc(max_particles: int) -> Particle_Config {
+Default_Particle_Config :: proc(max_particles: int) -> Particle_Config
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L609)
 
 ### `Texture_Invalid`
 
 ```odin
-Texture_Invalid :: proc(texture: Texture) -> bool {
+Texture_Invalid :: proc(texture: Texture) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L623)
 
 ### `Sound_Invalid`
 
 ```odin
-Sound_Invalid :: proc(sound: Sound) -> bool {
+Sound_Invalid :: proc(sound: Sound) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L627)
 
 ### `Music_Invalid`
 
 ```odin
-Music_Invalid :: proc(music: Music) -> bool {
+Music_Invalid :: proc(music: Music) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L631)
 
 ### `Audio_Source_Invalid`
 
 ```odin
-Audio_Source_Invalid :: proc(source: Audio_Source) -> bool {
+Audio_Source_Invalid :: proc(source: Audio_Source) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L635)
 
 ### `Audio_Device_Invalid`
 
 ```odin
-Audio_Device_Invalid :: proc(device: Audio_Device) -> bool {
+Audio_Device_Invalid :: proc(device: Audio_Device) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L639)
 
 ### `Recording_Device_Invalid`
 
 ```odin
-Recording_Device_Invalid :: proc(device: Recording_Device) -> bool {
+Recording_Device_Invalid :: proc(device: Recording_Device) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L643)
 
 ### `Audio_Decoder_Invalid`
 
 ```odin
-Audio_Decoder_Invalid :: proc(decoder: Audio_Decoder) -> bool {
+Audio_Decoder_Invalid :: proc(decoder: Audio_Decoder) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L647)
 
 ### `Video_Stream_Invalid`
 
 ```odin
-Video_Stream_Invalid :: proc(video: Video_Stream) -> bool {
+Video_Stream_Invalid :: proc(video: Video_Stream) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L651)
 
 ### `Audio_Bus_Invalid`
 
 ```odin
-Audio_Bus_Invalid :: proc(bus: Audio_Bus) -> bool {
+Audio_Bus_Invalid :: proc(bus: Audio_Bus) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L655)
 
 ### `Audio_Effect_Invalid`
 
 ```odin
-Audio_Effect_Invalid :: proc(effect: Audio_Effect) -> bool {
+Audio_Effect_Invalid :: proc(effect: Audio_Effect) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L659)
 
 ### `Font_Invalid`
 
 ```odin
-Font_Invalid :: proc(font: Font) -> bool {
+Font_Invalid :: proc(font: Font) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L663)
 
 ### `Text_Invalid`
 
 ```odin
-Text_Invalid :: proc(text: Text) -> bool {
+Text_Invalid :: proc(text: Text) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L667)
 
 ### `Canvas_Invalid`
 
 ```odin
-Canvas_Invalid :: proc(canvas: Canvas) -> bool {
+Canvas_Invalid :: proc(canvas: Canvas) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L671)
 
 ### `Shader_Invalid`
 
 ```odin
-Shader_Invalid :: proc(shader: Shader) -> bool {
+Shader_Invalid :: proc(shader: Shader) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L675)
 
 ### `Sprite_Batch_Invalid`
 
 ```odin
-Sprite_Batch_Invalid :: proc(batch: Sprite_Batch) -> bool {
+Sprite_Batch_Invalid :: proc(batch: Sprite_Batch) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L679)
 
 ### `Particle_System_Invalid`
 
 ```odin
-Particle_System_Invalid :: proc(particles: Particle_System) -> bool {
+Particle_System_Invalid :: proc(particles: Particle_System) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L683)
 
 ### `Mesh_Invalid`
 
 ```odin
-Mesh_Invalid :: proc(mesh: Mesh) -> bool {
+Mesh_Invalid :: proc(mesh: Mesh) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L687)
 
 ### `Physics_World_Invalid`
 
 ```odin
-Physics_World_Invalid :: proc(world: Physics_World) -> bool {
+Physics_World_Invalid :: proc(world: Physics_World) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L691)
 
 ### `Physics_Body_Invalid`
 
 ```odin
-Physics_Body_Invalid :: proc(body: Physics_Body) -> bool {
+Physics_Body_Invalid :: proc(body: Physics_Body) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L695)
 
 ### `Physics_Shape_Invalid`
 
 ```odin
-Physics_Shape_Invalid :: proc(shape: Physics_Shape) -> bool {
+Physics_Shape_Invalid :: proc(shape: Physics_Shape) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L699)
 
 ### `Physics_Joint_Invalid`
 
 ```odin
-Physics_Joint_Invalid :: proc(joint: Physics_Joint) -> bool {
+Physics_Joint_Invalid :: proc(joint: Physics_Joint) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L703)
 
 ### `Default_Config`
 
 ```odin
-Default_Config :: proc() -> Config {
+Default_Config :: proc() -> Config
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L728)
 
 ### `Error_String`
 
 ```odin
-Error_String :: proc(err: Error) -> string {
+Error_String :: proc(err: Error) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L767)
 
 ### `Cursor_Invalid`
 
 ```odin
-Cursor_Invalid :: proc(cursor: Cursor) -> bool {
+Cursor_Invalid :: proc(cursor: Cursor) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L994)
 
 ### `Image_Font_Invalid`
 
 ```odin
-Image_Font_Invalid :: proc(font: Image_Font) -> bool {
+Image_Font_Invalid :: proc(font: Image_Font) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L1022)
 
 ### `Texture_Array_Invalid`
 
 ```odin
-Texture_Array_Invalid :: proc(array: Texture_Array) -> bool {
+Texture_Array_Invalid :: proc(array: Texture_Array) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/types.odin#L1037)
 
 ## `video`
 
@@ -6667,146 +7635,181 @@ Source: `src/thor2d/video.odin`
 ### `Load_Video`
 
 ```odin
-Load_Video :: proc(ctx: ^Context, path: string) -> (Video_Stream, Error) {
+Load_Video :: proc(ctx: ^Context, path: string) -> (Video_Stream, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video is capability-gated at compile time. Builds without the optional
+FFmpeg adapter keep the same runtime and return Capability_Unavailable.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L8)
 
 ### `Play_Video`
 
 ```odin
-Play_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error {
+Play_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L22)
 
 ### `Pause_Video`
 
 ```odin
-Pause_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error {
+Pause_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L32)
 
 ### `Seek_Video`
 
 ```odin
-Seek_Video :: proc(ctx: ^Context, stream: Video_Stream, seconds: f64) -> Error {
+Seek_Video :: proc(ctx: ^Context, stream: Video_Stream, seconds: f64) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L42)
 
 ### `Set_Video_Loop`
 
 ```odin
-Set_Video_Loop :: proc(ctx: ^Context, stream: Video_Stream, looping: bool) -> Error {
+Set_Video_Loop :: proc(ctx: ^Context, stream: Video_Stream, looping: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L52)
 
 ### `Update_Video`
 
 ```odin
-Update_Video :: proc(ctx: ^Context, stream: Video_Stream, delta: f32) -> Error {
+Update_Video :: proc(ctx: ^Context, stream: Video_Stream, delta: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L62)
 
 ### `Draw_Video`
 
 ```odin
-Draw_Video :: proc(ctx: ^Context, stream: Video_Stream, position: Vec2, scale: Vec2, tint: Color) -> Error {
+Draw_Video :: proc(ctx: ^Context, stream: Video_Stream, position: Vec2, scale: Vec2, tint: Color) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L72)
 
 ### `Video_Duration`
 
 ```odin
-Video_Duration :: proc(ctx: ^Context, stream: Video_Stream) -> (f64, Error) {
+Video_Duration :: proc(ctx: ^Context, stream: Video_Stream) -> (f64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L82)
 
 ### `Video_Position`
 
 ```odin
-Video_Position :: proc(ctx: ^Context, stream: Video_Stream) -> (f64, Error) {
+Video_Position :: proc(ctx: ^Context, stream: Video_Stream) -> (f64, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L93)
 
 ### `Video_Frame_Info`
 
 ```odin
-Video_Frame_Info :: proc(ctx: ^Context, stream: Video_Stream) -> (width, height: int, frame_rate: f64, err: Error) {
+Video_Frame_Info :: proc(ctx: ^Context, stream: Video_Stream) -> (width, height: int, frame_rate: f64, err: Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L104)
 
 ### `Unload_Video`
 
 ```odin
-Unload_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error {
+Unload_Video :: proc(ctx: ^Context, stream: Video_Stream) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L115)
 
 ### `Video_Has_Audio`
 
 ```odin
-Video_Has_Audio :: proc(ctx: ^Context, stream: Video_Stream) -> bool {
+Video_Has_Audio :: proc(ctx: ^Context, stream: Video_Stream) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video_Has_Audio reports whether decoded audio frames are available for
+stream. Always false until the shim demuxes an audio track (see above).
+Plain bool query: false for nil ctx, missing backend, bad handles, and
+non-FFmpeg builds alike — never an error, headless-safe.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L137)
 
 ### `Video_Audio_Source`
 
 ```odin
-Video_Audio_Source :: proc(ctx: ^Context, stream: Video_Stream) -> (Audio_Source, Error) {
+Video_Audio_Source :: proc(ctx: ^Context, stream: Video_Stream) -> (Audio_Source, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video_Audio_Source would return an Audio_Source fed by the video's decoded
+audio frames for manual mixing. Without an FFmpeg build it returns
+.Capability_Unavailable; with one it still returns .Unsupported because the
+shim exposes no audio frames to feed the source with. Never a fake source.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L148)
 
 ### `Set_Video_Audio_Volume`
 
 ```odin
-Set_Video_Audio_Volume :: proc(ctx: ^Context, stream: Video_Stream, volume: f32) -> Error {
+Set_Video_Audio_Volume :: proc(ctx: ^Context, stream: Video_Stream, volume: f32) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Video_Audio_Volume would scale the auto-mixed video audio track.
+Gated like Video_Audio_Source: .Capability_Unavailable without FFmpeg,
+.Unsupported with it (no audio pipeline exists to apply the volume to).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L161)
 
 ### `Video_Is_Playing`
 
 ```odin
-Video_Is_Playing :: proc(ctx: ^Context, stream: Video_Stream) -> bool {
+Video_Is_Playing :: proc(ctx: ^Context, stream: Video_Stream) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video_Is_Playing reports whether the stream is playing (Play set it and no
+Pause followed). Plain bool query: false for nil contexts, missing
+backends and bad handles — headless-safe, never an error.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L181)
 
 ### `Video_Rewind`
 
 ```odin
-Video_Rewind :: proc(ctx: ^Context, stream: Video_Stream) -> Error {
+Video_Rewind :: proc(ctx: ^Context, stream: Video_Stream) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video_Rewind seeks to the start (Seek 0 wrapper; LOVE Video:rewind).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L189)
 
 ### `Video_Source_Path`
 
 ```odin
-Video_Source_Path :: proc(ctx: ^Context, stream: Video_Stream) -> string {
+Video_Source_Path :: proc(ctx: ^Context, stream: Video_Stream) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Video_Source_Path returns the path Load stored (borrowed: valid until
+Unload_Video). Empty for nil contexts, missing backends and bad handles —
+including non-FFmpeg builds, where Load never creates an entry.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L196)
 
 ### `Set_Video_Filter`
 
 ```odin
-Set_Video_Filter :: proc(ctx: ^Context, stream: Video_Stream, filter: Texture_Filter) -> Error {
+Set_Video_Filter :: proc(ctx: ^Context, stream: Video_Stream, filter: Texture_Filter) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Video_Filter sets the frame-texture filter (LOVE Texture:setFilter on
+the video frame). The filter is stored on the entry and applied to the
+live frame texture plus every future one: frames re-upload on each decode,
+which would otherwise reset the GL filter state. There is no getter — the
+backend retains no per-texture filter memory (same reason Set_Texture_Filter
+is setter-only). A stream with no decoded frame yet still stores the
+filter (.None); it applies from the first frame on.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/video.odin#L210)
 
 ## `window`
 
@@ -6815,215 +7818,265 @@ Source: `src/thor2d/window.odin`
 ### `Window_Title`
 
 ```odin
-Window_Title :: proc(ctx: ^Context) -> string {
+Window_Title :: proc(ctx: ^Context) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L8)
 
 ### `Window_Is_Open`
 
 ```odin
-Window_Is_Open :: proc(ctx: ^Context) -> bool {
+Window_Is_Open :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L15)
 
 ### `Close_Window`
 
 ```odin
-Close_Window :: proc(ctx: ^Context) {
+Close_Window :: proc(ctx: ^Context)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L19)
 
 ### `Window_Is_Visible`
 
 ```odin
-Window_Is_Visible :: proc(ctx: ^Context) -> bool {
+Window_Is_Visible :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L25)
 
 ### `Window_Has_Focus`
 
 ```odin
-Window_Has_Focus :: proc(ctx: ^Context) -> bool {
+Window_Has_Focus :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L29)
 
 ### `Window_Has_Mouse_Focus`
 
 ```odin
-Window_Has_Mouse_Focus :: proc(ctx: ^Context) -> bool {
+Window_Has_Mouse_Focus :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L33)
 
 ### `Window_Is_Maximized`
 
 ```odin
-Window_Is_Maximized :: proc(ctx: ^Context) -> bool {
+Window_Is_Maximized :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L37)
 
 ### `Maximize_Window`
 
 ```odin
-Maximize_Window :: proc(ctx: ^Context) -> Error {
+Maximize_Window :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L41)
 
 ### `Minimize_Window`
 
 ```odin
-Minimize_Window :: proc(ctx: ^Context) -> Error {
+Minimize_Window :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L49)
 
 ### `Restore_Window`
 
 ```odin
-Restore_Window :: proc(ctx: ^Context) -> Error {
+Restore_Window :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L57)
 
 ### `Get_Window_Mode`
 
 ```odin
-Get_Window_Mode :: proc(ctx: ^Context) -> (width, height: int, fullscreen, resizable, vsync: bool) {
+Get_Window_Mode :: proc(ctx: ^Context) -> (width, height: int, fullscreen, resizable, vsync: bool)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L65)
 
 ### `Get_VSync`
 
 ```odin
-Get_VSync :: proc(ctx: ^Context) -> bool {
+Get_VSync :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L73)
 
 ### `Set_VSync`
 
 ```odin
-Set_VSync :: proc(ctx: ^Context, enabled: bool) -> Error {
+Set_VSync :: proc(ctx: ^Context, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L80)
 
 ### `Get_Display_Count`
 
 ```odin
-Get_Display_Count :: proc(ctx: ^Context) -> int {
+Get_Display_Count :: proc(ctx: ^Context) -> int
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L89)
 
 ### `Get_Display_Info`
 
 ```odin
-Get_Display_Info :: proc(ctx: ^Context, index: int) -> (Display_Info, Error) {
+Get_Display_Info :: proc(ctx: ^Context, index: int) -> (Display_Info, Error)
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L96)
 
 ### `Get_Safe_Area`
 
 ```odin
-Get_Safe_Area :: proc(ctx: ^Context) -> Rect {
+Get_Safe_Area :: proc(ctx: ^Context) -> Rect
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Safe_Area returns the full window on desktop (no notch concept).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L108)
 
 ### `Set_Window_Icon`
 
 ```odin
-Set_Window_Icon :: proc(ctx: ^Context, image: Image_Data) -> Error {
+Set_Window_Icon :: proc(ctx: ^Context, image: Image_Data) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L113)
 
 ### `Show_Message_Box`
 
 ```odin
-Show_Message_Box :: proc(ctx: ^Context, title, message: string) -> Error {
+Show_Message_Box :: proc(ctx: ^Context, title, message: string) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L129)
 
 ### `Get_Power_Info`
 
 ```odin
-Get_Power_Info :: proc() -> Power_Info {
+Get_Power_Info :: proc() -> Power_Info
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L137)
 
 ### `Has_Background_Music`
 
 ```odin
-Has_Background_Music :: proc(ctx: ^Context) -> bool {
+Has_Background_Music :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L142)
 
 ### `Update_Window_Mode`
 
 ```odin
-Update_Window_Mode :: proc(ctx: ^Context, width, height: int, fullscreen, resizable, vsync: bool) -> Error {
+Update_Window_Mode :: proc(ctx: ^Context, width, height: int, fullscreen, resizable, vsync: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Update_Window_Mode mirrors the love.window.setMode(width, height, flags)
+subset. Size and fullscreen apply immediately via Set_Window_Size /
+Set_Fullscreen when a backend is present; resizable/vsync are stored in
+ctx.config. Raylib fixes VSYNC_HINT and the resizable flag at window
+creation, so vsync/resizable changes need a restart where the backend
+requires it. Returns .None and applies what is possible, never fakes:
+headless stores the config and returns .None (nothing to apply to).
+Non-positive size maps to .Invalid_Config; nil ctx maps to .Invalid_Config.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L155)
 
 ### `Get_Display_Orientation`
 
 ```odin
-Get_Display_Orientation :: proc(ctx: ^Context) -> string {
+Get_Display_Orientation :: proc(ctx: ^Context) -> string
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Display_Orientation is a mobile-future helper (mirrors the
+portrait/landscape queries mobile LOVE ports need). Desktop has no
+orientation sensor, so it derives the answer from the window aspect:
+width >= height is "landscape", otherwise "portrait". Headless (or nil
+ctx, or zero size) has no window and reports "unknown".
+See guides/Mobile.md.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L182)
 
 ### `Set_Display_Sleep_Enabled`
 
 ```odin
-Set_Display_Sleep_Enabled :: proc(ctx: ^Context, enabled: bool) -> Error {
+Set_Display_Sleep_Enabled :: proc(ctx: ^Context, enabled: bool) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Set_Display_Sleep_Enabled is a mobile-future stub (mirrors keeping the
+screen awake on phones). `enabled = false` would ask the OS to keep the
+display on; desktop has no such API in the raylib backend, so this
+always returns .Unsupported instead of pretending — including for nil ctx
+(there is nothing to store the intent on). The intent IS stored on live
+Contexts (backing Is_Display_Sleep_Enabled) so games can round-trip their
+request. See guides/Mobile.md.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L203)
 
 ### `Is_Display_Sleep_Enabled`
 
 ```odin
-Is_Display_Sleep_Enabled :: proc(ctx: ^Context) -> bool {
+Is_Display_Sleep_Enabled :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Is_Display_Sleep_Enabled is the getter for the Set_Display_Sleep_Enabled
+intent (mirrors love.window.isDisplaySleepEnabled reads). Default true;
+nil ctx reports the default. The value is stored intent, not OS state:
+desktop never honors the request (setter returns .Unsupported).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L216)
 
 ### `Window_Has_Icon`
 
 ```odin
-Window_Has_Icon :: proc(ctx: ^Context) -> bool {
+Window_Has_Icon :: proc(ctx: ^Context) -> bool
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Window_Has_Icon reports whether Set_Window_Icon has succeeded on this
+Context (mirrors love.window.getIcon presence checks). The raylib backend
+exposes no icon getter, so this stored flag is the honest answer; nil or
+headless Contexts report false.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L227)
 
 ### `Get_Fullscreen_Modes`
 
 ```odin
-Get_Fullscreen_Modes :: proc(ctx: ^Context) -> [dynamic]Display_Mode {
+Get_Fullscreen_Modes :: proc(ctx: ^Context) -> [dynamic]Display_Mode
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Get_Fullscreen_Modes lists one Display_Mode per monitor (mirrors
+love.window.getFullscreenModes). Width/Height come from Get_Display_Info;
+Refresh_Rate is filled from Current_Display_Mode when its dimensions match
+the monitor (the backend only reports the current monitor's rate), else 0
+("unknown" — never a guessed 60). Headless or nil ctx yields an empty
+array. The caller owns the returned array (delete it).
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L237)
 
 ### `Request_Attention`
 
 ```odin
-Request_Attention :: proc(ctx: ^Context) -> Error {
+Request_Attention :: proc(ctx: ^Context) -> Error
 ```
 
-See [API index](Api_Reference.md) and the relevant module page for behavior.
+Request_Attention asks the window manager to draw attention to the window
+(mirrors love.window.requestAttention / taskbar flashing). The raylib
+backend exposes no such API (vendor/raylib has no RequestWindowAttention
+binding — verified v0.10), so this always returns .Unsupported instead of a
+fake flash. Nil ctx maps to .Invalid_Config; headless maps to
+.Backend_Initialization_Failed.
+
+[Implementation and error branches](https://github.com/Bruno-BRG/Thor2D/blob/master/src/thor2d/window.odin#L264)
