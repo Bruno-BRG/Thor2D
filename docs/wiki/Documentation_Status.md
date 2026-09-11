@@ -1,6 +1,7 @@
 # Documentation Status
 
-`Api_Reference.md` is a generated **signature index**. It proves that a public
+`Api_Reference.md` is a generated **signature index** and `Complete_API.md` is
+the exhaustive one-entry-per-procedure reference. They prove that every public
 procedure is discoverable, not that its behavior is explained. Run this audit
 from the framework root:
 

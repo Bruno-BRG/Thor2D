@@ -61,6 +61,7 @@ main :: proc() {
 - [Editor](guides/Editor.md) — v0.9 CLI project inspector scaffolding.
 - [Mobile](guides/Mobile.md) — v0.9 mobile-future stubs (vibrate, orientation).
 - [Api_Reference](Api_Reference.md) — auto-generated index of every public procedure.
+- [Complete_API](Complete_API.md) — one signature entry for every public procedure.
 - [Documentation_Status](Documentation_Status.md) — curated coverage audit and honest backlog.
 
 ## Conventions used on every page
