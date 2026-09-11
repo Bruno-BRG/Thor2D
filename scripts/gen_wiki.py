@@ -59,7 +59,7 @@ def main() -> int:
 def generate_reference() -> None:
     ref = WIKI / "Api_Reference.md"
     lines = [
-        "# API Reference (v0.10)",
+        "# API Reference (v0.11)",
         "",
         "Auto-generated index of every public `thor2d` procedure by source file",
         "(`python3 scripts/gen_wiki.py --gen`). Curated module pages add LOVE",

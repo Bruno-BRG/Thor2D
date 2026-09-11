@@ -47,6 +47,9 @@ main :: proc() {
 | [modules/Video](modules/Video.md) | `love.video` | `video.odin` |
 | [modules/Window](modules/Window.md) | `love.window` | `context.odin`, `system.odin`, `window.odin` |
 | [modules/Net](modules/Net.md) | third-party `enet` / `socket` (LOVE has no built-in net) | `net.odin` |
+| [modules/ECS](modules/ECS.md) | game-side entity/component storage | `ecs.odin` |
+| [modules/Project](modules/Project.md) | project and scene manifests | `project.odin` |
+| [modules/Transforms](modules/Transforms.md) | 2D transforms | `transforms.odin` |
 
 ## Guides
 
@@ -58,6 +61,7 @@ main :: proc() {
 - [Editor](guides/Editor.md) — v0.9 CLI project inspector scaffolding.
 - [Mobile](guides/Mobile.md) — v0.9 mobile-future stubs (vibrate, orientation).
 - [Api_Reference](Api_Reference.md) — auto-generated index of every public procedure.
+- [Documentation_Status](Documentation_Status.md) — curated coverage audit and honest backlog.
 
 ## Conventions used on every page
 
