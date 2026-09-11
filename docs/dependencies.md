@@ -16,6 +16,10 @@ bridge into the pinned Odin vendor directory, and build the native Box2D
 archive. The Windows archive names are selected by Odin's vendor binding but
 are not validated on this Linux host yet.
 
+Windows archive names are selected by Odin's vendor binding. Build Windows
+projects with the Windows Odin toolchain and matching vendor libraries;
+`build.sh deps` is intentionally a Linux bootstrap script.
+
 The bridge source lives at `scripts/box2d_bridge.odin`. The package
 `src/thor2d/internal/box2d` exposes only the private adapter surface to the
 framework, keeping generated Box2D types out of game code.

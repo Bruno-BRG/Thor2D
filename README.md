@@ -36,8 +36,9 @@ windowed runtime and future editor/tooling workflows.
 ### Requirements
 
 - Odin `dev-2026-09` or newer with the bundled `vendor:raylib` package.
-- Linux AMD64 is the primary development target. Windows is kept as a planned
-  build target.
+- Linux AMD64 and Windows are supported build targets. Linux is the primary
+  development/validation host; Windows uses Odin's Windows toolchain and native
+  vendor bindings.
 - A desktop OpenGL environment for graphical examples.
 
 The pinned Odin compiler can be installed with:
